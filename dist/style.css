@@ -1,0 +1,147 @@
+html,
+body {
+	height: 100%;
+	margin: 0;
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background: linear-gradient(135deg, #181c24 0%, #23283a 100%);
+	min-height: 100vh;
+	color: #f3f6fa;
+}
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: 0;
+	background: url('https://i.imgur.com/tlE2YGA.jpeg') center/cover no-repeat;
+	filter: brightness(0.4);
+	opacity: 0.6;
+	pointer-events: none;
+}
+.showcase {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	z-index: 1;
+	backdrop-filter: blur(4px);
+}
+.showcase:before {
+	content: '';
+	/* background: url("https://i.ibb.co/jZHNPchN/Changli.webp"); */
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	position: absolute;
+	width: 90%;
+	height: 90%;
+	opacity: 0.6;
+	z-index: -1;
+}
+h1 {
+	margin-bottom: 36px;
+	font-size: 2.2rem;
+	font-weight: 600;
+	letter-spacing: 2px;
+}
+.gear-fields {
+	display: flex;
+	gap: 16px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.gear {
+	background: rgba(30, 34, 45, 0.92);
+	border-radius: 14px;
+	padding: 12px;
+	width: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+	gap: 12px;
+}
+.gear-title {
+	font-size: 1.05em;
+	font-weight: 500;
+	margin-bottom: 8px;
+	letter-spacing: 1px;
+	color: #a5b4fc;
+}
+.gear-bar {
+	width: 220px;
+	padding: 8px 0;
+	border-radius: 7px;
+	text-align: center;
+	font-size: 0.8em;
+	font-weight: 500;
+	margin-bottom: 2px;
+	background: #23283a;
+	transition: box-shadow 0.12s;
+	box-shadow: 0 1px 4px 0 rgba(76, 110, 245, 0.07);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+.gear-bar .title {
+	justify-self: flex-start;
+	text-align: left;
+	flex: 1 1 0;
+	padding-left: 10px;
+}
+.gear-bar .value {
+	justify-self: flex-end;
+	text-align: right;
+	flex: 1 1 0;
+	padding-right: 10px;
+	color: #43e97b;
+	font-weight: 600;
+	font-size: 0.98em;
+}
+.gear-score {
+	display: none;
+	margin-top: 12px;
+	background: rgba(30, 34, 45, 0.92);
+	border-radius: 14px;
+	padding: 12px;
+	width: auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-size: 1.4rem;
+	font-weight: 600;
+	letter-spacing: 2px;
+	box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
+}
+.gear-score .sub-value {
+	font-size: 1.2rem;
+}
+.sub-value {
+	color: rgba(165, 180, 252, 0.7);
+}
+@media (max-width: 900px) {
+	.gear-fields {
+		flex-direction: column;
+		gap: 18px;
+	}
+	.gear {
+		min-width: 200px;
+	}
+	.gear-bar {
+		width: 100%;
+	}
+}
+label[for='imageInput'] {
+	margin-top: 16px;
+	padding: 8px 12px;
+	border-radius: 7px;
+	text-align: center;
+	font-size: 1em;
+	font-weight: 500;
+	background: #23283a;
+	transition: box-shadow 0.12s;
+	box-shadow: 0 1px 4px 0 rgba(76, 110, 245, 0.07);
+	cursor: pointer;
+}
