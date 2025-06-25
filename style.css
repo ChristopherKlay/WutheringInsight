@@ -37,17 +37,13 @@ body {
 
 .canvas {
 	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
 	z-index: -1;
 	overflow: hidden;
 }
 
 .canvas::before {
 	content: '';
-	position: absolute;
+	position: fixed;
 	top: -50%;
 	left: -50%;
 	bottom: -50%;
@@ -58,7 +54,7 @@ body {
 }
 
 .canvas img {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -66,7 +62,6 @@ body {
 	object-fit: cover;
 	object-position: center;
 	mix-blend-mode: hard-light;
-	filter: blur(2px);
 }
 .showcase {
 	min-height: 100vh;
@@ -79,11 +74,10 @@ body {
 }
 
 .backdrop {
-	content: '';
+	position: fixed;
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
-	position: absolute;
 	width: 98%;
 	height: 98%;
 	opacity: 0.7;
@@ -212,7 +206,7 @@ label[for='imageInput'],
 }
 
 #reset {
-	font-family: --font-family-main;
+	font-family: var(--font-family-main);
 	font-size: 1rem;
 	color: #fff;
 	display: none;
@@ -266,4 +260,7 @@ label[for='imageInput'],
 [data-tooltip]:hover:before,
 [data-tooltip]:hover:after {
 	opacity: 1;
+}
+.floatingchat-container-wrap {
+	transform: scale(0.8);
 }
