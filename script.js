@@ -5,353 +5,273 @@ const regions = {
 			left: 70,
 			top: 26,
 			width: 290,
-			height: 60,
-		},
+			height: 60
+		}
 	],
 	group1: [
 		{
 			left: 65,
 			top: 885,
 			width: 310,
-			height: 36,
+			height: 36
 		},
 		{
 			left: 65,
 			top: 918,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 65,
 			top: 953,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 65,
 			top: 987,
 			width: 310,
-			height: 34,
+			height: 34
 		},
 		{
 			left: 65,
 			top: 1021,
 			width: 310,
-			height: 35,
-		},
+			height: 35
+		}
 	],
 	group2: [
 		{
 			left: 443,
 			top: 885,
 			width: 310,
-			height: 36,
+			height: 36
 		},
 		{
 			left: 443,
 			top: 918,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 443,
 			top: 953,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 443,
 			top: 987,
 			width: 310,
-			height: 34,
+			height: 34
 		},
 		{
 			left: 443,
 			top: 1021,
 			width: 310,
-			height: 35,
-		},
+			height: 35
+		}
 	],
 	group3: [
 		{
 			left: 817,
 			top: 885,
 			width: 310,
-			height: 36,
+			height: 36
 		},
 		{
 			left: 817,
 			top: 918,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 817,
 			top: 953,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 817,
 			top: 987,
 			width: 310,
-			height: 34,
+			height: 34
 		},
 		{
 			left: 817,
 			top: 1021,
 			width: 310,
-			height: 35,
-		},
+			height: 35
+		}
 	],
 	group4: [
 		{
 			left: 1191,
 			top: 885,
 			width: 310,
-			height: 36,
+			height: 36
 		},
 		{
 			left: 1191,
 			top: 918,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 1191,
 			top: 953,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 1191,
 			top: 987,
 			width: 310,
-			height: 34,
+			height: 34
 		},
 		{
 			left: 1191,
 			top: 1021,
 			width: 310,
-			height: 35,
-		},
+			height: 35
+		}
 	],
 	group5: [
 		{
 			left: 1565,
 			top: 885,
 			width: 310,
-			height: 36,
+			height: 36
 		},
 		{
 			left: 1565,
 			top: 918,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 1565,
 			top: 953,
 			width: 310,
-			height: 35,
+			height: 35
 		},
 		{
 			left: 1565,
 			top: 987,
 			width: 310,
-			height: 34,
+			height: 34
 		},
 		{
 			left: 1565,
 			top: 1021,
 			width: 310,
-			height: 35,
-		},
-	],
+			height: 35
+		}
+	]
 }
 
 // Sub-stat ranges
 const range = {
 	Empty: {
 		min: 0,
-		max: 100,
+		max: 100
 	},
 	HP: {
 		min: 320,
-		max: 580,
+		max: 580
 	},
 	ATK: {
 		min: 30,
-		max: 60,
+		max: 60
 	},
 	DEF: {
 		min: 40,
-		max: 70,
+		max: 70
 	},
 	'HP%': {
 		min: 6.4,
-		max: 11.6,
+		max: 11.6
 	},
 	'ATK%': {
 		min: 6.4,
-		max: 11.6,
+		max: 11.6
 	},
 	'DEF%': {
 		min: 8.1,
-		max: 14.7,
+		max: 14.7
 	},
 	CritRate: {
 		min: 6.3,
-		max: 10.5,
+		max: 10.5
 	},
 	CritDMG: {
 		min: 12.6,
-		max: 21,
+		max: 21
 	},
 	EnergyRegen: {
 		min: 6.8,
-		max: 12.4,
+		max: 12.4
 	},
 	BasicAttackDMGBonus: {
 		min: 6.4,
-		max: 11.6,
+		max: 11.6
 	},
 	HeavyAttackDMGBonus: {
 		min: 6.4,
-		max: 11.6,
+		max: 11.6
 	},
 	ResonanceSkillDMGBonus: {
 		min: 6.4,
-		max: 11.6,
+		max: 11.6
 	},
 	ResonanceLiberationDMGBonus: {
 		min: 6.4,
-		max: 11.6,
-	},
+		max: 11.6
+	}
 }
 
 // Supported characters
 const chars = {
-	Aalto: {
-		background: '#',
-	},
-	Augusta: {
-		background: '#',
-	},
-	Baizhi: {
-		background: '#',
-	},
-	Brant: {
-		background: '#',
-	},
-	Calcharo: {
-		background: '#',
-	},
-	Camellya: {
-		background: '#',
-	},
-	Cantarella: {
-		background: '#',
-	},
-	Carlotta: {
-		background: '#',
-	},
-	Cartethyia: {
-		background: '#',
-	},
-	Changli: {
-		background: '#',
-	},
-	Chisa: {
-		background: '#',
-	},
-	Chixia: {
-		background: '#',
-	},
-	Ciaconna: {
-		background: '#',
-	},
-	Danjin: {
-		background: '#',
-	},
-	Encore: {
-		background: '#',
-	},
-	Galbrena: {
-		background: '#',
-	},
-	Iuno: {
-		background: '#',
-	},
-	Jianxin: {
-		background: '#',
-	},
-	Jinhsi: {
-		background: '#',
-	},
-	Jiyan: {
-		background: '#',
-	},
-	Lingyang: {
-		background: '#',
-	},
-	Lumi: {
-		background: '#',
-	},
-	Lupa: {
-		background: '#',
-	},
-	Mortefi: {
-		background: '#',
-	},
-	Phoebe: {
-		background: '#',
-	},
-	Phrolova: {
-		background: '#',
-	},
-	Qiuyuan: {
-		background: '#',
-	},
-	Roccia: {
-		background: '#',
-	},
-	Rover: {
-		background: '#',
-	},
-	Sanhua: {
-		background: '#',
-	},
-	Taoqi: {
-		background: '#',
-	},
-	'The Shorekeeper': {
-		background: '#',
-	},
-	Verina: {
-		background: '#',
-	},
-	'Xiangli Yao': {
-		background: '#',
-	},
-	Yangyang: {
-		background: '#',
-	},
-	Yinlin: {
-		background: '#',
-	},
-	Youhu: {
-		background: '#',
-	},
-	Yuanwu: {
-		background: '#',
-	},
-	Zani: {
-		background: '#',
-	},
-	Zhezhi: {
-		background: '#',
-	},
+	Aalto: {},
+	Augusta: {},
+	Baizhi: {},
+	Brant: {},
+	Calcharo: {},
+	Camellya: {},
+	Cantarella: {},
+	Carlotta: {},
+	Cartethyia: {},
+	Changli: {},
+	Chisa: {},
+	Chixia: {},
+	Ciaconna: {},
+	Danjin: {},
+	Encore: {},
+	Galbrena: {},
+	Iuno: {},
+	Jianxin: {},
+	Jinhsi: {},
+	Jiyan: {},
+	Lingyang: {},
+	Lumi: {},
+	Lupa: {},
+	Mortefi: {},
+	Phoebe: {},
+	Phrolova: {},
+	Qiuyuan: {},
+	Roccia: {},
+	Rover: {},
+	Sanhua: {},
+	Taoqi: {},
+	'The Shorekeeper': {},
+	Verina: {},
+	'Xiangli Yao': {},
+	Yangyang: {},
+	Yinlin: {},
+	Youhu: {},
+	Yuanwu: {},
+	Zani: {},
+	Zhezhi: {}
 }
 
 document.getElementById('imageInput').addEventListener('change', async function (e) {
@@ -364,7 +284,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	const worker = await Tesseract.createWorker('eng')
 	// Tesseract Settings
 	await worker.setParameters({
-		tessedit_pageseg_mode: 7,
+		tessedit_pageseg_mode: 7
 	})
 	// Image Element
 	const img = new Image()
@@ -382,6 +302,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		var rv = 0
 		var cv = 0
 		for (let i = 0; i < regions[echo].length; i++) {
+			// Setup
 			const { left, top, width, height } = regions[echo][i]
 			canvas.width = width
 			canvas.height = height
@@ -396,7 +317,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 			// OCR on the cropped region
 			const {
-				data: { text },
+				data: { text }
 			} = await Tesseract.recognize(croppedDataUrl, 'eng')
 
 			// Detect Char
@@ -405,10 +326,14 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 				if (match) {
 					document.querySelector('.title').textContent = match + "'s Echoes"
+					document.querySelector('.backdrop').style.backgroundImage = `url("/media/img/backdrop/${match.replace(' ', '')}.webp")`
 				}
 
 				continue
 			}
+
+			// Toggle container
+			container[currentContainer].style.display = 'flex'
 
 			// Cleanup
 			var output =
@@ -473,10 +398,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					<span class="value">${amount}</span>`
 			if (calcLabel == 'Empty') {
 				// Empty Stat
-				el.style.background = 'linear-gradient(to right, rgba(135, 135, 135, 0.6) 0%, rgba(106, 106, 106, 0.3) ' + perc + '%, transparent ' + perc + '%, #23283a 100%)'
+				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + perc + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
 			} else {
 				// Found stat
-				el.style.background = 'linear-gradient(to right, rgba(116, 128, 255, 0.6) 0%, rgba(0, 123, 255, 0.3) ' + perc + '%, transparent ' + perc + '%, #23283a 100%)'
+				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + perc + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
 			}
 			container[currentContainer].append(el)
 		}
@@ -489,7 +414,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			el.innerHTML = `
 					<span class="title">Crit Roll Value</span>
 					<span class="value">${cv.toFixed(1)}<span class="sub-value">/200</span></span>`
-			el.style.background = 'linear-gradient(to right, rgba(244, 224, 179, 0.6) 0%, rgba(234, 212, 160, 0.3) ' + cv_perc + '%, transparent ' + cv_perc + '%, #23283a 100%)'
+			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + cv_perc + '%, transparent ' + cv_perc + '%), rgba(32, 34, 37, 0.52)'
 			container[currentContainer].append(el)
 
 			// Roll Value
@@ -499,7 +424,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			el.innerHTML = `
 					<span class="title">Sub Roll Value</span>
 					<span class="value">${rv.toFixed(1)}<span class="sub-value">/500</span></span>`
-			el.style.background = 'linear-gradient(to right, rgba(244, 224, 179, 0.6) 0%, rgba(234, 212, 160, 0.3) ' + rv_perc + '%, transparent ' + rv_perc + '%, #23283a 100%)'
+			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + rv_perc + '%, transparent ' + rv_perc + '%), rgba(32, 34, 37, 0.52)'
 			container[currentContainer].append(el)
 
 			// Scoring
@@ -512,6 +437,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var scoreLabel = document.querySelector('.gear-score')
 	var score_perc = (score / 2500) * 100
 	scoreLabel.innerHTML = `Score: ${score_perc.toFixed(2)}%<span class="sub-value">(${score.toFixed(2)}/2500)</span>`
+	scoreLabel.style.display = 'flex'
+
+	// Enable reset
+	document.querySelector('#reset').style.display = 'block'
 })
 
 function increaseContrast(canvas, ctx, contrast = 1.5) {
