@@ -28,7 +28,6 @@
 
 html,
 body {
-	height: 100%;
 	margin: 0;
 	font-family: var(--font-family-main);
 	min-height: 100vh;
@@ -44,13 +43,13 @@ body {
 .canvas::before {
 	content: '';
 	position: fixed;
-	top: -50%;
-	left: -50%;
-	bottom: -50%;
-	right: -50%;
+	left: 50%;
+	top: 50%;
+	width: 200vmax;
+	height: 200vmax;
+	transform: translate(-50%, -50%) rotate(45deg);
 	background: radial-gradient(circle at center, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
 	background-size: var(--halftone-dotsize) var(--halftone-dotsize);
-	transform: rotate(45deg);
 }
 
 .canvas img {
@@ -90,6 +89,7 @@ h1 {
 	font-weight: 600;
 	letter-spacing: 2px;
 	text-shadow: 4px 4px 3px rgba(0, 0, 0, 0.3);
+	text-align: center;
 }
 
 .gear-fields {
@@ -178,19 +178,6 @@ h1 {
 	color: rgba(154, 166, 180);
 }
 
-@media (max-width: 900px) {
-	.gear-fields {
-		flex-direction: column;
-		gap: 18px;
-	}
-	.gear {
-		min-width: 200px;
-	}
-	.gear-bar {
-		width: 100%;
-	}
-}
-
 label[for='imageInput'],
 #reset {
 	margin-top: 16px;
@@ -267,6 +254,25 @@ label[for='imageInput'],
 }
 
 .floatingchat-container-wrap {
-	left: 0px !important;
+	left: 0 !important;
 	transform: scale(0.8);
+}
+
+@media (max-width: 900px) {
+	.gear-fields {
+		flex-direction: column;
+		gap: 18px;
+	}
+	.gear {
+		min-width: 200px;
+	}
+	.gear-bar {
+		width: 100%;
+	}
+	#reset {
+		margin-bottom: 80px;
+	}
+	.floatingchat-container-wrap {
+		left: calc(50% - 125px) !important;
+	}
 }
