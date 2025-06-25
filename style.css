@@ -19,9 +19,9 @@
 	src:
 		local('Lagu Sans Bold'),
 		local('Lagu-Sans-Bold'),
-		url('/media/font/LaguSans-Bold.woff2') format('woff2'),
-		url('/media/font/LaguSans-Bold.woff') format('woff'),
-		url('/media/font/LaguSans-Bold.ttf') format('truetype');
+		url('./media/font/LaguSans-Bold.woff2') format('woff2'),
+		url('./media/font/LaguSans-Bold.woff') format('woff'),
+		url('./media/font/LaguSans-Bold.ttf') format('truetype');
 	font-weight: 700;
 	font-style: normal;
 }

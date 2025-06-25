@@ -323,12 +323,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			// Detect Char
 			if (echo == 'name') {
 				var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
-
 				if (match) {
 					document.querySelector('.title').textContent = match + "'s Echoes"
-					document.querySelector('.backdrop').style.backgroundImage = `url("/media/img/backdrop/${match.replace(' ', '')}.webp")`
+					document.querySelector('.backdrop').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
 				}
-
 				continue
 			}
 
