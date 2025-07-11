@@ -297,7 +297,8 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	// Container Elements
 	var container = document.querySelectorAll('.gear')
 	var currentContainer = 0
-	var score = 0
+	var total_rv = 0
+	var total_cv = 0
 	for (let echo in regions) {
 		var rv = 0
 		var cv = 0
@@ -426,19 +427,35 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			container[currentContainer].append(el)
 
 			// Scoring
-			score += rv
+			total_rv += rv
+			total_cv += cv
 
 			currentContainer++
 		}
 	}
-	// Scoring Label
-	var scoreLabel = document.querySelector('.gear-score')
-	var score_perc = (score / 2500) * 100
-	scoreLabel.innerHTML = `Score: ${score_perc.toFixed(2)}%<span class="sub-value">(${score.toFixed(2)}/2500)</span>`
-	scoreLabel.style.display = 'flex'
+	var details = document.querySelector('.details')
+	
+	// Crit Score
+	var cv_perc = (total_cv / 1000) * 100
+	var el = document.createElement('div')
+	el.classList = 'gear-score'
+	el.innerHTML = `Crit Score: ${cv_perc.toFixed(2)}%<span class="sub-value">(${total_cv.toFixed(2)}/1000 CV)</span>`
+	details.append(el)
+	
+	// Roll Score
+	var rv_perc = (total_rv / 2500) * 100
+	var el = document.createElement('div')
+	el.classList = 'gear-score'
+	el.innerHTML = `Roll Score: ${rv_perc.toFixed(2)}%<span class="sub-value">(${total_rv.toFixed(2)}/2500 RV)</span>`
+	details.append(el)
 
 	// Enable reset
-	document.querySelector('#reset').style.display = 'block'
+	var showcase = document.querySelector('.showcase')
+	var reset = document.createElement('button')
+	reset.textContent = "Reset"
+	reset.id = "reset"
+	reset.onclick = "location.reload()"
+	showcase.append(reset)
 })
 
 function increaseContrast(canvas, ctx, contrast = 1.5) {
