@@ -172,7 +172,7 @@ const regions = {
 
 // Sub-stat ranges
 const range = {
-	Empty: {
+	None: {
 		min: 0,
 		max: 100
 	},
@@ -820,10 +820,12 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	await img.decode()
 	// Create a canvas for cropping
 	const canvas = document.createElement('canvas')
-	const ctx = canvas.getContext('2d')
+	const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
 	// Container Elements
 	var container = document.querySelectorAll('.gear')
+	var showcase = document.querySelector('.showcase')
+	var bar = document.querySelector('.score-bar')
 	var currentContainer = 0
 	var total_rv = 0
 	var total_cv = 0
@@ -831,6 +833,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	for (let echo in regions) {
 		var rv = 0
 		var cv = 0
+		var wv = 0
 		for (let i = 0; i < regions[echo].length; i++) {
 			// Setup
 			const { left, top, width, height } = regions[echo][i]
@@ -843,15 +846,18 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			increaseContrast(canvas, ctx)
 
 			// Convert cropped area to a data URL
-			const croppedDataUrl = canvas.toDataURL()
+			var croppedDataUrl = canvas.toDataURL()
 
 			// OCR on the cropped region
-			const {
+			var {
 				data: { text }
-			} = await Tesseract.recognize(croppedDataUrl, 'eng')
+			} = await worker.recognize(croppedDataUrl, 'eng')
 
 			// Detect Char
 			if (echo == 'name') {
+				// Scan errors
+				text = text.replace('Zanj', 'Zani')
+
 				var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
 				if (match) {
 					document.querySelector('.title').textContent = match + "'s Echoes"
@@ -860,13 +866,11 @@ document.getElementById('imageInput').addEventListener('change', async function 
 				continue
 			}
 
-			// Toggle container
-			container[currentContainer].style.display = 'flex'
-
 			// Cleanup
 			var output =
 				text
 					.replace('al', 'HP')
+					.replace('Ronus', 'Bonus')
 					.replace('\n', '')
 					.replace(/(\d+(\.\d+)?%?)/, '')
 					.replace(/\s+/, ' ')
@@ -875,8 +879,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 				(text.match(/(\d+(\.\d+)?%?)/) || [''])[0]
 
 			// Empty stats
-			if (text == '' || text.length < 4) {
-				output = 'Empty 0'
+			var req = ['Crit', 'DMG', 'HP', 'DEF', 'ATK', 'Energy']
+			var found = req.some((req) => output.includes(req))
+			if (text == '' || text.length < 4 || !found) {
+				output = 'None 0'
 			}
 
 			// Pre-format
@@ -898,26 +904,28 @@ document.getElementById('imageInput').addEventListener('change', async function 
 				// Fix missing %
 				label += '%'
 			}
-			label = label.replace('Ronus', 'Bonus') // Ronus -> Bonus
 
 			// Label formats
 			var calcLabel = label.replaceAll(' ', '').replaceAll('.', '')
 			var calcAmount = amount.replace('%', '')
 
 			// Percentage
-			var perc = (((calcAmount - range[calcLabel].min) / (range[calcLabel].max - range[calcLabel].min)) * 100).toFixed(2)
-
-			// Roll values
-			rv += parseFloat(perc)
+			var perc = ((calcAmount / range[calcLabel].max) * 100).toFixed(2)
 
 			// Weighted values
-			if (chars[match].weights) {
-				total_wv += chars[match].weights[calcLabel] * perc
-			}
+			if (calcLabel != 'None') {
+				// Roll values
+				rv += parseFloat(perc)
 
-			// Crit value
-			if (calcLabel.includes('Crit')) {
-				cv += parseFloat(perc)
+				// Crit value
+				if (calcLabel.includes('Crit')) {
+					cv += parseFloat(perc)
+				}
+
+				// Weighted values
+				if (chars[match].weights) {
+					wv += chars[match].weights[calcLabel] * perc
+				}
 			}
 
 			// Add element
@@ -937,12 +945,16 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		}
 
 		if (echo != 'name') {
+			// HR
+			el = document.createElement('hr')
+			container[currentContainer].append(el)
+
 			// Crit Value
 			var cv_perc = (cv / 200) * 100
 			var el = document.createElement('div')
 			el.classList = 'gear-bar'
 			el.innerHTML = `
-					<span class="title">Crit Roll Value</span>
+					<span class="title">Crit</span>
 					<span class="value">${cv.toFixed(1)}<span class="sub-value">/200</span></span>`
 			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + cv_perc + '%, transparent ' + cv_perc + '%), rgba(32, 34, 37, 0.52)'
 			container[currentContainer].append(el)
@@ -952,14 +964,28 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			var el = document.createElement('div')
 			el.classList = 'gear-bar'
 			el.innerHTML = `
-					<span class="title">Sub Roll Value</span>
+					<span class="title">Rolls</span>
 					<span class="value">${rv.toFixed(1)}<span class="sub-value">/500</span></span>`
 			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + rv_perc + '%, transparent ' + rv_perc + '%), rgba(32, 34, 37, 0.52)'
 			container[currentContainer].append(el)
 
-			// Scoring
+			// Weighted Value (Perfection)
+			var wv_perc = (wv / 500) * 100
+			var el = document.createElement('div')
+			el.classList = 'gear-bar'
+			el.innerHTML = `
+					<span class="title">Perfection: ${ranking(wv_perc)}</span>
+					<span class="value">${wv.toFixed(1)}<span class="sub-value">/500</span></span>`
+			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + wv_perc + '%, transparent ' + wv_perc + '%), rgba(32, 34, 37, 0.52)'
+			container[currentContainer].append(el)
+
+			// Totals
 			total_rv += rv
 			total_cv += cv
+			total_wv += wv
+
+			// Toogle container opacity
+			container[currentContainer].style.opacity = '1'
 
 			currentContainer++
 		}
@@ -971,7 +997,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
 	el.setAttribute('data-tooltip', 'The total value of crit rolls.')
-	el.innerHTML = `Crit Score: ${cv_perc.toFixed(2)}%<span class="sub-value">(${total_cv.toFixed(2)}/1000)</span>`
+	el.innerHTML = `Crit: ${cv_perc.toFixed(2)}%<span class="sub-value">${total_cv.toFixed(2)}/1000</span>`
 	details.append(el)
 
 	// Roll Score
@@ -979,27 +1005,22 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
 	el.setAttribute('data-tooltip', 'The total value of all (including sub-optimal and useless) rolls.')
-	el.innerHTML = `Roll Score: ${rv_perc.toFixed(2)}%<span class="sub-value">(${total_rv.toFixed(2)}/2500)</span>`
+	el.innerHTML = `Rolls: ${rv_perc.toFixed(2)}%<span class="sub-value">${total_rv.toFixed(2)}/2500</span>`
 	details.append(el)
 
-	// Weighted Stats
+	// Weighted Stats (Perfection)
 	if (chars[match].weights) {
-		var max_weight = Object.values(chars[match].weights)
-			.sort((a, b) => b - a)
-			.slice(0, 5)
-			.reduce((acc, val) => acc + val, 0)
-
-		var weighted_perc = (total_wv / (max_weight * 500)) * 100
+		var weighted_perc = ((total_wv / 2500) * 100).toFixed(2)
 
 		var el = document.createElement('div')
 		el.classList = 'gear-score'
-		el.setAttribute('data-tooltip', 'The total value of rolls into character-specific stats.')
-		el.innerHTML = `Weighted Score: ${weighted_perc.toFixed(2)}%<span class="sub-value">(${total_wv.toFixed(2)}/${max_weight * 500})</span>`
+		el.setAttribute('data-tooltip', 'The total value for rolls into character-specific stats.')
+		el.innerHTML = `Perfection: ${ranking(weighted_perc)}<span class="sub-value">${weighted_perc}%</span><span class="sub-value">${total_wv.toFixed(2)}/${2500}</span>`
 		details.append(el)
+		details.style.opacity = '1'
 	}
 
 	// Enable reset
-	var showcase = document.querySelector('.showcase')
 	var reset = document.createElement('button')
 	reset.textContent = 'Reset'
 	reset.id = 'reset'
@@ -1008,6 +1029,49 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	})
 	showcase.append(reset)
 })
+
+function ranking(perc) {
+	switch (true) {
+		case perc >= 75:
+			return 'Sentinel'
+		case perc >= 70:
+			return 'WTF+'
+		case perc >= 65:
+			return 'WTF'
+		case perc >= 60.5:
+			return 'SSS+'
+		case perc >= 56.5:
+			return 'SSS'
+		case perc >= 53:
+			return 'SS+'
+		case perc >= 50:
+			return 'SS'
+		case perc >= 47.5:
+			return 'S+'
+		case perc >= 45:
+			return 'S'
+		case perc >= 42.5:
+			return 'A+'
+		case perc >= 40:
+			return 'A'
+		case perc >= 37.5:
+			return 'B+'
+		case perc >= 35:
+			return 'B'
+		case perc >= 32.5:
+			return 'C+'
+		case perc >= 30:
+			return 'C'
+		case perc >= 27.5:
+			return 'D+'
+		case perc >= 25:
+			return 'D'
+		case perc >= 22.5:
+			return 'F+'
+		default:
+			return 'F'
+	}
+}
 
 function increaseContrast(canvas, ctx, contrast = 1.5) {
 	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
