@@ -970,7 +970,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var cv_perc = (total_cv / 1000) * 100
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
-	el.setAttribute('data-tooltip', 'The total value (%) of crit rolls, out of the maximum possible (200% per piece).')
+	el.setAttribute('data-tooltip', 'The total value of crit rolls.')
 	el.innerHTML = `Crit Score: ${cv_perc.toFixed(2)}%<span class="sub-value">(${total_cv.toFixed(2)}/1000)</span>`
 	details.append(el)
 
@@ -978,7 +978,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var rv_perc = (total_rv / 2500) * 100
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
-	el.setAttribute('data-tooltip', 'The total value (%) of all rolls (no matter how useful!), out of the maximum possible (500% per piece).')
+	el.setAttribute('data-tooltip', 'The total value of all (including sub-optimal and useless) rolls.')
 	el.innerHTML = `Roll Score: ${rv_perc.toFixed(2)}%<span class="sub-value">(${total_rv.toFixed(2)}/2500)</span>`
 	details.append(el)
 
@@ -993,7 +993,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 		var el = document.createElement('div')
 		el.classList = 'gear-score'
-		el.setAttribute('data-tooltip', 'The total value (%) of rolls into character-specific stats, out of the maximum possible (500% per piece).')
+		el.setAttribute('data-tooltip', 'The total value of rolls into character-specific stats.')
 		el.innerHTML = `Weighted Score: ${weighted_perc.toFixed(2)}%<span class="sub-value">(${total_wv.toFixed(2)}/${max_weight * 500})</span>`
 		details.append(el)
 	}

@@ -160,6 +160,7 @@ h1 {
 
 .gear-score {
 	display: flex;
+	position: relative;
 	margin-top: 12px;
 	background: rgba(32, 34, 37, 0.82);
 	border-radius: 7px;
@@ -211,21 +212,26 @@ label[for='imageInput'],
 
 [data-tooltip]:before,
 [data-tooltip]:after {
-	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';
-	filter: progid: DXImageTransform.Microsoft.Alpha(Opacity=0);
 	opacity: 0;
 	pointer-events: none;
+	transition: opacity 0.2s;
+}
+
+[data-tooltip='']:hover::before,
+[data-tooltip='']:hover::after {
+	display: none !important;
 }
 
 [data-tooltip]:before {
 	position: absolute;
+	left: 50%;
+	transform: translate(-50%);
+	width: 240px;
 	bottom: 120%;
-	left: 72px;
-	margin-bottom: 5px;
-	margin-left: -80px;
 	padding: 8px 12px;
 	border-radius: 12px;
-	background-color: rgba(32, 34, 37, 0.92);
+	backdrop-filter: blur(10px);
+	background-color: rgba(32, 34, 37, 0.82);
 	border: var(--border-main);
 	color: #fff;
 	content: attr(data-tooltip);
