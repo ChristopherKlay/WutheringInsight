@@ -152,7 +152,8 @@ h1 {
 	font-size: 0.98em;
 }
 
-.details {
+.details,
+.options {
 	display: flex;
 	gap: 12px;
 }
@@ -199,6 +200,7 @@ label[for='imageInput'],
 	font-family: var(--font-family-main);
 	font-size: 1rem;
 	color: #fff;
+	margin-bottom: 80px;
 }
 
 [data-tooltip] {
@@ -218,32 +220,18 @@ label[for='imageInput'],
 [data-tooltip]:before {
 	position: absolute;
 	bottom: 120%;
-	left: 76px;
+	left: 72px;
 	margin-bottom: 5px;
 	margin-left: -80px;
 	padding: 8px 12px;
-	width: 200px;
 	border-radius: 12px;
-	background-color: rgba(32, 34, 37, 0.82);
+	background-color: rgba(32, 34, 37, 0.92);
+	border: var(--border-main);
 	color: #fff;
 	content: attr(data-tooltip);
 	text-align: center;
-	font-size: 0.8rem;
+	font-size: 0.9rem;
 	line-height: 1.4;
-}
-
-[data-tooltip]:after {
-	position: absolute;
-	bottom: 120%;
-	left: 50%;
-	margin-left: -5px;
-	width: 0;
-	border-top: 5px solid rgba(32, 34, 37, 0.82);
-	border-right: 5px solid transparent;
-	border-left: 5px solid transparent;
-	content: ' ';
-	font-size: 0;
-	line-height: 0;
 }
 
 [data-tooltip]:hover:before,
@@ -269,9 +257,6 @@ label[for='imageInput'],
 	}
 	.gear-bar {
 		width: 100%;
-	}
-	#reset {
-		margin-bottom: 80px;
 	}
 	.floatingchat-container-wrap {
 		left: calc(50% - 125px) !important;

@@ -232,46 +232,574 @@ const range = {
 
 // Supported characters
 const chars = {
-	Aalto: {},
+	Aalto: {
+		weights: {
+			HP: 0,
+			ATK: 0.5,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 0.13
+		}
+	},
 	Augusta: {},
-	Baizhi: {},
-	Brant: {},
-	Calcharo: {},
-	Camellya: {},
-	Cantarella: {},
-	Carlotta: {},
-	Cartethyia: {},
-	Changli: {},
+	Baizhi: {
+		weights: {
+			HP: 1,
+			ATK: 0,
+			DEF: 1,
+			'HP%': 1,
+			'ATK%': 0,
+			'DEF%': 1,
+			CritRate: 0,
+			CritDMG: 0,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
+	Brant: {
+		weights: {
+			HP: 0,
+			ATK: 0.5,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0.18
+		}
+	},
+	Calcharo: {
+		weights: {
+			HP: 0,
+			ATK: 0.5,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Camellya: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0.17
+		}
+	},
+	Cantarella: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.07,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
+	Carlotta: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.01,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
+	Cartethyia: {
+		weights: {
+			HP: 0.5,
+			ATK: 0,
+			DEF: 0,
+			'HP%': 1,
+			'ATK%': 0,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0.1,
+			ResonanceSkillDMGBonus: 0.13,
+			ResonanceLiberationDMGBonus: 0.24
+		}
+	},
+	Changli: {
+		weights: {
+			HP: 0,
+			ATK: 0.5,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.04,
+			HeavyAttackDMGBonus: 0.02,
+			ResonanceSkillDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
 	Chisa: {},
-	Chixia: {},
-	Ciaconna: {},
-	Danjin: {},
-	Encore: {},
+	Chixia: {
+		weights: {
+			HP: 0,
+			ATK: 0.5,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Ciaconna: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.5,
+			HeavyAttackDMGBonus: 0.5,
+			ResonanceSkillDMGBonus: 0.04,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Danjin: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 1,
+			ResonanceSkillDMGBonus: 0.5,
+			ResonanceLiberationDMGBonus: 0.5
+		}
+	},
+	Encore: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
 	Galbrena: {},
 	Iuno: {},
-	Jianxin: {},
-	Jinhsi: {},
-	Jiyan: {},
-	Lingyang: {},
-	Lumi: {},
-	Lupa: {},
-	Mortefi: {},
-	Phoebe: {},
+	Jianxin: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.5,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 1,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0.36
+		}
+	},
+	Jinhsi: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.35,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 0.18
+		}
+	},
+	Jiyan: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.3,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 1,
+			ResonanceSkillDMGBonus: 0.15,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
+	Lingyang: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.29,
+			ResonanceLiberationDMGBonus: 0.06
+		}
+	},
+	Lumi: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 0.36,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.26,
+			ResonanceLiberationDMGBonus: 0.3
+		}
+	},
+	Lupa: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.25,
+			BasicAttackDMGBonus: 0.05,
+			HeavyAttackDMGBonus: 0.07,
+			ResonanceSkillDMGBonus: 0.13,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Mortefi: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.08,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.18,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Phoebe: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.13,
+			HeavyAttackDMGBonus: 1,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0.14
+		}
+	},
 	Phrolova: {},
 	Qiuyuan: {},
-	Roccia: {},
+	Roccia: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.25,
+			BasicAttackDMGBonus: 0.06,
+			HeavyAttackDMGBonus: 1,
+			ResonanceSkillDMGBonus: 0.15,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
 	Rover: {},
-	Sanhua: {},
-	Taoqi: {},
-	'The Shorekeeper': {},
-	Verina: {},
-	'Xiangli Yao': {},
-	Yangyang: {},
-	Yinlin: {},
-	Youhu: {},
-	Yuanwu: {},
-	Zani: {},
-	Zhezhi: {}
+	Sanhua: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 1,
+			ResonanceSkillDMGBonus: 0.27,
+			ResonanceLiberationDMGBonus: 0.28
+		}
+	},
+	Taoqi: {
+		weights: {
+			HP: 0,
+			ATK: 0,
+			DEF: 1,
+			'HP%': 0,
+			'ATK%': 0,
+			'DEF%': 1,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 0.43,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.1,
+			ResonanceLiberationDMGBonus: 0.37
+		}
+	},
+	'The Shorekeeper': {
+		weights: {
+			HP: 1,
+			ATK: 0,
+			DEF: 0,
+			'HP%': 1,
+			'ATK%': 0,
+			'DEF%': 0,
+			CritRate: 0,
+			CritDMG: 1,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 0.09,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.03,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Verina: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 1,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 1,
+			CritRate: 0,
+			CritDMG: 0,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
+	'Xiangli Yao': {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.09,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.17,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Yangyang: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0,
+			BasicAttackDMGBonus: 0.32,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.14,
+			ResonanceLiberationDMGBonus: 1
+		}
+	},
+	Yinlin: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.08,
+			HeavyAttackDMGBonus: 0.09,
+			ResonanceSkillDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 0.21
+		}
+	},
+	Youhu: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 1,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 1,
+			CritRate: 0,
+			CritDMG: 0,
+			EnergyRegen: 1,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0
+		}
+	},
+	Yuanwu: {
+		weights: {
+			HP: 0,
+			ATK: 0,
+			DEF: 1,
+			'HP%': 0,
+			'ATK%': 0,
+			'DEF%': 1,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 0.4
+		}
+	},
+	Zani: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 0.02,
+			HeavyAttackDMGBonus: 1,
+			ResonanceSkillDMGBonus: 0.06,
+			ResonanceLiberationDMGBonus: 0.2
+		}
+	},
+	Zhezhi: {
+		weights: {
+			HP: 0,
+			ATK: 1,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1,
+			'DEF%': 0,
+			CritRate: 1,
+			CritDMG: 1,
+			EnergyRegen: 0.2,
+			BasicAttackDMGBonus: 1,
+			HeavyAttackDMGBonus: 0.06,
+			ResonanceSkillDMGBonus: 0.07,
+			ResonanceLiberationDMGBonus: 0
+		}
+	}
 }
 
 document.getElementById('imageInput').addEventListener('change', async function (e) {
@@ -299,6 +827,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var currentContainer = 0
 	var total_rv = 0
 	var total_cv = 0
+	var total_wv = 0
 	for (let echo in regions) {
 		var rv = 0
 		var cv = 0
@@ -377,12 +906,14 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 			// Percentage
 			var perc = (((calcAmount - range[calcLabel].min) / (range[calcLabel].max - range[calcLabel].min)) * 100).toFixed(2)
-			if (perc < 1) {
-				perc = 3
-			}
 
 			// Roll values
 			rv += parseFloat(perc)
+
+			// Weighted values
+			if (chars[match].weights) {
+				total_wv += chars[match].weights[calcLabel] * perc
+			}
 
 			// Crit value
 			if (calcLabel.includes('Crit')) {
@@ -397,10 +928,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					<span class="value">${amount}</span>`
 			if (calcLabel == 'Empty') {
 				// Empty Stat
-				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + perc + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
+				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + Math.max(perc, 3) + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
 			} else {
 				// Found stat
-				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + perc + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
+				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + Math.max(perc, 3) + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
 			}
 			container[currentContainer].append(el)
 		}
@@ -434,27 +965,47 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		}
 	}
 	var details = document.querySelector('.details')
-	
+
 	// Crit Score
 	var cv_perc = (total_cv / 1000) * 100
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
-	el.innerHTML = `Crit Score: ${cv_perc.toFixed(2)}%<span class="sub-value">(${total_cv.toFixed(2)}/1000 CV)</span>`
+	el.setAttribute('data-tooltip', 'The total value (%) of crit rolls, out of the maximum possible (200% per piece).')
+	el.innerHTML = `Crit Score: ${cv_perc.toFixed(2)}%<span class="sub-value">(${total_cv.toFixed(2)}/1000)</span>`
 	details.append(el)
-	
+
 	// Roll Score
 	var rv_perc = (total_rv / 2500) * 100
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
-	el.innerHTML = `Roll Score: ${rv_perc.toFixed(2)}%<span class="sub-value">(${total_rv.toFixed(2)}/2500 RV)</span>`
+	el.setAttribute('data-tooltip', 'The total value (%) of all rolls (no matter how useful!), out of the maximum possible (500% per piece).')
+	el.innerHTML = `Roll Score: ${rv_perc.toFixed(2)}%<span class="sub-value">(${total_rv.toFixed(2)}/2500)</span>`
 	details.append(el)
+
+	// Weighted Stats
+	if (chars[match].weights) {
+		var max_weight = Object.values(chars[match].weights)
+			.sort((a, b) => b - a)
+			.slice(0, 5)
+			.reduce((acc, val) => acc + val, 0)
+
+		var weighted_perc = (total_wv / (max_weight * 500)) * 100
+
+		var el = document.createElement('div')
+		el.classList = 'gear-score'
+		el.setAttribute('data-tooltip', 'The total value (%) of rolls into character-specific stats, out of the maximum possible (500% per piece).')
+		el.innerHTML = `Weighted Score: ${weighted_perc.toFixed(2)}%<span class="sub-value">(${total_wv.toFixed(2)}/${max_weight * 500})</span>`
+		details.append(el)
+	}
 
 	// Enable reset
 	var showcase = document.querySelector('.showcase')
 	var reset = document.createElement('button')
-	reset.textContent = "Reset"
-	reset.id = "reset"
-	reset.onclick = "location.reload()"
+	reset.textContent = 'Reset'
+	reset.id = 'reset'
+	reset.addEventListener('click', function () {
+		location.reload()
+	})
 	showcase.append(reset)
 })
 
