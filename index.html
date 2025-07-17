@@ -3,16 +3,20 @@
 	<head>
 		<meta charset="UTF-8" />
 		<title>WutheringInsight</title>
+		<link rel="icon" type="image/x-icon" href="./media/img/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="./style.css" />
 		<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 	</head>
 
 	<body>
+		<!-- Background Setup -->
 		<div class="canvas">
 			<img src="./media/img/background.jpg" alt="" />
 		</div>
 		<div class="backdrop"></div>
+
+		<!-- Main Container -->
 		<div class="showcase">
 			<h1 class="title"></h1>
 			<div class="gear-fields">
@@ -32,10 +36,121 @@
 					<div class="gear-title">Echo #5</div>
 				</div>
 			</div>
+
+			<!-- Details -->
 			<div class="details"></div>
-			<input type="file" id="imageInput" accept="image/*" hidden />
-			<label for="imageInput" data-tooltip="Please select the showcase provided by the Wuthering Waves Discord Bot in its original (1920x1080) resolution.">Upload Showcase</label>
+
+			<!-- Controls -->
+			<input type="file" id="imageInput" accept=".jpeg" hidden />
+			<label for="imageInput" data-tooltip="Please select the showcase (1920x1080 JPEG) provided by the Wuthering Waves Discord bot.">Upload Showcase</label>
+			<div class="controls"></div>
+
+			<!-- Info Modal -->
+			<div class="info-page">
+				<div class="info-explain">
+					<div class="info-title">Explanation & Details</div>
+					<div class="info-content">
+						<span class="highlight">Crit Scoring: </span>The total percentage value of rolled crit rate/damage out of a possible 200% per echo.
+						<span class="expl"> Example: Rolling 14 out of the possible 21 crit damage (without any crit rate) would result in a crit scoring of ~66.66%. </span>
+						<span class="highlight">Roll Scoring: </span>The total percentage value of all stats (without character-specific weighting applied) in comparison to the maximum possible value for the given stat.
+						<span class="expl">
+							A high roll score doesn't equal a well-equipped character due to character-specific stats not being applied, causing for example a high DEF% roll on an ATK-scaling character to have the same value as ATK%.
+						</span>
+						<span class="highlight">Perfection: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a letter-based format for easier understanding.
+						<span class="expl">
+							While character-specific weighting is applied, secondary requirements like energy regen and crit ratios are not checked and can result in performing below expectations. Always use this stat with your current crit
+							scoring and character-specific secondary requirements in mind.
+						</span>
+					</div>
+				</div>
+				<div class="info-weighted">
+					<div class="info-title">Weighted Stats</div>
+				</div>
+				<div class="info-ranks">
+					<div class="info-title">Ranking</div>
+					<table>
+						<tr>
+							<td>75 and above</td>
+							<td>Sentinel</td>
+						</tr>
+						<tr>
+							<td>70 – 74.99</td>
+							<td>WTF+</td>
+						</tr>
+						<tr>
+							<td>65 – 69.99</td>
+							<td>WTF</td>
+						</tr>
+						<tr>
+							<td>60.5 – 64.99</td>
+							<td>SSS+</td>
+						</tr>
+						<tr>
+							<td>56.5 – 60.49</td>
+							<td>SSS</td>
+						</tr>
+						<tr>
+							<td>53 – 56.49</td>
+							<td>SS+</td>
+						</tr>
+						<tr>
+							<td>50 – 52.99</td>
+							<td>SS</td>
+						</tr>
+						<tr>
+							<td>47.5 – 49.99</td>
+							<td>S+</td>
+						</tr>
+						<tr>
+							<td>45 – 47.49</td>
+							<td>S</td>
+						</tr>
+						<tr>
+							<td>42.5 – 44.99</td>
+							<td>A+</td>
+						</tr>
+						<tr>
+							<td>40 – 42.49</td>
+							<td>A</td>
+						</tr>
+						<tr>
+							<td>37.5 – 39.99</td>
+							<td>B+</td>
+						</tr>
+						<tr>
+							<td>35 – 37.49</td>
+							<td>B</td>
+						</tr>
+						<tr>
+							<td>32.5 – 34.99</td>
+							<td>C+</td>
+						</tr>
+						<tr>
+							<td>30 – 32.49</td>
+							<td>C</td>
+						</tr>
+						<tr>
+							<td>27.5 – 29.99</td>
+							<td>D+</td>
+						</tr>
+						<tr>
+							<td>25 – 27.49</td>
+							<td>D</td>
+						</tr>
+						<tr>
+							<td>22.5 – 24.99</td>
+							<td>F+</td>
+						</tr>
+						<tr>
+							<td>Below 22.5</td>
+							<td>F</td>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</div>
+
+		<!-- Scripts -->
 		<script src="./script.js"></script>
 		<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
 		<script>

@@ -803,11 +803,11 @@ const chars = {
 }
 
 document.getElementById('imageInput').addEventListener('change', async function (e) {
+	// Upload label
+	var label = document.querySelector('label[for="imageInput"]')
 	// File
 	const file = e.target.files[0]
 	if (!file) return
-	// Hide upload
-	document.querySelector('label[for="imageInput"]').style.display = 'none'
 	// Tesseract
 	const worker = await Tesseract.createWorker('eng')
 	// Tesseract Settings
@@ -818,13 +818,22 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	const img = new Image()
 	img.src = URL.createObjectURL(file)
 	await img.decode()
-	// Create a canvas for cropping
-	const canvas = document.createElement('canvas')
-	const ctx = canvas.getContext('2d', { willReadFrequently: true })
+
+	// Validate image
+	if (img.width != 1920 || img.height != 1080 || file.name.split('.').pop().toLowerCase() != 'jpeg') {
+		label.setAttribute('data-error', 'Error: Unsupported file. Please upload the original 1920x1080 JPEG file.')
+		return
+	}
+
+	// Hide upload
+	label.style.display = 'none'
+	label.removeAttribute('data-error')
 
 	// Container Elements
 	var container = document.querySelectorAll('.gear')
 	var showcase = document.querySelector('.showcase')
+	var controls = document.querySelector('.controls')
+	var info = document.querySelector('.info-weighted')
 	var bar = document.querySelector('.score-bar')
 	var currentContainer = 0
 	var total_rv = 0
@@ -837,21 +846,13 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		for (let i = 0; i < regions[echo].length; i++) {
 			// Setup
 			const { left, top, width, height } = regions[echo][i]
-			canvas.width = width
-			canvas.height = height
-			ctx.clearRect(0, 0, width, height)
-			ctx.drawImage(img, left, top, width, height, 0, 0, width, height)
-
-			// Contrast Adjustement
-			increaseContrast(canvas, ctx)
-
-			// Convert cropped area to a data URL
-			var croppedDataUrl = canvas.toDataURL()
 
 			// OCR on the cropped region
 			var {
 				data: { text }
-			} = await worker.recognize(croppedDataUrl, 'eng')
+			} = await worker.recognize(img, {
+				rectangle: { top: top, left: left, width: width, height: height }
+			})
 
 			// Detect Char
 			if (echo == 'name') {
@@ -874,6 +875,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					.replace('\n', '')
 					.replace(/(\d+(\.\d+)?%?)/, '')
 					.replace(/\s+/, ' ')
+					.replace(' /', '')
 					.trim() +
 				' ' +
 				(text.match(/(\d+(\.\d+)?%?)/) || [''])[0]
@@ -936,10 +938,25 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					<span class="value">${amount}</span>`
 			if (calcLabel == 'Empty') {
 				// Empty Stat
-				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + Math.max(perc, 3) + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
+				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 			} else {
-				// Found stat
-				el.style.background = 'linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ' + Math.max(perc, 3) + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
+				if (chars[match].weights && chars[match].weights[calcLabel] == '1') {
+					// Weighted
+					el.style.background = `
+					url("./media/img/bg-gradient.png") center/100% 100%,
+					linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%)`
+					el.style.border = 'var(--border-main)'
+				} else {
+					// Normal
+					el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
+					el.setAttribute('secondary-stat', '')
+				}
+			}
+			// Crit styling class
+			if (calcLabel.includes('Crit')) {
+				el.setAttribute('crit', '')
+			} else {
+				el.setAttribute('no-crit', '')
 			}
 			container[currentContainer].append(el)
 		}
@@ -996,15 +1013,19 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var cv_perc = (total_cv / 1000) * 100
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
-	el.setAttribute('data-tooltip', 'The total value of crit rolls.')
 	el.innerHTML = `Crit: ${cv_perc.toFixed(2)}%<span class="sub-value">${total_cv.toFixed(2)}/1000</span>`
+	el.addEventListener('mouseover', () => {
+		showcase.setAttribute('crit-filter', '')
+	})
+	el.addEventListener('mouseout', () => {
+		showcase.removeAttribute('crit-filter')
+	})
 	details.append(el)
 
 	// Roll Score
 	var rv_perc = (total_rv / 2500) * 100
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
-	el.setAttribute('data-tooltip', 'The total value of all (including sub-optimal and useless) rolls.')
 	el.innerHTML = `Rolls: ${rv_perc.toFixed(2)}%<span class="sub-value">${total_rv.toFixed(2)}/2500</span>`
 	details.append(el)
 
@@ -1014,20 +1035,76 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 		var el = document.createElement('div')
 		el.classList = 'gear-score'
-		el.setAttribute('data-tooltip', 'The total value for rolls into character-specific stats.')
 		el.innerHTML = `Perfection: ${ranking(weighted_perc)}<span class="sub-value">${weighted_perc}%</span><span class="sub-value">${total_wv.toFixed(2)}/${2500}</span>`
+		el.addEventListener('mouseover', () => {
+			showcase.setAttribute('secondary-filter', '')
+		})
+		el.addEventListener('mouseout', () => {
+			showcase.removeAttribute('secondary-filter')
+		})
 		details.append(el)
-		details.style.opacity = '1'
 	}
 
-	// Enable reset
-	var reset = document.createElement('button')
-	reset.textContent = 'Reset'
-	reset.id = 'reset'
-	reset.addEventListener('click', function () {
+	// Info
+	var el = document.createElement('button')
+	el.textContent = 'Info'
+	el.className = 'info-button'
+	el.addEventListener('click', function () {
+		document.querySelector('.info-page').style.opacity = '1'
+		document.querySelector('.info-page').style.pointerEvents = 'all'
+	})
+	controls.append(el)
+	details.style.opacity = '1'
+
+	window.addEventListener('mouseup', function (event) {
+		var info = document.querySelector('.info-page')
+		if (info && !info.contains(event.target)) {
+			info.style.opacity = '0'
+			info.style.pointerEvents = 'none'
+		}
+	})
+
+	// Weighted Stats Display
+	var statMap = {
+		HP: 'HP',
+		ATK: 'ATK',
+		DEF: 'DEF',
+		'HP%': 'HP%',
+		'ATK%': 'ATK%',
+		'DEF%': 'DEF%',
+		CritRate: 'Crit. Rate',
+		CritDMG: 'Crit. DMG',
+		EnergyRegen: 'Energy Regen',
+		BasicAttackDMGBonus: 'Basic ATK DMG Bonus',
+		HeavyAttackDMGBonus: 'Heavy ATK DMG Bonus',
+		ResonanceSkillDMGBonus: 'Resonance Skill DMG Bonus',
+		ResonanceLiberationDMGBonus: 'Resonance Liberation DMG Bonus'
+	}
+
+	for (var stat in chars[match].weights) {
+		// Create Bars
+		var perc = ((chars[match].weights[stat] / 1) * 100).toFixed(2)
+		var el = document.createElement('div')
+		el.classList = 'gear-bar'
+		el.innerHTML = `
+					<span class="title">${statMap[stat]}</span>
+					<span class="value">${chars[match].weights[stat]}<span class="sub-value">/1</span></span>`
+		if (chars[match].weights[stat] != 0) {
+			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + perc + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
+		} else {
+			el.style.background = 'rgba(32, 34, 37, 0.52)'
+		}
+		info.append(el)
+	}
+
+	// Reset
+	var el = document.createElement('button')
+	el.textContent = 'Reset'
+	el.className = 'reset-button'
+	el.addEventListener('click', function () {
 		location.reload()
 	})
-	showcase.append(reset)
+	controls.append(el)
 })
 
 function ranking(perc) {
@@ -1071,16 +1148,4 @@ function ranking(perc) {
 		default:
 			return 'F'
 	}
-}
-
-function increaseContrast(canvas, ctx, contrast = 1.5) {
-	const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
-	const data = imageData.data
-	for (let i = 0; i < data.length; i += 4) {
-		data[i] = (data[i] - 128) * contrast + 128 // Red
-		data[i + 1] = (data[i + 1] - 128) * contrast + 128 // Green
-		data[i + 2] = (data[i + 2] - 128) * contrast + 128 // Blue
-		// data[i + 3] is alpha (leave unchanged)
-	}
-	ctx.putImageData(imageData, 0, 0)
 }
