@@ -876,6 +876,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					.replace(/(\d+(\.\d+)?%?)/, '')
 					.replace(/\s+/, ' ')
 					.replace(' /', '')
+					.replace(' :', '')
 					.trim() +
 				' ' +
 				(text.match(/(\d+(\.\d+)?%?)/) || [''])[0]
@@ -886,6 +887,8 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			if (text == '' || text.length < 4 || !found) {
 				output = 'None 0'
 			}
+
+			console.log(`[Log] Tesseract: ${output}`)
 
 			// Pre-format
 			var label = output.split(' ')
