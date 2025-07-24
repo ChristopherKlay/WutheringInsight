@@ -37,31 +37,22 @@
 		<!-- Main Container -->
 		<div class="showcase">
 			<h1 class="title"></h1>
-			<div class="gear-fields">
-				<div class="gear">
-					<div class="gear-title">Echo #1</div>
-				</div>
-				<div class="gear">
-					<div class="gear-title">Echo #2</div>
-				</div>
-				<div class="gear">
-					<div class="gear-title">Echo #3</div>
-				</div>
-				<div class="gear">
-					<div class="gear-title">Echo #4</div>
-				</div>
-				<div class="gear">
-					<div class="gear-title">Echo #5</div>
-				</div>
-			</div>
+			<div class="gear-fields"></div>
 
 			<!-- Details -->
 			<div class="details"></div>
 
 			<!-- Controls -->
-			<input type="file" id="imageInput" accept=".jpeg" hidden />
-			<label for="imageInput" data-tooltip="Please select the showcase (1920x1080 JPEG) provided by the Wuthering Waves Discord bot.">Upload Showcase</label>
-			<div class="controls"></div>
+			<div class="base-controls">
+				<div class="manualInput">Manual Input</div>
+				<input type="file" id="imageInput" accept=".jpeg" hidden />
+				<label for="imageInput" data-tooltip="Please select the showcase (1920x1080 JPEG) provided by the Wuthering Waves Discord bot.">Upload Showcase</label>
+			</div>
+
+			<!-- Additional Controls -->
+			<div class="controls">
+				<button class="reset-button" onclick="location.reload()">Reset</button>
+			</div>
 
 			<!-- Info Modal -->
 			<div class="info-page">
@@ -74,7 +65,7 @@
 						<span class="expl">
 							A high roll score doesn't equal a well-equipped character due to character-specific stats not being applied, causing for example a high DEF% roll on an ATK-scaling character to have the same value as ATK%.
 						</span>
-						<span class="highlight">Perfection: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a letter-based format for easier understanding.
+						<span class="highlight">Weighted: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a letter-based format for easier understanding.
 						<span class="expl">
 							While character-specific weighting is applied, secondary requirements like energy regen and crit ratios are not checked and can result in performing below expectations. Always use this stat with your current crit
 							scoring and character-specific secondary requirements in mind.
@@ -85,7 +76,7 @@
 					<div class="info-title">Weighted Stats</div>
 				</div>
 				<div class="info-ranks">
-					<div class="info-title">Ranking</div>
+					<div class="info-title">Weighted Ranks</div>
 					<table>
 						<tr>
 							<td>75 and above</td>
@@ -169,7 +160,7 @@
 		</div>
 
 		<!-- Scripts -->
-		<script src="./script.js"></script>
+		<script src="./script.js" type="module"></script>
 		<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
 		<script>
 			kofiWidgetOverlay.draw('christopherklay', {

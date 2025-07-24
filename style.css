@@ -2,7 +2,10 @@
 :root {
 	--font-family-main: 'Lagu Sans', 'Segoe UI', Arial, sans-serif;
 
+	--accent-color: 194, 168, 105;
+
 	--background-main: rgba(32, 34, 37, 0.82);
+	--background-sec: rgba(32, 34, 37, 0.52);
 	--background-modal: rgba(2, 4, 7, 0.82);
 
 	--border-main: 1px solid rgba(194, 168, 105, 0.7);
@@ -13,6 +16,9 @@
 	--gradient-main-stop: rgba(85, 93, 101, 0.3);
 	--gradient-sub-start: rgba(237, 228, 217, 0.6);
 	--gradient-sub-stop: rgba(219, 201, 153, 0.3);
+	--gradient-roll-highlight: rgba(255, 255, 255, 0.1);
+
+	--transition-main: all 0.3s ease-in;
 
 	--halftone-dotsize: 0.25em;
 }
@@ -118,7 +124,7 @@ h1 {
 .gear {
 	display: flex;
 	opacity: 0;
-	transition: opacity 0.5s;
+	transition: var(--transition-main);
 	background: var(--background-main);
 	bottom: 0;
 	right: 0;
@@ -130,6 +136,7 @@ h1 {
 	align-items: center;
 	box-shadow: 0 2px 14px rgba(0, 0, 0, 0.13);
 	gap: 12px;
+	backdrop-filter: blur(2px) brightness(1.1);
 }
 
 .gear-title,
@@ -146,8 +153,7 @@ h1 {
 	text-align: center;
 	font-size: 0.8em;
 	font-weight: 500;
-	background: #23283a;
-	transition: opacity 0.5s;
+	transition: var(--transition-main);
 	box-shadow: 0 1px 4px 0 rgba(76, 110, 245, 0.07);
 	display: flex;
 	justify-content: space-between;
@@ -171,8 +177,12 @@ h1 {
 	font-size: 0.98em;
 }
 
-.showcase[secondary-filter]:hover .gear-bar[secondary-stat],
-.showcase[crit-filter]:hover .gear-bar[no-crit] {
+.gear-bar[weight='true'] {
+	border: var(--border-main);
+}
+
+.showcase[filter='weight']:hover .gear-bar[weight='false'],
+.showcase[filter='crit']:hover .gear-bar[crit='false'] {
 	opacity: 0.2;
 }
 
@@ -180,7 +190,7 @@ h1 {
 	display: flex;
 	gap: 12px;
 	opacity: 0;
-	transition: opacity 0.5s;
+	transition: var(--transition-main);
 }
 
 .gear-score {
@@ -208,20 +218,23 @@ h1 {
 	color: rgba(154, 166, 180);
 }
 
-label[for='imageInput'] {
+.base-controls {
 	position: fixed;
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
 }
 
 label[for='imageInput'],
 .reset-button,
-.info-button {
+.info-button,
+.manualInput {
 	padding: 8px 12px;
 	border-radius: var(--border-radius-main);
 	border: var(--border-main);
 	text-align: center;
 	font-size: 1.4em;
 	background: var(--background-main);
-	transition: box-shadow 0.12s;
 	box-shadow: 0 1px 4px 0 rgba(76, 110, 245, 0.07);
 	cursor: pointer;
 }
@@ -237,6 +250,9 @@ label[for='imageInput'],
 .controls {
 	display: flex;
 	gap: 12px;
+	opacity: 0;
+	transition: var(--transition-main);
+	pointer-events: none;
 }
 
 [data-tooltip] {
@@ -247,7 +263,7 @@ label[for='imageInput'],
 [data-tooltip]:before {
 	opacity: 0;
 	pointer-events: none;
-	transition: opacity 0.2s;
+	transition: var(--transition-main);
 }
 
 [data-tooltip]:before {
@@ -314,7 +330,7 @@ label[for='imageInput'],
 	padding: 12px;
 	opacity: 0;
 	pointer-events: none;
-	transition: opacity 0.5s;
+	transition: var(--transition-main);
 	box-shadow: 0 0 0 50vmax var(--background-modal);
 }
 
@@ -395,6 +411,44 @@ label[for='imageInput'],
 	text-align: center;
 }
 
+.gear.custom {
+	width: max(38%, 560px);
+}
+
+.gear > .row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	gap: 12px;
+}
+
+.gear select {
+	background: var(--background-sec);
+	border: none;
+	border-radius: var(--border-radius-main);
+	color: #fff;
+	padding: 8px 0;
+	width: 60%;
+	min-width: 0;
+	font-family: var(--font-family-main);
+	font-size: 0.9rem;
+}
+
+.gear select > option {
+	background: rgba(32, 34, 37, 0.8);
+}
+
+.gear > .row > input[type='range'] {
+	accent-color: rgb(var(--accent-color));
+	width: 30%;
+}
+
+.gear > .row > span {
+	text-align-last: center;
+	width: 10%;
+}
+
 @media (max-width: 1200px) {
 	.info-page {
 		flex-direction: column;
@@ -414,6 +468,9 @@ label[for='imageInput'],
 		position: relative;
 		width: 80%;
 		left: 10%;
+	}
+	.gear.custom {
+		width: 80%;
 	}
 	.gear-bar {
 		width: 100%;

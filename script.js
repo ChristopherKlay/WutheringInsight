@@ -1,807 +1,16 @@
-// Predefined coordinates
-const regions = {
-	name: [
-		{
-			left: 70,
-			top: 26,
-			width: 290,
-			height: 60
-		}
-	],
-	group1: [
-		{
-			left: 65,
-			top: 885,
-			width: 310,
-			height: 36
-		},
-		{
-			left: 65,
-			top: 918,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 65,
-			top: 953,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 65,
-			top: 987,
-			width: 310,
-			height: 34
-		},
-		{
-			left: 65,
-			top: 1021,
-			width: 310,
-			height: 35
-		}
-	],
-	group2: [
-		{
-			left: 443,
-			top: 885,
-			width: 310,
-			height: 36
-		},
-		{
-			left: 443,
-			top: 918,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 443,
-			top: 953,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 443,
-			top: 987,
-			width: 310,
-			height: 34
-		},
-		{
-			left: 443,
-			top: 1021,
-			width: 310,
-			height: 35
-		}
-	],
-	group3: [
-		{
-			left: 817,
-			top: 885,
-			width: 310,
-			height: 36
-		},
-		{
-			left: 817,
-			top: 918,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 817,
-			top: 953,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 817,
-			top: 987,
-			width: 310,
-			height: 34
-		},
-		{
-			left: 817,
-			top: 1021,
-			width: 310,
-			height: 35
-		}
-	],
-	group4: [
-		{
-			left: 1191,
-			top: 885,
-			width: 310,
-			height: 36
-		},
-		{
-			left: 1191,
-			top: 918,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 1191,
-			top: 953,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 1191,
-			top: 987,
-			width: 310,
-			height: 34
-		},
-		{
-			left: 1191,
-			top: 1021,
-			width: 310,
-			height: 35
-		}
-	],
-	group5: [
-		{
-			left: 1565,
-			top: 885,
-			width: 310,
-			height: 36
-		},
-		{
-			left: 1565,
-			top: 918,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 1565,
-			top: 953,
-			width: 310,
-			height: 35
-		},
-		{
-			left: 1565,
-			top: 987,
-			width: 310,
-			height: 34
-		},
-		{
-			left: 1565,
-			top: 1021,
-			width: 310,
-			height: 35
-		}
-	]
-}
+// Imports
+import { name, regions } from './import/scan.js'
+import { range, statMap } from './import/stats.js'
+import { chars } from './import/chars.js'
 
-// Sub-stat ranges
-const range = {
-	None: {
-		min: 0,
-		max: 100
-	},
-	HP: {
-		min: 320,
-		max: 580
-	},
-	ATK: {
-		min: 30,
-		max: 60
-	},
-	DEF: {
-		min: 40,
-		max: 70
-	},
-	'HP%': {
-		min: 6.4,
-		max: 11.6
-	},
-	'ATK%': {
-		min: 6.4,
-		max: 11.6
-	},
-	'DEF%': {
-		min: 8.1,
-		max: 14.7
-	},
-	CritRate: {
-		min: 6.3,
-		max: 10.5
-	},
-	CritDMG: {
-		min: 12.6,
-		max: 21
-	},
-	EnergyRegen: {
-		min: 6.8,
-		max: 12.4
-	},
-	BasicAttackDMGBonus: {
-		min: 6.4,
-		max: 11.6
-	},
-	HeavyAttackDMGBonus: {
-		min: 6.4,
-		max: 11.6
-	},
-	ResonanceSkillDMGBonus: {
-		min: 6.4,
-		max: 11.6
-	},
-	ResonanceLiberationDMGBonus: {
-		min: 6.4,
-		max: 11.6
-	}
-}
+// Element Handles
+var echoContainer = document.querySelector('.gear-fields')
+var showcase = document.querySelector('.showcase')
+var controls = document.querySelector('.controls')
+var info = document.querySelector('.info-weighted')
+var gearInput = document.querySelector('.gear-input')
 
-// Supported characters
-const chars = {
-	Aalto: {
-		weights: {
-			HP: 0,
-			ATK: 0.5,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 1,
-			ResonanceLiberationDMGBonus: 0.13
-		}
-	},
-	Augusta: {},
-	Baizhi: {
-		weights: {
-			HP: 1,
-			ATK: 0,
-			DEF: 1,
-			'HP%': 1,
-			'ATK%': 0,
-			'DEF%': 1,
-			CritRate: 0,
-			CritDMG: 0,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	Brant: {
-		weights: {
-			HP: 0,
-			ATK: 0.5,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0.18
-		}
-	},
-	Calcharo: {
-		weights: {
-			HP: 0,
-			ATK: 0.5,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Camellya: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0.17
-		}
-	},
-	Cantarella: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.07,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	Carlotta: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.01,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 1,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	Cartethyia: {
-		weights: {
-			HP: 0.5,
-			ATK: 0,
-			DEF: 0,
-			'HP%': 1,
-			'ATK%': 0,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0.1,
-			ResonanceSkillDMGBonus: 0.13,
-			ResonanceLiberationDMGBonus: 0.24
-		}
-	},
-	Changli: {
-		weights: {
-			HP: 0,
-			ATK: 0.5,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.04,
-			HeavyAttackDMGBonus: 0.02,
-			ResonanceSkillDMGBonus: 1,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Chisa: {},
-	Chixia: {
-		weights: {
-			HP: 0,
-			ATK: 0.5,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 1,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Ciaconna: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.5,
-			HeavyAttackDMGBonus: 0.5,
-			ResonanceSkillDMGBonus: 0.04,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Danjin: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 1,
-			ResonanceSkillDMGBonus: 0.5,
-			ResonanceLiberationDMGBonus: 0.5
-		}
-	},
-	Encore: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	Galbrena: {},
-	Iuno: {},
-	Jianxin: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.5,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 1,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0.36
-		}
-	},
-	Jinhsi: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.35,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 1,
-			ResonanceLiberationDMGBonus: 0.18
-		}
-	},
-	Jiyan: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.3,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 1,
-			ResonanceSkillDMGBonus: 0.15,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	Lingyang: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.29,
-			ResonanceLiberationDMGBonus: 0.06
-		}
-	},
-	Lumi: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 0.36,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.26,
-			ResonanceLiberationDMGBonus: 0.3
-		}
-	},
-	Lupa: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.25,
-			BasicAttackDMGBonus: 0.05,
-			HeavyAttackDMGBonus: 0.07,
-			ResonanceSkillDMGBonus: 0.13,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Mortefi: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.08,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.18,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Phoebe: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.13,
-			HeavyAttackDMGBonus: 1,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0.14
-		}
-	},
-	Phrolova: {},
-	Qiuyuan: {},
-	Roccia: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.25,
-			BasicAttackDMGBonus: 0.06,
-			HeavyAttackDMGBonus: 1,
-			ResonanceSkillDMGBonus: 0.15,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	Rover: {},
-	Sanhua: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 1,
-			ResonanceSkillDMGBonus: 0.27,
-			ResonanceLiberationDMGBonus: 0.28
-		}
-	},
-	Taoqi: {
-		weights: {
-			HP: 0,
-			ATK: 0,
-			DEF: 1,
-			'HP%': 0,
-			'ATK%': 0,
-			'DEF%': 1,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 0.43,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.1,
-			ResonanceLiberationDMGBonus: 0.37
-		}
-	},
-	'The Shorekeeper': {
-		weights: {
-			HP: 1,
-			ATK: 0,
-			DEF: 0,
-			'HP%': 1,
-			'ATK%': 0,
-			'DEF%': 0,
-			CritRate: 0,
-			CritDMG: 1,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 0.09,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.03,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Verina: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 1,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 1,
-			CritRate: 0,
-			CritDMG: 0,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	'Xiangli Yao': {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.09,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.17,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Yangyang: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0,
-			BasicAttackDMGBonus: 0.32,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0.14,
-			ResonanceLiberationDMGBonus: 1
-		}
-	},
-	Yinlin: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.08,
-			HeavyAttackDMGBonus: 0.09,
-			ResonanceSkillDMGBonus: 1,
-			ResonanceLiberationDMGBonus: 0.21
-		}
-	},
-	Youhu: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 1,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 1,
-			CritRate: 0,
-			CritDMG: 0,
-			EnergyRegen: 1,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 0,
-			ResonanceLiberationDMGBonus: 0
-		}
-	},
-	Yuanwu: {
-		weights: {
-			HP: 0,
-			ATK: 0,
-			DEF: 1,
-			'HP%': 0,
-			'ATK%': 0,
-			'DEF%': 1,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0,
-			HeavyAttackDMGBonus: 0,
-			ResonanceSkillDMGBonus: 1,
-			ResonanceLiberationDMGBonus: 0.4
-		}
-	},
-	Zani: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 0.02,
-			HeavyAttackDMGBonus: 1,
-			ResonanceSkillDMGBonus: 0.06,
-			ResonanceLiberationDMGBonus: 0.2
-		}
-	},
-	Zhezhi: {
-		weights: {
-			HP: 0,
-			ATK: 1,
-			DEF: 0,
-			'HP%': 0,
-			'ATK%': 1,
-			'DEF%': 0,
-			CritRate: 1,
-			CritDMG: 1,
-			EnergyRegen: 0.2,
-			BasicAttackDMGBonus: 1,
-			HeavyAttackDMGBonus: 0.06,
-			ResonanceSkillDMGBonus: 0.07,
-			ResonanceLiberationDMGBonus: 0
-		}
-	}
-}
-
+// Upload Showcase
 document.getElementById('imageInput').addEventListener('change', async function (e) {
 	// Upload label
 	var label = document.querySelector('label[for="imageInput"]')
@@ -825,24 +34,44 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		return
 	}
 
-	// Hide upload
-	label.style.display = 'none'
-	label.removeAttribute('data-error')
+	// Hide base controls
+	document.querySelector('.base-controls').style.display = 'none'
 
-	// Container Elements
-	var container = document.querySelectorAll('.gear')
-	var showcase = document.querySelector('.showcase')
-	var controls = document.querySelector('.controls')
-	var info = document.querySelector('.info-weighted')
-	var bar = document.querySelector('.score-bar')
-	var currentContainer = 0
+	// Setup loop variables
 	var total_rv = 0
 	var total_cv = 0
 	var total_wv = 0
+
+	// Recognize character
+	var {
+		data: { text }
+	} = await worker.recognize(img, {
+		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height }
+	})
+
+	// Scan errors
+	text = text.replace('Zanj', 'Zani')
+
+	var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
+	if (match) {
+		document.querySelector('.title').textContent = match + "'s Echoes"
+		document.querySelector('.backdrop').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
+	}
+
 	for (let echo in regions) {
 		var rv = 0
 		var cv = 0
 		var wv = 0
+		var titleCount = 1
+
+		// Create echo
+		var echoSlot = document.createElement('div')
+		echoSlot.className = 'gear'
+		echoSlot.innerHTML = `
+			<div class="gear-title">Echo #${titleCount}</div>
+		`
+		echoContainer.append(echoSlot)
+
 		for (let i = 0; i < regions[echo].length; i++) {
 			// Setup
 			const { left, top, width, height } = regions[echo][i]
@@ -853,19 +82,6 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			} = await worker.recognize(img, {
 				rectangle: { top: top, left: left, width: width, height: height }
 			})
-
-			// Detect Char
-			if (echo == 'name') {
-				// Scan errors
-				text = text.replace('Zanj', 'Zani')
-
-				var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
-				if (match) {
-					document.querySelector('.title').textContent = match + "'s Echoes"
-					document.querySelector('.backdrop').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
-				}
-				continue
-			}
 
 			// Cleanup
 			var output =
@@ -915,7 +131,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			var calcAmount = amount.replace('%', '')
 
 			// Percentage
-			var perc = ((calcAmount / range[calcLabel].max) * 100).toFixed(2)
+			var perc = (calcAmount / range[calcLabel].max) * 100
 
 			// Weighted values
 			if (calcLabel != 'None') {
@@ -939,65 +155,71 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			el.innerHTML = `
 					<span class="title">${label}</span>
 					<span class="value">${amount}</span>`
+
+			// Add attributes
+			el.setAttribute('min', ((range[calcLabel].min / range[calcLabel].max) * 100).toFixed(2))
+			el.setAttribute('cur', perc.toFixed(2))
+
+			// Set styling
 			if (calcLabel == 'Empty') {
 				// Empty Stat
-				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
+				el.style.background = createGradient(0)
 			} else {
-				if (chars[match].weights && chars[match].weights[calcLabel] == '1') {
+				if (chars[match].weights && chars[match].weights[calcLabel] == 1) {
 					// Weighted
-					el.style.background = `
-					url("./media/img/bg-gradient.png") center/100% 100%,
-					linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%)`
-					el.style.border = 'var(--border-main)'
+					el.style.background = createGradient(perc, 'weighted')
+					el.setAttribute('weight', 'true')
 				} else {
 					// Normal
-					el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
-					el.setAttribute('secondary-stat', '')
+					el.style.background = createGradient(perc)
+					el.setAttribute('weight', 'false')
 				}
 			}
 			// Crit styling class
 			if (calcLabel.includes('Crit')) {
-				el.setAttribute('crit', '')
+				el.setAttribute('crit', 'true')
 			} else {
-				el.setAttribute('no-crit', '')
+				el.setAttribute('crit', 'false')
 			}
-			container[currentContainer].append(el)
+			echoSlot.append(el)
 		}
 
 		if (echo != 'name') {
 			// HR
 			el = document.createElement('hr')
-			container[currentContainer].append(el)
+			echoSlot.append(el)
 
 			// Crit Value
-			var cv_perc = (cv / 200) * 100
+			var perc = (cv / 200) * 100
 			var el = document.createElement('div')
 			el.classList = 'gear-bar'
 			el.innerHTML = `
 					<span class="title">Crit</span>
 					<span class="value">${cv.toFixed(1)}<span class="sub-value">/200</span></span>`
-			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + cv_perc + '%, transparent ' + cv_perc + '%), rgba(32, 34, 37, 0.52)'
-			container[currentContainer].append(el)
+			el.style.background = createGradient(perc, 'sub')
+			echoSlot.append(el)
 
 			// Roll Value
-			var rv_perc = (rv / 500) * 100
+			var perc = (rv / 500) * 100
 			var el = document.createElement('div')
 			el.classList = 'gear-bar'
 			el.innerHTML = `
 					<span class="title">Rolls</span>
 					<span class="value">${rv.toFixed(1)}<span class="sub-value">/500</span></span>`
-			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + rv_perc + '%, transparent ' + rv_perc + '%), rgba(32, 34, 37, 0.52)'
-			container[currentContainer].append(el)
+			el.style.background = createGradient(perc, 'sub')
+			echoSlot.append(el)
 
-			// Weighted Value (Perfection)
-			var wv_perc = (wv / 500) * 100
-			var el = document.createElement('div')
-			el.classList = 'gear-bar'
-			el.innerHTML = `
-					<span class="title">Perfection: ${ranking(wv_perc)}</span>
+			// Weighted Value
+			if (chars[match].weights) {
+				var perc = (wv / 500) * 100
+				var el = document.createElement('div')
+				el.classList = 'gear-bar'
+				el.innerHTML = `
+					<span class="title">Weighted: ${ranking(perc)}</span>
 					<span class="value">${wv.toFixed(1)}<span class="sub-value">/500</span></span>`
-			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + wv_perc + '%, transparent ' + wv_perc + '%), rgba(32, 34, 37, 0.52)'
-			container[currentContainer].append(el)
+				el.style.background = createGradient(perc, 'sub')
+				echoSlot.append(el)
+			}
 
 			// Totals
 			total_rv += rv
@@ -1005,9 +227,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			total_wv += wv
 
 			// Toogle container opacity
-			container[currentContainer].style.opacity = '1'
+			echoSlot.style.opacity = '1'
 
-			currentContainer++
+			// Increase title count
+			titleCount++
 		}
 	}
 	var details = document.querySelector('.details')
@@ -1018,10 +241,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	el.classList = 'gear-score'
 	el.innerHTML = `Crit: ${cv_perc.toFixed(2)}%<span class="sub-value">${total_cv.toFixed(2)}/1000</span>`
 	el.addEventListener('mouseover', () => {
-		showcase.setAttribute('crit-filter', '')
+		showcase.setAttribute('filter', 'crit')
 	})
 	el.addEventListener('mouseout', () => {
-		showcase.removeAttribute('crit-filter')
+		showcase.setAttribute('filter', '')
 	})
 	details.append(el)
 
@@ -1030,58 +253,45 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var el = document.createElement('div')
 	el.classList = 'gear-score'
 	el.innerHTML = `Rolls: ${rv_perc.toFixed(2)}%<span class="sub-value">${total_rv.toFixed(2)}/2500</span>`
+	el.addEventListener('mouseover', () => {
+		var bars = document.querySelectorAll('.gear-bar[min][cur]')
+		// Generate & set gradients including minimal value
+		for (var i = 0; i < bars.length; i++) {
+			if (bars[i].getAttribute('weight') == 'true') {
+				bars[i].style.background = createGradient(bars[i].getAttribute('cur'), 'weighted', bars[i].getAttribute('min'))
+			} else {
+				bars[i].style.background = createGradient(bars[i].getAttribute('cur'), false, bars[i].getAttribute('min'))
+			}
+		}
+	})
+	el.addEventListener('mouseout', () => {
+		showcase.setAttribute('filter', '')
+		var bars = document.querySelectorAll('.gear-bar[min][cur]')
+		// Generate & set gradients to default
+		for (var i = 0; i < bars.length; i++) {
+			if (bars[i].getAttribute('weight') == 'true') {
+				bars[i].style.background = createGradient(bars[i].getAttribute('cur'), 'weighted')
+			} else {
+				bars[i].style.background = createGradient(bars[i].getAttribute('cur'))
+			}
+		}
+	})
 	details.append(el)
 
-	// Weighted Stats (Perfection)
+	// Weighted Stats
 	if (chars[match].weights) {
 		var weighted_perc = ((total_wv / 2500) * 100).toFixed(2)
 
 		var el = document.createElement('div')
 		el.classList = 'gear-score'
-		el.innerHTML = `Perfection: ${ranking(weighted_perc)}<span class="sub-value">${weighted_perc}%</span><span class="sub-value">${total_wv.toFixed(2)}/${2500}</span>`
+		el.innerHTML = `Weighted: ${ranking(weighted_perc)}<span class="sub-value">${weighted_perc}%</span><span class="sub-value">${total_wv.toFixed(2)}/${2500}</span>`
 		el.addEventListener('mouseover', () => {
-			showcase.setAttribute('secondary-filter', '')
+			showcase.setAttribute('filter', 'weight')
 		})
 		el.addEventListener('mouseout', () => {
-			showcase.removeAttribute('secondary-filter')
+			showcase.setAttribute('filter', '')
 		})
 		details.append(el)
-	}
-
-	// Info
-	var el = document.createElement('button')
-	el.textContent = 'Info'
-	el.className = 'info-button'
-	el.addEventListener('click', function () {
-		document.querySelector('.info-page').style.opacity = '1'
-		document.querySelector('.info-page').style.pointerEvents = 'all'
-	})
-	controls.append(el)
-	details.style.opacity = '1'
-
-	window.addEventListener('mouseup', function (event) {
-		var info = document.querySelector('.info-page')
-		if (info && !info.contains(event.target)) {
-			info.style.opacity = '0'
-			info.style.pointerEvents = 'none'
-		}
-	})
-
-	// Weighted Stats Display
-	var statMap = {
-		HP: 'HP',
-		ATK: 'ATK',
-		DEF: 'DEF',
-		'HP%': 'HP%',
-		'ATK%': 'ATK%',
-		'DEF%': 'DEF%',
-		CritRate: 'Crit. Rate',
-		CritDMG: 'Crit. DMG',
-		EnergyRegen: 'Energy Regen',
-		BasicAttackDMGBonus: 'Basic ATK DMG Bonus',
-		HeavyAttackDMGBonus: 'Heavy ATK DMG Bonus',
-		ResonanceSkillDMGBonus: 'Resonance Skill DMG Bonus',
-		ResonanceLiberationDMGBonus: 'Resonance Liberation DMG Bonus'
 	}
 
 	for (var stat in chars[match].weights) {
@@ -1093,22 +303,247 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					<span class="title">${statMap[stat]}</span>
 					<span class="value">${chars[match].weights[stat]}<span class="sub-value">/1</span></span>`
 		if (chars[match].weights[stat] != 0) {
-			el.style.background = 'linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ' + perc + '%, transparent ' + perc + '%), rgba(32, 34, 37, 0.52)'
+			el.style.background = createGradient(perc, 'sub')
 		} else {
 			el.style.background = 'rgba(32, 34, 37, 0.52)'
 		}
 		info.append(el)
 	}
 
-	// Reset
+	// Enable details
+	details.style.opacity = '1'
+
+	// Info
 	var el = document.createElement('button')
-	el.textContent = 'Reset'
-	el.className = 'reset-button'
+	el.textContent = 'Info'
+	el.className = 'info-button'
 	el.addEventListener('click', function () {
-		location.reload()
+		document.querySelector('.info-page').style.opacity = '1'
+		document.querySelector('.info-page').style.pointerEvents = 'all'
 	})
-	controls.append(el)
+	controls.prepend(el)
+
+	window.addEventListener('mouseup', function (event) {
+		var info = document.querySelector('.info-page')
+		if (info && !info.contains(event.target)) {
+			info.style.opacity = '0'
+			info.style.pointerEvents = 'none'
+		}
+	})
+
+	// Enable controls
+	controls.style.opacity = '1'
+	controls.style.pointerEvents = 'all'
 })
+
+// Manual Input
+document.querySelector('.manualInput').addEventListener('click', function () {
+	// Hide base controls
+	document.querySelector('.base-controls').style.display = 'none'
+
+	// Setup echo
+	var echoSlot = document.createElement('div')
+	echoSlot.className = 'gear custom'
+	echoSlot.innerHTML = `
+		<div class="gear-title">Custom Echo</div>
+	`
+
+	// Setup input
+	for (let i = 0; i < 5; i++) {
+		// Create row
+		var row = document.createElement('div')
+		row.className = 'row'
+
+		// Create dropdown
+		var select = document.createElement('select')
+		for (var key in statMap) {
+			const option = document.createElement('option')
+			option.value = key
+			option.textContent = statMap[key]
+			select.appendChild(option)
+		}
+		select.addEventListener('change', calcCustomEcho)
+
+		// Create slider with min/max
+		var slider = document.createElement('input')
+		slider.type = 'range'
+		slider.min = 0
+		slider.max = 0
+		slider.addEventListener('change', calcCustomEcho)
+
+		// Create label
+		var label = document.createElement('span')
+		label.textContent = '0'
+
+		row.appendChild(select)
+		row.appendChild(slider)
+		row.appendChild(label)
+
+		echoSlot.appendChild(row)
+	}
+
+	// Character Select
+	var select = document.createElement('select')
+	for (var key in chars) {
+		const option = document.createElement('option')
+		option.value = key
+		option.textContent = key
+		select.appendChild(option)
+	}
+	select.addEventListener('change', calcCustomEcho)
+	echoSlot.append(select)
+
+	// Divider element
+	var el = document.createElement('hr')
+	echoSlot.append(el)
+
+	// Crit Value
+	var el = document.createElement('div')
+	el.classList = 'gear-bar'
+	el.innerHTML = `
+					<span class="title">Crit</span>
+					<span class="value">0<span class="sub-value">/200</span></span>`
+	el.style.background = createGradient(0, 'sub')
+	echoSlot.append(el)
+
+	// Roll Value
+	var el = document.createElement('div')
+	el.classList = 'gear-bar'
+	el.innerHTML = `
+					<span class="title">Rolls</span>
+					<span class="value">0<span class="sub-value">/500</span></span>`
+	el.style.background = createGradient(0, 'sub')
+	echoSlot.append(el)
+
+	// Weighted Value
+	var el = document.createElement('div')
+	el.classList = 'gear-bar'
+	el.innerHTML = `
+					<span class="title">Weighted: Unranked</span>
+					<span class="value">0<span class="sub-value">/500</span></span>`
+	el.style.background = createGradient(0, 'sub')
+	echoSlot.append(el)
+
+	echoContainer.append(echoSlot)
+	echoSlot.style.opacity = '1'
+
+	// Enable controls
+	controls.style.opacity = '1'
+	controls.style.pointerEvents = 'all'
+})
+
+function calcCustomEcho() {
+	var select = echoContainer.querySelectorAll('select')
+	var slider = echoContainer.querySelectorAll('input[type="range"]')
+	var labels = echoContainer.querySelectorAll('span')
+	var ratings = echoContainer.querySelectorAll('.gear-bar')
+	var cv = 0
+	var rv = 0
+	var wv = 0
+	var char = select[select.length - 1].value
+
+	// Update select/sliders
+	for (var i = 0; i < select.length - 1; i++) {
+		if (select[i].value == 'None') {
+			// Reset styles
+			slider[i].value = 0
+			labels[i].textContent = 0
+			select[i].style.background = 'transparent'
+			select[i].style.border = 'none'
+			continue
+		}
+
+		// Set limits
+		slider[i].min = range[select[i].value].min
+		slider[i].max = range[select[i].value].max
+
+		// Reset out of bound
+		if (slider[i].value < select[i].min || slider[i].value > select[i].max) {
+			slider[i].value = slider[i].min
+		}
+
+		// Set steps
+		if (slider[i].max > 21) {
+			slider[i].step = 5
+		} else {
+			slider[i].step = 0.1
+		}
+
+		// Update label
+		labels[i].textContent = slider[i].value
+
+		// Calculate values
+		// -> Crit
+		if (select[i].value.includes('Crit')) {
+			cv += parseFloat((slider[i].value / slider[i].max) * 100)
+		}
+		// -> RV
+		rv += parseFloat((slider[i].value / slider[i].max) * 100)
+		// -> WV
+		if (chars[char].weights) {
+			wv += chars[char].weights[select[i].value] * ((slider[i].value / slider[i].max) * 100)
+			if (chars[char].weights[select[i].value] == 1) {
+				select[i].style.background = createGradient(((slider[i].value / slider[i].max) * 100).toFixed(2), 'weighted')
+				select[i].style.border = 'var(--border-main)'
+			} else {
+				select[i].style.background = createGradient(((slider[i].value / slider[i].max) * 100).toFixed(2))
+				select[i].style.border = 'none'
+			}
+		}
+	}
+	// Update ratings
+	console.log(`[Log] Crit Value: ${cv} - Roll Value: ${rv} - Weighted Value: ${wv}`)
+
+	// Crit
+	var cv_perc = (cv / 200) * 100
+	ratings[0].style.background = createGradient(cv_perc, 'sub')
+	ratings[0].querySelector('.value').innerHTML = `${cv.toFixed(1)}<span class="sub-value">/200</span>`
+
+	// Rolls
+	var rv_perc = (rv / 500) * 100
+	ratings[1].style.background = createGradient(rv_perc, 'sub')
+	ratings[1].querySelector('.value').innerHTML = `${rv.toFixed(1)}<span class="sub-value">/500</span>`
+
+	// Weighted
+	if (chars[char].weights) {
+		var wv_perc = (wv / 500) * 100
+		ratings[2].style.background = createGradient(wv_perc, 'sub')
+		ratings[2].querySelector('.title').textContent = `Weighted: ${ranking(wv_perc)}`
+		ratings[2].querySelector('.value').innerHTML = `${wv.toFixed(1)}<span class="sub-value">/500</span>`
+		ratings[2].style.display = 'flex'
+	} else {
+		ratings[2].style.display = 'none'
+	}
+}
+
+function createGradient(perc, type = false, min = false) {
+	// Preset parts
+	var overlay_img = `url("./media/img/bg-gradient.png") center/100% 100%`
+	var overlay_roll = `linear-gradient(90deg,rgba(0, 0, 0, 0) ${min}%, var(--gradient-roll-highlight) ${min}%, var(--gradient-roll-highlight) ${perc}%, rgba(0, 0, 0, 0) ${perc}%)`
+	var main = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
+	var sub = `linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
+	var gradients = []
+
+	// Structure gradient
+	// -> Add weighted image overlay
+	if (type == 'weighted') {
+		gradients.push(overlay_img)
+	}
+
+	// Min stat overlay
+	if (min && min != perc) {
+		gradients.push(overlay_roll)
+	}
+
+	// Base color options
+	if (type && type == 'sub') {
+		gradients.push(sub)
+	} else {
+		gradients.push(main)
+	}
+
+	return gradients.join(', ')
+}
 
 function ranking(perc) {
 	switch (true) {

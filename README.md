@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/ChristopherKlay/WutheringInsight/refs/heads/main/media/img/banner.jpg)
+# Wuthering Insight
 
 Quickly analyze your Wuthering Waves character showcases
 
