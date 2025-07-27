@@ -21,7 +21,8 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	const worker = await Tesseract.createWorker('eng')
 	// Tesseract Settings
 	await worker.setParameters({
-		tessedit_pageseg_mode: 7
+		tessedit_pageseg_mode: 7,
+		tessedit_char_whitelist: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%,. '
 	})
 	// Image Element
 	const img = new Image()
@@ -41,6 +42,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var total_rv = 0
 	var total_cv = 0
 	var total_wv = 0
+	var titleCount = 1
 
 	// Recognize character
 	var {
@@ -49,9 +51,10 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height }
 	})
 
-	// Scan errors
+	// Character scan errors
 	text = text.replace('Zanj', 'Zani')
 
+	// CHaracter-specific setup
 	var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
 	if (match) {
 		document.querySelector('.title').textContent = match + "'s Echoes"
@@ -62,7 +65,6 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		var rv = 0
 		var cv = 0
 		var wv = 0
-		var titleCount = 1
 
 		// Create echo
 		var echoSlot = document.createElement('div')
@@ -84,6 +86,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			})
 
 			// Cleanup
+			// -> Common replacements
 			var output =
 				text
 					.replace('al', 'HP')
@@ -91,11 +94,15 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					.replace('\n', '')
 					.replace(/(\d+(\.\d+)?%?)/, '')
 					.replace(/\s+/, ' ')
-					.replace(' /', '')
-					.replace(' :', '')
 					.trim() +
 				' ' +
 				(text.match(/(\d+(\.\d+)?%?)/) || [''])[0]
+
+			// -> Remove faulty scan elements
+			output = output
+				.split(' ')
+				.filter((element) => element.length > 1)
+				.join(' ')
 
 			// Empty stats
 			var req = ['Crit', 'DMG', 'HP', 'DEF', 'ATK', 'Energy']
