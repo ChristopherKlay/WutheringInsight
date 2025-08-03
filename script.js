@@ -39,7 +39,6 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	document.querySelector('.base-controls').style.display = 'none'
 
 	// Setup loop variables
-	var total_rv = 0
 	var total_cv = 0
 	var total_wv = 0
 	var titleCount = 1
@@ -62,7 +61,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	}
 
 	for (let echo in regions) {
-		var rv = 0
+		var tv = 0
 		var cv = 0
 		var wv = 0
 
@@ -137,14 +136,14 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			var calcLabel = label.replaceAll(' ', '').replaceAll('.', '')
 			var calcAmount = amount.replace('%', '')
 
+			// Tier Check
+			var tier = getTier(calcLabel, calcAmount)
+
 			// Percentage
-			var perc = (calcAmount / range[calcLabel].max) * 100
+			var perc = (calcAmount / range[calcLabel]['8']) * 100
 
 			// Weighted values
 			if (calcLabel != 'None') {
-				// Roll values
-				rv += parseFloat(perc)
-
 				// Crit value
 				if (calcLabel.includes('Crit')) {
 					cv += parseFloat(perc)
@@ -159,30 +158,37 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			// Add element
 			var el = document.createElement('div')
 			el.classList = 'gear-bar'
-			el.innerHTML = `
-					<span class="title">${label}</span>
-					<span class="value">${amount}</span>`
+
+			// Add label
+			var title = document.createElement('span')
+			title.textContent = label
+			title.className = 'title'
+			el.append(title)
+
+			var value = document.createElement('span')
+			value.textContent = amount
+			value.className = 'value'
+			el.append(value)
+
+			// Add segments
+			var seg = document.createElement('div')
+			seg.className = 'segments'
+			for (var s = 1; s < 9; s++) {
+				var box = document.createElement('div')
+				if (tier >= s) {
+					box.setAttribute('active', '')
+				}
+				seg.append(box)
+			}
+			el.append(seg)
 
 			// Add attributes
-			el.setAttribute('min', ((range[calcLabel].min / range[calcLabel].max) * 100).toFixed(2))
-			el.setAttribute('cur', perc.toFixed(2))
-
-			// Set styling
-			if (calcLabel == 'Empty') {
-				// Empty Stat
-				el.style.background = createGradient(0)
+			el.setAttribute('tier', tier)
+			if (chars[match].weights[calcLabel] == 1) {
+				el.setAttribute('weighted', 'true')
 			} else {
-				if (chars[match].weights && chars[match].weights[calcLabel] == 1) {
-					// Weighted
-					el.style.background = createGradient(perc, 'weighted')
-					el.setAttribute('weight', 'true')
-				} else {
-					// Normal
-					el.style.background = createGradient(perc)
-					el.setAttribute('weight', 'false')
-				}
+				el.setAttribute('weighted', 'false')
 			}
-			// Crit styling class
 			if (calcLabel.includes('Crit')) {
 				el.setAttribute('crit', 'true')
 			} else {
@@ -202,18 +208,8 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			el.classList = 'gear-bar'
 			el.innerHTML = `
 					<span class="title">Crit</span>
-					<span class="value">${cv.toFixed(1)}<span class="sub-value">/200</span></span>`
-			el.style.background = createGradient(perc, 'sub')
-			echoSlot.append(el)
-
-			// Roll Value
-			var perc = (rv / 500) * 100
-			var el = document.createElement('div')
-			el.classList = 'gear-bar'
-			el.innerHTML = `
-					<span class="title">Rolls</span>
-					<span class="value">${rv.toFixed(1)}<span class="sub-value">/500</span></span>`
-			el.style.background = createGradient(perc, 'sub')
+					<span class="value">${cv.toFixed(2)}<span class="sub-value">/200</span></span>`
+			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 			echoSlot.append(el)
 
 			// Weighted Value
@@ -222,14 +218,13 @@ document.getElementById('imageInput').addEventListener('change', async function 
 				var el = document.createElement('div')
 				el.classList = 'gear-bar'
 				el.innerHTML = `
-					<span class="title">Weighted: ${ranking(perc)}</span>
+					<span class="title">Weighted: ${getRank(perc)}</span>
 					<span class="value">${wv.toFixed(1)}<span class="sub-value">/500</span></span>`
-				el.style.background = createGradient(perc, 'sub')
+				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 				echoSlot.append(el)
 			}
 
 			// Totals
-			total_rv += rv
 			total_cv += cv
 			total_wv += wv
 
@@ -255,43 +250,12 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	})
 	details.append(el)
 
-	// Roll Score
-	var rv_perc = (total_rv / 2500) * 100
-	var el = document.createElement('div')
-	el.classList = 'gear-score'
-	el.innerHTML = `Rolls: ${rv_perc.toFixed(2)}%<span class="sub-value">${total_rv.toFixed(2)}/2500</span>`
-	el.addEventListener('mouseover', () => {
-		var bars = document.querySelectorAll('.gear-bar[min][cur]')
-		// Generate & set gradients including minimal value
-		for (var i = 0; i < bars.length; i++) {
-			if (bars[i].getAttribute('weight') == 'true') {
-				bars[i].style.background = createGradient(bars[i].getAttribute('cur'), 'weighted', bars[i].getAttribute('min'))
-			} else {
-				bars[i].style.background = createGradient(bars[i].getAttribute('cur'), false, bars[i].getAttribute('min'))
-			}
-		}
-	})
-	el.addEventListener('mouseout', () => {
-		showcase.setAttribute('filter', '')
-		var bars = document.querySelectorAll('.gear-bar[min][cur]')
-		// Generate & set gradients to default
-		for (var i = 0; i < bars.length; i++) {
-			if (bars[i].getAttribute('weight') == 'true') {
-				bars[i].style.background = createGradient(bars[i].getAttribute('cur'), 'weighted')
-			} else {
-				bars[i].style.background = createGradient(bars[i].getAttribute('cur'))
-			}
-		}
-	})
-	details.append(el)
-
 	// Weighted Stats
 	if (chars[match].weights) {
-		var weighted_perc = ((total_wv / 2500) * 100).toFixed(2)
-
+		var weighted_perc = (total_wv / 2500) * 100
 		var el = document.createElement('div')
 		el.classList = 'gear-score'
-		el.innerHTML = `Weighted: ${ranking(weighted_perc)}<span class="sub-value">${weighted_perc}%</span><span class="sub-value">${total_wv.toFixed(2)}/${2500}</span>`
+		el.innerHTML = `Weighted: ${getRank(weighted_perc)}<span class="sub-value">${weighted_perc.toFixed(2)}%</span><span class="sub-value">${total_wv.toFixed(2)}/${2500}</span>`
 		el.addEventListener('mouseover', () => {
 			showcase.setAttribute('filter', 'weight')
 		})
@@ -310,7 +274,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 					<span class="title">${statMap[stat]}</span>
 					<span class="value">${chars[match].weights[stat]}<span class="sub-value">/1</span></span>`
 		if (chars[match].weights[stat] != 0) {
-			el.style.background = createGradient(perc, 'sub')
+			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 		} else {
 			el.style.background = 'rgba(32, 34, 37, 0.52)'
 		}
@@ -355,14 +319,17 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 		<div class="gear-title">Custom Echo</div>
 	`
 
-	// Setup input
+	// Input Elements
 	for (let i = 0; i < 5; i++) {
 		// Create row
 		var row = document.createElement('div')
 		row.className = 'row'
 
-		// Create dropdown
+		// Create stat options
+		var selectContainer = document.createElement('div')
+		selectContainer.className = 'selection-container'
 		var select = document.createElement('select')
+		select.setAttribute('stat', '')
 		for (var key in statMap) {
 			const option = document.createElement('option')
 			option.value = key
@@ -370,27 +337,33 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 			select.appendChild(option)
 		}
 		select.addEventListener('change', calcCustomEcho)
+		selectContainer.appendChild(select)
 
-		// Create slider with min/max
-		var slider = document.createElement('input')
-		slider.type = 'range'
-		slider.min = 0
-		slider.max = 0
-		slider.addEventListener('change', calcCustomEcho)
+		// Add segments
+		var seg = document.createElement('div')
+		seg.className = 'segments'
+		for (var s = 1; s < 9; s++) {
+			var box = document.createElement('div')
+			box.setAttribute('tier', s)
+			seg.append(box)
+		}
+		selectContainer.append(seg)
+		row.append(selectContainer)
 
-		// Create label
-		var label = document.createElement('span')
-		label.textContent = '0'
-
+		// Create stat ranges
+		var select = document.createElement('select')
+		select.setAttribute('value', '')
+		const option = document.createElement('option')
+		select.appendChild(option)
+		select.addEventListener('change', calcCustomEcho)
 		row.appendChild(select)
-		row.appendChild(slider)
-		row.appendChild(label)
 
 		echoSlot.appendChild(row)
 	}
 
 	// Character Select
 	var select = document.createElement('select')
+	select.setAttribute('char', '')
 	for (var key in chars) {
 		const option = document.createElement('option')
 		option.value = key
@@ -410,16 +383,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	el.innerHTML = `
 					<span class="title">Crit</span>
 					<span class="value">0<span class="sub-value">/200</span></span>`
-	el.style.background = createGradient(0, 'sub')
-	echoSlot.append(el)
-
-	// Roll Value
-	var el = document.createElement('div')
-	el.classList = 'gear-bar'
-	el.innerHTML = `
-					<span class="title">Rolls</span>
-					<span class="value">0<span class="sub-value">/500</span></span>`
-	el.style.background = createGradient(0, 'sub')
+	el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) 0%, rgba(32, 34, 37, 0.52) 0%`
 	echoSlot.append(el)
 
 	// Weighted Value
@@ -428,7 +392,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	el.innerHTML = `
 					<span class="title">Weighted: Unranked</span>
 					<span class="value">0<span class="sub-value">/500</span></span>`
-	el.style.background = createGradient(0, 'sub')
+	el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) 0%, rgba(32, 34, 37, 0.52) 0%`
 	echoSlot.append(el)
 
 	echoContainer.append(echoSlot)
@@ -440,119 +404,92 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 })
 
 function calcCustomEcho() {
-	var select = echoContainer.querySelectorAll('select')
-	var slider = echoContainer.querySelectorAll('input[type="range"]')
-	var labels = echoContainer.querySelectorAll('span')
+	var char = echoContainer.querySelector('select[char]').value
+	var stats = echoContainer.querySelectorAll('select[stat]')
+	var values = echoContainer.querySelectorAll('select[value]')
 	var ratings = echoContainer.querySelectorAll('.gear-bar')
+	var segments = echoContainer.querySelectorAll('.segments')
 	var cv = 0
-	var rv = 0
+	var tv = 0
 	var wv = 0
-	var char = select[select.length - 1].value
 
 	// Update select/sliders
-	for (var i = 0; i < select.length - 1; i++) {
-		if (select[i].value == 'None') {
+	for (var i = 0; i < stats.length; i++) {
+		if (stats[i].value == 'None') {
 			// Reset styles
-			slider[i].value = 0
-			labels[i].textContent = 0
-			select[i].style.background = 'transparent'
-			select[i].style.border = 'none'
-			continue
+			values[i].value = 0
 		}
 
-		// Set limits
-		slider[i].min = range[select[i].value].min
-		slider[i].max = range[select[i].value].max
-
-		// Reset out of bound
-		if (slider[i].value < select[i].min || slider[i].value > select[i].max) {
-			slider[i].value = slider[i].min
+		// Set range options
+		if (values[i].getAttribute('type') != stats[i].value) {
+			values[i].options.length = 0
+			values[i].setAttribute('type', stats[i].value)
+			for (var key in range[stats[i].value]) {
+				var option = document.createElement('option')
+				option.value = range[stats[i].value][key]
+				option.textContent = range[stats[i].value][key]
+				values[i].append(option)
+			}
 		}
-
-		// Set steps
-		if (slider[i].max > 21) {
-			slider[i].step = 5
-		} else {
-			slider[i].step = 0.1
-		}
-
-		// Update label
-		labels[i].textContent = slider[i].value
 
 		// Calculate values
 		// -> Crit
-		if (select[i].value.includes('Crit')) {
-			cv += parseFloat((slider[i].value / slider[i].max) * 100)
+		if (stats[i].value.includes('Crit')) {
+			cv += parseFloat((values[i].value / range[stats[i].value][8]) * 100)
 		}
-		// -> RV
-		rv += parseFloat((slider[i].value / slider[i].max) * 100)
 		// -> WV
-		if (chars[char].weights) {
-			wv += chars[char].weights[select[i].value] * ((slider[i].value / slider[i].max) * 100)
-			if (chars[char].weights[select[i].value] == 1) {
-				select[i].style.background = createGradient(((slider[i].value / slider[i].max) * 100).toFixed(2), 'weighted')
-				select[i].style.border = 'var(--border-main)'
-			} else {
-				select[i].style.background = createGradient(((slider[i].value / slider[i].max) * 100).toFixed(2))
-				select[i].style.border = 'none'
+		if (chars[char].weights && stats[i].value != 'None') {
+			wv += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
+			if (chars[char].weights[stats[i].value] == 1) {
+				stats[i].setAttribute('weighted', 'true')
 			}
+		} else {
+			stats[i].setAttribute('weighted', 'false')
 		}
+		
+		// Tier to segments
+		var tier = getTier(stats[i].value, values[i].value)
+		var boxes = segments[i].querySelectorAll('[tier]')
+		boxes.forEach((el) => {
+			if (el.getAttribute('tier') <= tier) {
+				el.setAttribute('active', '')
+			} else {
+				el.removeAttribute('active')
+			}
+		})
 	}
-	// Update ratings
-	console.log(`[Log] Crit Value: ${cv} - Roll Value: ${rv} - Weighted Value: ${wv}`)
 
 	// Crit
 	var cv_perc = (cv / 200) * 100
-	ratings[0].style.background = createGradient(cv_perc, 'sub')
+	ratings[0].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${cv_perc}%, rgba(32, 34, 37, 0.52) ${cv_perc}%`
 	ratings[0].querySelector('.value').innerHTML = `${cv.toFixed(1)}<span class="sub-value">/200</span>`
-
-	// Rolls
-	var rv_perc = (rv / 500) * 100
-	ratings[1].style.background = createGradient(rv_perc, 'sub')
-	ratings[1].querySelector('.value').innerHTML = `${rv.toFixed(1)}<span class="sub-value">/500</span>`
 
 	// Weighted
 	if (chars[char].weights) {
 		var wv_perc = (wv / 500) * 100
-		ratings[2].style.background = createGradient(wv_perc, 'sub')
-		ratings[2].querySelector('.title').textContent = `Weighted: ${ranking(wv_perc)}`
-		ratings[2].querySelector('.value').innerHTML = `${wv.toFixed(1)}<span class="sub-value">/500</span>`
-		ratings[2].style.display = 'flex'
+		ratings[1].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${wv_perc}%, rgba(32, 34, 37, 0.52) ${wv_perc}%`
+		ratings[1].querySelector('.title').textContent = `Weighted: ${getRank(wv_perc)}`
+		ratings[1].querySelector('.value').innerHTML = `${wv.toFixed(1)}<span class="sub-value">/500</span>`
+		ratings[1].style.display = 'flex'
 	} else {
-		ratings[2].style.display = 'none'
+		ratings[1].style.display = 'none'
 	}
 }
 
-function createGradient(perc, type = false, min = false) {
-	// Preset parts
-	var overlay_img = `url("./media/img/bg-gradient.png") center/100% 100%`
-	var overlay_roll = `linear-gradient(90deg,rgba(0, 0, 0, 0) ${min}%, var(--gradient-roll-highlight) ${min}%, var(--gradient-roll-highlight) ${perc}%, rgba(0, 0, 0, 0) ${perc}%)`
-	var main = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
-	var sub = `linear-gradient(to right, var(--gradient-sub-start) 0%, var(--gradient-sub-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
-	var gradients = []
-
-	// Structure gradient
-	// -> Add weighted image overlay
-	if (type == 'weighted') {
-		gradients.push(overlay_img)
+function getTier(stat, amount) {
+	var match = 0
+	if (amount == 0) {
+		return 0
 	}
-
-	// Min stat overlay
-	if (min && min != perc) {
-		gradients.push(overlay_roll)
+	for (const [key, value] of Object.entries(range[stat])) {
+		if (amount >= value) {
+			match++
+		}
 	}
-
-	// Base color options
-	if (type && type == 'sub') {
-		gradients.push(sub)
-	} else {
-		gradients.push(main)
-	}
-
-	return gradients.join(', ')
+	return match
 }
 
-function ranking(perc) {
+function getRank(perc) {
 	switch (true) {
 		case perc >= 75:
 			return 'Sentinel'
