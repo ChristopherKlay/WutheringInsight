@@ -49,9 +49,16 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	} = await worker.recognize(img, {
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height }
 	})
+	
+	console.log(`[Log] Tesseract: [Char] ${text}`)
 
 	// Character scan errors
-	text = text.replace('Zanj', 'Zani')
+	// -> Ending 'j' instead of 'i'
+	var split = text.split(' ')
+	if (split[0].slice(-1) == 'j') {
+		split[0] = split[0].slice(0, -1) + 'i'
+		text = split.join(' ')
+	}
 
 	// CHaracter-specific setup
 	var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
@@ -110,7 +117,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 				output = 'None 0'
 			}
 
-			console.log(`[Log] Tesseract: ${output}`)
+			console.log(`[Log] Tesseract: [Raw] ${text} [Output] ${output}`)
 
 			// Pre-format
 			var label = output.split(' ')
@@ -446,7 +453,7 @@ function calcCustomEcho() {
 		} else {
 			stats[i].setAttribute('weighted', 'false')
 		}
-		
+
 		// Tier to segments
 		var tier = getTier(stats[i].value, values[i].value)
 		var boxes = segments[i].querySelectorAll('[tier]')
