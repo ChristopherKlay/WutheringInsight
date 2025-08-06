@@ -32,15 +32,15 @@
 		<div class="canvas">
 			<img src="./media/img/background.jpg" alt="" />
 		</div>
-		<div class="backdrop"></div>
+		<div class="splash"></div>
 
 		<!-- Main Container -->
 		<div class="showcase">
 			<h1 class="title"></h1>
-			<div class="gear-fields"></div>
+			<div class="echo-fields"></div>
 
 			<!-- Details -->
-			<div class="details"></div>
+			<div class="ratings"></div>
 
 			<!-- Controls -->
 			<div class="base-controls">
@@ -60,15 +60,16 @@
 					<div class="info-title">Explanation & Details</div>
 					<div class="info-content">
 						<span class="highlight">Crit Scoring: </span>The total percentage value of rolled crit rate/damage out of a possible 200% per echo.
-						<span class="expl"> Example: Rolling 6.3 (the lowest possible) out of 10.5 (the maximum) crit chance (without any crit damage) would result in a crit scoring of 60 (60% of the possible gain). </span>
+						<span class="sub-text"> Example: Rolling 6.3 (the lowest possible) out of 10.5 (the maximum) crit chance (without any crit damage) would result in a crit scoring of 60 (60% of the possible gain). </span>
 						<span class="highlight">Tiers: </span>The segmentation on stat bars displayes the different possible roll values. The higher the tier of the roll, the more segments are highlighted.
-						<span class="expl">
-							Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% - only 6.4% or 7.1%) and heavily weighted (the lowest being almost 2.5x more likely to appear compared to the highest).
-							<br><br>
+						<span class="sub-text">
+							Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% - only 6.4% or 7.1%) and heavily weighted (the lowest being almost 2.5x more likely to appear compared to
+							the highest).
+							<br /><br />
 							More information can be found in the "Substat Distribution" table below.
 						</span>
 						<span class="highlight">Weighted: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a letter-based format for easier understanding.
-						<span class="expl">
+						<span class="sub-text">
 							While character-specific weighting is applied, secondary requirements like energy regen and crit ratios are not checked and can result in performing below expectations. Always use this stat with your current crit
 							scoring and character-specific secondary requirements in mind.
 						</span>
@@ -161,8 +162,8 @@
 				<div class="info-table">
 					<div class="info-title">Substat Distribution</div>
 					<table>
-							<thead>
-							<tr style="background: rgba(0, 0, 0, 0.2);">
+						<thead>
+							<tr style="background: rgba(0, 0, 0, 0.2)">
 								<td>Stat</td>
 								<td>T1</td>
 								<td>T2</td>
@@ -173,7 +174,7 @@
 								<td>T7</td>
 								<td>T8</td>
 							</tr>
-							</thead>
+						</thead>
 						<tbody>
 							<tr>
 								<td>Crit. DMG</td>

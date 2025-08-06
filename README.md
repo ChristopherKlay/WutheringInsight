@@ -2,7 +2,8 @@
 
 ![](https://raw.githubusercontent.com/ChristopherKlay/WutheringInsight/refs/heads/main/media/img/banner.jpg)
 
-Quickly analyze your Wuthering Waves character showcases
+A tool to quickly analyze your character showcase files powered by OCR (optical character recognition) displaying information that isn't (easily, or at all) available in the game itself, including a visual representation of stat tiers, a
+rating based on weighted stats and more.
 
 [Live Version](https://christopherklay.github.io/WutheringInsight/)
 

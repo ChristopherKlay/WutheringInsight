@@ -4,11 +4,11 @@ import { range, statMap } from './import/stats.js'
 import { chars } from './import/chars.js'
 
 // Element Handles
-var echoContainer = document.querySelector('.gear-fields')
+var echoContainer = document.querySelector('.echo-fields')
 var showcase = document.querySelector('.showcase')
 var controls = document.querySelector('.controls')
 var info = document.querySelector('.info-weighted')
-var gearInput = document.querySelector('.gear-input')
+var echoInput = document.querySelector('.echo-input')
 
 // Upload Showcase
 document.getElementById('imageInput').addEventListener('change', async function (e) {
@@ -39,8 +39,8 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	document.querySelector('.base-controls').style.display = 'none'
 
 	// Setup loop variables
-	var total_cv = 0
-	var total_wv = 0
+	var cv_total = 0
+	var wv_total = 0
 	var titleCount = 1
 
 	// Recognize character
@@ -49,7 +49,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	} = await worker.recognize(img, {
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height }
 	})
-	
+
 	console.log(`[Log] Tesseract: [Char] ${text}`)
 
 	// Character scan errors
@@ -64,19 +64,18 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
 	if (match) {
 		document.querySelector('.title').textContent = match + "'s Echoes"
-		document.querySelector('.backdrop').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
+		document.querySelector('.splash').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
 	}
 
 	for (let echo in regions) {
-		var tv = 0
-		var cv = 0
-		var wv = 0
+		var cv_echo = 0
+		var wv_echo = 0
 
 		// Create echo
 		var echoSlot = document.createElement('div')
-		echoSlot.className = 'gear'
+		echoSlot.className = 'echo'
 		echoSlot.innerHTML = `
-			<div class="gear-title">Echo #${titleCount}</div>
+			<div class="echo-title">Echo #${titleCount}</div>
 		`
 		echoContainer.append(echoSlot)
 
@@ -153,18 +152,18 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			if (calcLabel != 'None') {
 				// Crit value
 				if (calcLabel.includes('Crit')) {
-					cv += parseFloat(perc)
+					cv_echo += parseFloat(perc)
 				}
 
 				// Weighted values
 				if (chars[match].weights) {
-					wv += chars[match].weights[calcLabel] * perc
+					wv_echo += chars[match].weights[calcLabel] * perc
 				}
 			}
 
 			// Add element
 			var el = document.createElement('div')
-			el.classList = 'gear-bar'
+			el.classList = 'echo-bar'
 
 			// Add label
 			var title = document.createElement('span')
@@ -210,30 +209,30 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			echoSlot.append(el)
 
 			// Crit Value
-			var perc = (cv / 200) * 100
+			var perc = (cv_echo / 200) * 100
 			var el = document.createElement('div')
-			el.classList = 'gear-bar'
+			el.classList = 'echo-bar'
 			el.innerHTML = `
 					<span class="title">Crit</span>
-					<span class="value">${cv.toFixed(2)}<span class="sub-value">/200</span></span>`
+					<span class="value">${cv_echo.toFixed(2)}<span class="sub-value">/200</span></span>`
 			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 			echoSlot.append(el)
 
 			// Weighted Value
 			if (chars[match].weights) {
-				var perc = (wv / 500) * 100
+				var perc = (wv_echo / 500) * 100
 				var el = document.createElement('div')
-				el.classList = 'gear-bar'
+				el.classList = 'echo-bar'
 				el.innerHTML = `
 					<span class="title">Weighted: ${getRank(perc)}</span>
-					<span class="value">${wv.toFixed(1)}<span class="sub-value">/500</span></span>`
+					<span class="value">${wv_echo.toFixed(1)}<span class="sub-value">/500</span></span>`
 				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 				echoSlot.append(el)
 			}
 
 			// Totals
-			total_cv += cv
-			total_wv += wv
+			cv_total += cv_echo
+			wv_total += wv_echo
 
 			// Toogle container opacity
 			echoSlot.style.opacity = '1'
@@ -242,41 +241,41 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			titleCount++
 		}
 	}
-	var details = document.querySelector('.details')
+	var ratings = document.querySelector('.ratings')
 
 	// Crit Score
-	var cv_perc = (total_cv / 1000) * 100
+	var cv_perc = (cv_total / 1000) * 100
 	var el = document.createElement('div')
-	el.classList = 'gear-score'
-	el.innerHTML = `Crit: ${cv_perc.toFixed(2)}%<span class="sub-value">${total_cv.toFixed(2)}/1000</span>`
+	el.classList = 'echo-score'
+	el.innerHTML = `Crit: ${cv_perc.toFixed(2)}%<span class="sub-value">${cv_total.toFixed(2)}/1000</span>`
 	el.addEventListener('mouseover', () => {
 		showcase.setAttribute('filter', 'crit')
 	})
 	el.addEventListener('mouseout', () => {
 		showcase.setAttribute('filter', '')
 	})
-	details.append(el)
+	ratings.append(el)
 
 	// Weighted Stats
 	if (chars[match].weights) {
-		var weighted_perc = (total_wv / 2500) * 100
+		var wv_perc = (wv_total / 2500) * 100
 		var el = document.createElement('div')
-		el.classList = 'gear-score'
-		el.innerHTML = `Weighted: ${getRank(weighted_perc)}<span class="sub-value">${weighted_perc.toFixed(2)}%</span><span class="sub-value">${total_wv.toFixed(2)}/${2500}</span>`
+		el.classList = 'echo-score'
+		el.innerHTML = `Weighted: ${getRank(wv_perc)}<span class="sub-value">${wv_perc.toFixed(2)}%</span><span class="sub-value">${wv_total.toFixed(2)}/${2500}</span>`
 		el.addEventListener('mouseover', () => {
 			showcase.setAttribute('filter', 'weight')
 		})
 		el.addEventListener('mouseout', () => {
 			showcase.setAttribute('filter', '')
 		})
-		details.append(el)
+		ratings.append(el)
 	}
 
 	for (var stat in chars[match].weights) {
 		// Create Bars
 		var perc = ((chars[match].weights[stat] / 1) * 100).toFixed(2)
 		var el = document.createElement('div')
-		el.classList = 'gear-bar'
+		el.classList = 'echo-bar'
 		el.innerHTML = `
 					<span class="title">${statMap[stat]}</span>
 					<span class="value">${chars[match].weights[stat]}<span class="sub-value">/1</span></span>`
@@ -288,8 +287,8 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		info.append(el)
 	}
 
-	// Enable details
-	details.style.opacity = '1'
+	// Enable ratings
+	ratings.style.opacity = '1'
 
 	// Info
 	var el = document.createElement('button')
@@ -321,9 +320,9 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 
 	// Setup echo
 	var echoSlot = document.createElement('div')
-	echoSlot.className = 'gear custom'
+	echoSlot.className = 'echo custom'
 	echoSlot.innerHTML = `
-		<div class="gear-title">Custom Echo</div>
+		<div class="echo-title">Custom Echo</div>
 	`
 
 	// Input Elements
@@ -386,7 +385,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 
 	// Crit Value
 	var el = document.createElement('div')
-	el.classList = 'gear-bar'
+	el.classList = 'echo-bar'
 	el.innerHTML = `
 					<span class="title">Crit</span>
 					<span class="value">0<span class="sub-value">/200</span></span>`
@@ -395,7 +394,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 
 	// Weighted Value
 	var el = document.createElement('div')
-	el.classList = 'gear-bar'
+	el.classList = 'echo-bar'
 	el.innerHTML = `
 					<span class="title">Weighted: Unranked</span>
 					<span class="value">0<span class="sub-value">/500</span></span>`
@@ -414,11 +413,10 @@ function calcCustomEcho() {
 	var char = echoContainer.querySelector('select[char]').value
 	var stats = echoContainer.querySelectorAll('select[stat]')
 	var values = echoContainer.querySelectorAll('select[value]')
-	var ratings = echoContainer.querySelectorAll('.gear-bar')
+	var ratings = echoContainer.querySelectorAll('.echo-bar')
 	var segments = echoContainer.querySelectorAll('.segments')
-	var cv = 0
-	var tv = 0
-	var wv = 0
+	var cv_echo = 0
+	var wv_echo = 0
 
 	// Update select/sliders
 	for (var i = 0; i < stats.length; i++) {
@@ -442,11 +440,11 @@ function calcCustomEcho() {
 		// Calculate values
 		// -> Crit
 		if (stats[i].value.includes('Crit')) {
-			cv += parseFloat((values[i].value / range[stats[i].value][8]) * 100)
+			cv_echo += parseFloat((values[i].value / range[stats[i].value][8]) * 100)
 		}
 		// -> WV
 		if (chars[char].weights && stats[i].value != 'None') {
-			wv += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
+			wv_echo += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
 			if (chars[char].weights[stats[i].value] == 1) {
 				stats[i].setAttribute('weighted', 'true')
 			}
@@ -467,13 +465,13 @@ function calcCustomEcho() {
 	}
 
 	// Crit
-	var cv_perc = (cv / 200) * 100
+	var cv_perc = (cv_echo / 200) * 100
 	ratings[0].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${cv_perc}%, rgba(32, 34, 37, 0.52) ${cv_perc}%`
 	ratings[0].querySelector('.value').innerHTML = `${cv.toFixed(1)}<span class="sub-value">/200</span>`
 
 	// Weighted
 	if (chars[char].weights) {
-		var wv_perc = (wv / 500) * 100
+		var wv_perc = (wv_echo / 500) * 100
 		ratings[1].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${wv_perc}%, rgba(32, 34, 37, 0.52) ${wv_perc}%`
 		ratings[1].querySelector('.title').textContent = `Weighted: ${getRank(wv_perc)}`
 		ratings[1].querySelector('.value').innerHTML = `${wv.toFixed(1)}<span class="sub-value">/500</span>`
