@@ -190,7 +190,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 			// Add attributes
 			el.setAttribute('tier', tier)
-			if (chars[match].weights[calcLabel] == 1) {
+			if (chars[match].weights && chars[match].weights[calcLabel] == 1) {
 				el.setAttribute('weighted', 'true')
 			} else {
 				el.setAttribute('weighted', 'false')
