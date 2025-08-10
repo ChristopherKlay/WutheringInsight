@@ -40,7 +40,7 @@
 			<div class="echo-fields"></div>
 
 			<!-- Details -->
-			<div class="ratings"></div>
+			<div class="ratings hidden"></div>
 
 			<!-- Controls -->
 			<div class="base-controls">
@@ -49,8 +49,16 @@
 				<label for="imageInput" data-tooltip="Please select the showcase (1920x1080 JPEG) provided by the Wuthering Waves Discord bot.">Upload Showcase</label>
 			</div>
 
+			<!-- Filters -->
+			<div class="filters hidden">
+				<div class="filter-button" data-filter="weight">Weighted Stats</div>
+				<div class="filter-button" data-filter="crit">Crit Value</div>
+				<div class="filter-button" data-filter="color">Colored Tiers</div>
+				<div class="filter-button" data-filter="replace">Echo Value</div>
+			</div>
+
 			<!-- Additional Controls -->
-			<div class="controls">
+			<div class="controls hidden">
 				<button class="reset-button" onclick="location.reload()">Reset</button>
 			</div>
 
@@ -59,11 +67,16 @@
 				<div class="info-explain">
 					<div class="info-title">Explanation & Details</div>
 					<div class="info-content">
-						<span class="highlight">Crit Scoring: </span>The total percentage value of rolled crit rate/damage out of a possible 200% per echo.
-						<span class="sub-text"> Example: Rolling 6.3 (the lowest possible) out of 10.5 (the maximum) crit chance (without any crit damage) would result in a crit scoring of 60 (60% of the possible gain). </span>
+						<span class="highlight">Crit Scoring: </span>The total percentage value of rolled crit rate/damage out of the given maximum per echo.
+						<span class="sub-text">
+							Example: Rolling 6.3 (the lowest possible) out of 10.5 (the maximum) crit chance (without any crit damage) would result in a crit scoring of 60 (60% of the possible gain) further increased to 90, due to the 1.5
+							weight modifier.
+							<br /><br />
+							This rating is only visible on characters that include crit stats in their weighted stats.
+						</span>
 						<span class="highlight">Tiers: </span>The segmentation on stat bars displayes the different possible roll values. The higher the tier of the roll, the more segments are highlighted.
 						<span class="sub-text">
-							Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% - only 6.4% or 7.1%) and heavily weighted (the lowest being almost 2.5x more likely to appear compared to
+							Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% — only 6.4% or 7.1%) and heavily weighted (the lowest being almost 2.5x more likely to appear compared to
 							the highest).
 							<br /><br />
 							More information can be found in the "Substat Distribution" table below.
@@ -73,6 +86,9 @@
 							While character-specific weighting is applied, secondary requirements like energy regen and crit ratios are not checked and can result in performing below expectations. Always use this stat with your current crit
 							scoring and character-specific secondary requirements in mind.
 						</span>
+						<span class="highlight">Echo Value: </span>A rating based on weighted stats further being adjusted by (accummulated) probabilities of the given tiers, (slightly) increasing the value of higher rolled stats instead of
+						using a equal distribution.
+						<span class="sub-text"> This gives a even better insight in how much "value" a given echo has and how replaceable it is, with the lowest valued echo being the most replaceable. </span>
 					</div>
 				</div>
 				<div class="info-weighted split">
@@ -226,7 +242,7 @@
 								<td>9%</td>
 								<td>10%</td>
 								<td>10.9%</td>
-								<td>11.8%</td>
+								<td>11.9%</td>
 								<td>12.8%</td>
 								<td>13.8%</td>
 								<td>14.7%</td>
@@ -320,7 +336,7 @@
 		<script>
 			kofiWidgetOverlay.draw('christopherklay', {
 				type: 'floating-chat',
-				'floating-chat.donateButton.text': 'Spare some waveplates',
+				'floating-chat.donateButton.text': 'Spare some astrites',
 				'floating-chat.donateButton.background-color': 'rgba(32, 34, 37, 0.82)',
 				'floating-chat.donateButton.text-color': '#fff'
 			})

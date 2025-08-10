@@ -63,6 +63,13 @@ body {
 	color: rgb(243 246 250);
 }
 
+/* Effect classes */
+.hidden {
+	opacity: 0;
+	pointer-events: none;
+	visibility: hidden;
+}
+
 /* Background */
 .canvas {
 	position: absolute;
@@ -179,9 +186,18 @@ h1 {
 	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
 }
 
+.echo-bar .icon {
+	width: 1.4rem;
+	height: 1.4rem;
+	align-self: center;
+	margin-left: 4px;
+}
+
 .echo-bar .title {
 	justify-self: flex-start;
 	text-align: left;
+	display: flex;
+	flex-direction: row;
 	width: 70%;
 	padding: 8px 0 8px 10px;
 }
@@ -212,6 +228,8 @@ h1 {
 .echo .selection-container {
 	position: relative;
 	width: 70%;
+	transition: var(--transition-main);
+	border-radius: var(--border-radius-main);
 }
 
 .echo .selection-container > select {
@@ -269,35 +287,59 @@ h1 {
 }
 
 /* Hover Filters */
-.echo-bar[weighted='true'],
-.echo select[weighted='true'] {
-	background: url('./media/img/bg-gradient.png') center/100% 100%;
-	border: var(--border-main);
+/* Full */
+[data-weight^='1'],
+[data-weight^='2']{
+	background: url('./media/img/bg-gradient.png') center/100% 100% !important;
+	border: var(--border-main) !important;
 }
 
-.showcase[filter='weight']:hover .echo-bar[weighted='false'],
-.showcase[filter='crit']:hover .echo-bar[crit='false'] {
+/* Partly */
+[data-weight='0.8'] {
+	border: 1px solid rgb(var(--muted-color) / 0.6) !important;
+}
+
+.showcase[filter='weight'] [data-weight='0'],
+.showcase[filter='crit'] [crit='false'] {
 	opacity: 0.2;
 }
 
+/* Replaceability */
+.echo-title[replace]:after {
+	content: attr(replace);
+	opacity: 0;
+	position: absolute;
+	right: 12px;
+	font-size: 0.8rem;
+	padding: 2px 6px;
+	background: rgb(var(--accent-color) / 0.2);
+	border-radius: var(--border-radius-main);
+	border: var(--border-main);
+	transition: var(--transition-main);
+}
+
+.showcase[replace='show'] .echo-title[replace]:after {
+	opacity: 1;
+}
+
 /* Tiers */
-.showcase[filter='weight']:hover .echo-bar[tier='1'] > .value,
-.showcase[filter='weight']:hover .echo-bar[tier='2'] > .value {
+.showcase[tiers='show'] [tier='1'],
+.showcase[tiers='show'] [tier='2'] {
 	color: rgb(var(--tier-one) / 1);
 }
 
-.showcase[filter='weight']:hover .echo-bar[tier='3'] > .value,
-.showcase[filter='weight']:hover .echo-bar[tier='4'] > .value {
+.showcase[tiers='show'] [tier='3'],
+.showcase[tiers='show'] [tier='4'] {
 	color: rgb(var(--tier-two) / 1);
 }
 
-.showcase[filter='weight']:hover .echo-bar[tier='5'] > .value,
-.showcase[filter='weight']:hover .echo-bar[tier='6'] > .value {
+.showcase[tiers='show'] [tier='5'],
+.showcase[tiers='show'] [tier='6'] {
 	color: rgb(var(--tier-three) / 1);
 }
 
-.showcase[filter='weight']:hover .echo-bar[tier='7'] > .value,
-.showcase[filter='weight']:hover .echo-bar[tier='8'] > .value {
+.showcase[tiers='show'] [tier='7'],
+.showcase[tiers='show'] [tier='8'] {
 	color: rgb(var(--tier-four) / 1);
 }
 
@@ -305,7 +347,6 @@ h1 {
 .ratings {
 	display: flex;
 	gap: 12px;
-	opacity: 0;
 	transition: var(--transition-main);
 }
 
@@ -337,9 +378,7 @@ h1 {
 .controls {
 	display: flex;
 	gap: 12px;
-	opacity: 0;
 	transition: var(--transition-main);
-	pointer-events: none;
 }
 
 .controls button {
@@ -369,6 +408,41 @@ label[for='imageInput'],
 	background: var(--background-main);
 	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
 	cursor: pointer;
+}
+
+/* Filters */
+.filters {
+	border: var(--border-main);
+	border-radius: var(--border-radius-sec);
+	padding: 6px;
+	background: var(--background-main);
+	transition: var(--transition-main);
+}
+
+.filter-button {
+	color: rgb(var(--muted-color));
+	display: inline-block;
+	padding: 4px 6px;
+	pointer-events: all;
+	border-radius: var(--border-radius-main);
+	border: 1px solid rgb(255 255 255 / 0.2);
+	text-align: center;
+	font-size: 0.8rem;
+	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
+	cursor: pointer;
+	user-select: none;
+}
+
+.filter-button.active {
+	color: #fff;
+	background: url('./media/img/bg-gradient.png');
+	background-size: cover;
+	border: var(--border-main);
+}
+
+.filter-button.active:before {
+	content: '✓';
+	padding-right: 4px;
 }
 
 /* Data Attr Tooltips */

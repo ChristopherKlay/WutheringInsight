@@ -1,31 +1,37 @@
-// Supported characters
+/*
+ * Crit: 2.2
+ * Main Stat: 1.4
+ * Flat Stat: 0.8
+ * Dmg Stat: 0.8
+ */
+
 export const chars = {
     Aalto: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.35,
-            BasicAttackDMGBonus: 1,
+            BasicAttackDMGBonus: 0.8,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0.27,
-            ResonanceLiberationDMGBonus: 0.13
+            ResonanceSkillDMGBonus: 0.274,
+            ResonanceLiberationDMGBonus: 0.131
         }
     },
     Augusta: {},
     Baizhi: {
         weights: {
-            HP: 1,
+            HP: 0.8,
             ATK: 0,
-            DEF: 1,
-            'HP%': 1,
+            DEF: 0,
+            'HP%': 1.4,
             'ATK%': 0,
-            'DEF%': 1,
+            'DEF%': 0,
             CritRate: 0,
             CritDMG: 0,
             EnergyRegen: 1,
@@ -43,62 +49,62 @@ export const chars = {
             'HP%': 0,
             'ATK%': 1,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
-            EnergyRegen: 1,
-            BasicAttackDMGBonus: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
+            EnergyRegen: 1.4,
+            BasicAttackDMGBonus: 1.4,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0,
-            ResonanceLiberationDMGBonus: 0.18
+            ResonanceSkillDMGBonus: 0.023,
+            ResonanceLiberationDMGBonus: 0.181
         }
     },
     Calcharo: {
         weights: {
             HP: 0,
-            ATK: 0.5,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.15,
-            BasicAttackDMGBonus: 1,
+            BasicAttackDMGBonus: 0.252,
             HeavyAttackDMGBonus: 0,
             ResonanceSkillDMGBonus: 0,
-            ResonanceLiberationDMGBonus: 1
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Camellya: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.2,
-            BasicAttackDMGBonus: 1,
+            BasicAttackDMGBonus: 0.8,
             HeavyAttackDMGBonus: 0,
             ResonanceSkillDMGBonus: 0,
-            ResonanceLiberationDMGBonus: 0.17
+            ResonanceLiberationDMGBonus: 0.165
         }
     },
     Cantarella: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.45,
-            BasicAttackDMGBonus: 1,
-            HeavyAttackDMGBonus: 0,
+            BasicAttackDMGBonus: 0.72,
+            HeavyAttackDMGBonus: 0.023,
             ResonanceSkillDMGBonus: 0.07,
             ResonanceLiberationDMGBonus: 0
         }
@@ -106,17 +112,17 @@ export const chars = {
     Carlotta: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.2,
-            BasicAttackDMGBonus: 0.01,
+            BasicAttackDMGBonus: 0.011,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 1,
+            ResonanceSkillDMGBonus: 0.8,
             ResonanceLiberationDMGBonus: 0
         }
     },
@@ -125,102 +131,102 @@ export const chars = {
             HP: 1,
             ATK: 0,
             DEF: 0,
-            'HP%': 1,
+            'HP%': 1.4,
             'ATK%': 0,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.15,
-            BasicAttackDMGBonus: 1,
+            BasicAttackDMGBonus: 0.8,
             HeavyAttackDMGBonus: 0.1,
-            ResonanceSkillDMGBonus: 0.13,
-            ResonanceLiberationDMGBonus: 0.24
+            ResonanceSkillDMGBonus: 0.125,
+            ResonanceLiberationDMGBonus: 0.236
         }
     },
     Changli: {
         weights: {
             HP: 0,
-            ATK: 0.5,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.15,
             BasicAttackDMGBonus: 0.04,
             HeavyAttackDMGBonus: 0.02,
-            ResonanceSkillDMGBonus: 1,
-            ResonanceLiberationDMGBonus: 1
+            ResonanceSkillDMGBonus: 0.8,
+            ResonanceLiberationDMGBonus: 0.238
         }
     },
     Chisa: {},
     Chixia: {
         weights: {
             HP: 0,
-            ATK: 0.5,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.4,
             BasicAttackDMGBonus: 0,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 1,
-            ResonanceLiberationDMGBonus: 1
+            ResonanceSkillDMGBonus: 0.8,
+            ResonanceLiberationDMGBonus: 0.325
         }
     },
     Ciaconna: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.1,
-            BasicAttackDMGBonus: 0.5,
-            HeavyAttackDMGBonus: 0.5,
-            ResonanceSkillDMGBonus: 0.04,
-            ResonanceLiberationDMGBonus: 1
+            BasicAttackDMGBonus: 0.182,
+            HeavyAttackDMGBonus: 0.17,
+            ResonanceSkillDMGBonus: 0.039,
+            ResonanceLiberationDMGBonus: 0.281
         }
     },
     Danjin: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0,
-            BasicAttackDMGBonus: 0,
-            HeavyAttackDMGBonus: 1,
-            ResonanceSkillDMGBonus: 0.5,
-            ResonanceLiberationDMGBonus: 0.5
+            BasicAttackDMGBonus: 0.047,
+            HeavyAttackDMGBonus: 0.244,
+            ResonanceSkillDMGBonus: 0.255,
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Encore: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.125,
-            BasicAttackDMGBonus: 1,
+            BasicAttackDMGBonus: 0.8,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0,
-            ResonanceLiberationDMGBonus: 0
+            ResonanceSkillDMGBonus: 0.015,
+            ResonanceLiberationDMGBonus: 0.0146
         }
     },
     Galbrena: {},
@@ -228,153 +234,153 @@ export const chars = {
     Jianxin: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.35,
-            BasicAttackDMGBonus: 0,
-            HeavyAttackDMGBonus: 1,
-            ResonanceSkillDMGBonus: 0,
-            ResonanceLiberationDMGBonus: 0.36
+            BasicAttackDMGBonus: 0.309,
+            HeavyAttackDMGBonus: 0.121,
+            ResonanceSkillDMGBonus: 0.079,
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Jinhsi: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.2,
             BasicAttackDMGBonus: 0,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 1,
-            ResonanceLiberationDMGBonus: 0.18
+            ResonanceSkillDMGBonus: 0.8,
+            ResonanceLiberationDMGBonus: 0.175
         }
     },
     Jiyan: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.325,
             BasicAttackDMGBonus: 0,
-            HeavyAttackDMGBonus: 1,
-            ResonanceSkillDMGBonus: 0.15,
+            HeavyAttackDMGBonus: 0.8,
+            ResonanceSkillDMGBonus: 0.146,
             ResonanceLiberationDMGBonus: 0
         }
     },
     Lingyang: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.175,
-            BasicAttackDMGBonus: 1,
-            HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0.29,
-            ResonanceLiberationDMGBonus: 0.06
+            BasicAttackDMGBonus: 0.8,
+            HeavyAttackDMGBonus: 0.027,
+            ResonanceSkillDMGBonus: 0.286,
+            ResonanceLiberationDMGBonus: 0.062
         }
     },
     Lumi: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 1,
             BasicAttackDMGBonus: 0.36,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0.26,
-            ResonanceLiberationDMGBonus: 0.3
+            ResonanceSkillDMGBonus: 0.263,
+            ResonanceLiberationDMGBonus: 0.296
         }
     },
     Lupa: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.225,
-            BasicAttackDMGBonus: 0.05,
-            HeavyAttackDMGBonus: 0.07,
-            ResonanceSkillDMGBonus: 0.13,
-            ResonanceLiberationDMGBonus: 1
+            BasicAttackDMGBonus: 0.053,
+            HeavyAttackDMGBonus: 0.069,
+            ResonanceSkillDMGBonus: 0.127,
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Mortefi: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.15,
-            BasicAttackDMGBonus: 0.08,
+            BasicAttackDMGBonus: 0.082,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0.18,
-            ResonanceLiberationDMGBonus: 1
+            ResonanceSkillDMGBonus: 0.178,
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Phoebe: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.075,
-            BasicAttackDMGBonus: 0.13,
-            HeavyAttackDMGBonus: 1,
-            ResonanceSkillDMGBonus: 0,
-            ResonanceLiberationDMGBonus: 0.14
+            BasicAttackDMGBonus: 0.134,
+            HeavyAttackDMGBonus: 0.8,
+            ResonanceSkillDMGBonus: 0.012,
+            ResonanceLiberationDMGBonus: 0.144
         }
     },
     Phrolova: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0,
-            BasicAttackDMGBonus: 0,
+            BasicAttackDMGBonus: 0.061,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 1,
+            ResonanceSkillDMGBonus: 0.8,
             ResonanceLiberationDMGBonus: 0
         }
     },
@@ -382,80 +388,130 @@ export const chars = {
     Roccia: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.25,
-            BasicAttackDMGBonus: 0.06,
-            HeavyAttackDMGBonus: 1,
-            ResonanceSkillDMGBonus: 0.15,
+            BasicAttackDMGBonus: 0.055,
+            HeavyAttackDMGBonus: 0.8,
+            ResonanceSkillDMGBonus: 0.146,
             ResonanceLiberationDMGBonus: 0
         }
     },
-    Rover: {},
+    'Rover (Aero)': {
+        weights: {
+            HP: 0,
+            ATK: 0.8,
+            DEF: 0,
+            'HP%': 0,
+            'ATK%': 1.4,
+            'DEF%': 0,
+            CritRate: 2.2,
+            CritDMG: 2.2,
+            EnergyRegen: 0.35,
+            BasicAttackDMGBonus: 0.05,
+            HeavyAttackDMGBonus: 0,
+            ResonanceSkillDMGBonus: 0.8,
+            ResonanceLiberationDMGBonus: 0.189
+        }
+    },
+    'Rover (Havoc)': {
+        weights: {
+            HP: 0,
+            ATK: 0.8,
+            DEF: 0,
+            'HP%': 0,
+            'ATK%': 1.4,
+            'DEF%': 0,
+            CritRate: 2.2,
+            CritDMG: 2.2,
+            EnergyRegen: 0.15,
+            BasicAttackDMGBonus: 0.316,
+            HeavyAttackDMGBonus: 0.034,
+            ResonanceSkillDMGBonus: 0.185,
+            ResonanceLiberationDMGBonus: 0.262
+        }
+    },
+    'Rover (Spectro)': {
+        weights: {
+            HP: 0,
+            ATK: 0.8,
+            DEF: 0,
+            'HP%': 0,
+            'ATK%': 1.4,
+            'DEF%': 0,
+            CritRate: 2.2,
+            CritDMG: 2.2,
+            EnergyRegen: 0.15,
+            BasicAttackDMGBonus: 0.046,
+            HeavyAttackDMGBonus: 0.092,
+            ResonanceSkillDMGBonus: 0.318,
+            ResonanceLiberationDMGBonus: 0.8
+        }
+    },
     Sanhua: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0,
             BasicAttackDMGBonus: 0,
-            HeavyAttackDMGBonus: 1,
-            ResonanceSkillDMGBonus: 0.27,
-            ResonanceLiberationDMGBonus: 0.28
+            HeavyAttackDMGBonus: 0.347,
+            ResonanceSkillDMGBonus: 0.269,
+            ResonanceLiberationDMGBonus: 0.276
         }
     },
     Taoqi: {
         weights: {
             HP: 0,
             ATK: 0,
-            DEF: 1,
+            DEF: 0.8,
             'HP%': 0,
             'ATK%': 0,
-            'DEF%': 1,
-            CritRate: 1,
-            CritDMG: 1,
+            'DEF%': 1.2,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 1,
-            BasicAttackDMGBonus: 0.43,
+            BasicAttackDMGBonus: 0.431,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0.1,
-            ResonanceLiberationDMGBonus: 0.37
+            ResonanceSkillDMGBonus: 0.097,
+            ResonanceLiberationDMGBonus: 0.373
         }
     },
     'The Shorekeeper': {
         weights: {
-            HP: 1,
+            HP: 0.8,
             ATK: 0,
             DEF: 0,
-            'HP%': 1,
+            'HP%': 1.4,
             'ATK%': 0,
             'DEF%': 0,
             CritRate: 0,
-            CritDMG: 1,
+            CritDMG: 2.2,
             EnergyRegen: 1,
-            BasicAttackDMGBonus: 0.09,
+            BasicAttackDMGBonus: 0.086,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0.03,
-            ResonanceLiberationDMGBonus: 1
+            ResonanceSkillDMGBonus: 0.027,
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Verina: {
         weights: {
             HP: 0,
-            ATK: 1,
-            DEF: 1,
+            ATK: 1.4,
+            DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
-            'DEF%': 1,
+            'ATK%': 2.2,
+            'DEF%': 0,
             CritRate: 0,
             CritDMG: 0,
             EnergyRegen: 1,
@@ -468,62 +524,62 @@ export const chars = {
     'Xiangli Yao': {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.15,
-            BasicAttackDMGBonus: 0.09,
+            BasicAttackDMGBonus: 0.093,
             HeavyAttackDMGBonus: 0,
             ResonanceSkillDMGBonus: 0.17,
-            ResonanceLiberationDMGBonus: 1
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Yangyang: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0,
-            BasicAttackDMGBonus: 0.32,
+            BasicAttackDMGBonus: 0.318,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 0.14,
-            ResonanceLiberationDMGBonus: 1
+            ResonanceSkillDMGBonus: 0.135,
+            ResonanceLiberationDMGBonus: 0.8
         }
     },
     Yinlin: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.25,
-            BasicAttackDMGBonus: 0.08,
-            HeavyAttackDMGBonus: 0.09,
-            ResonanceSkillDMGBonus: 1,
-            ResonanceLiberationDMGBonus: 0.21
+            BasicAttackDMGBonus: 0.076,
+            HeavyAttackDMGBonus: 0.091,
+            ResonanceSkillDMGBonus: 0.8,
+            ResonanceLiberationDMGBonus: 0.206
         }
     },
     Youhu: {
         weights: {
             HP: 0,
-            ATK: 1,
-            DEF: 1,
+            ATK: 1.4,
+            DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
-            'DEF%': 1,
+            'ATK%': 2.2,
+            'DEF%': 0,
             CritRate: 0,
             CritDMG: 0,
             EnergyRegen: 1,
@@ -540,29 +596,29 @@ export const chars = {
             DEF: 1,
             'HP%': 0,
             'ATK%': 0,
-            'DEF%': 1,
-            CritRate: 1,
-            CritDMG: 1,
+            'DEF%': 1.2,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.3,
             BasicAttackDMGBonus: 0,
             HeavyAttackDMGBonus: 0,
-            ResonanceSkillDMGBonus: 1,
+            ResonanceSkillDMGBonus: 0.8,
             ResonanceLiberationDMGBonus: 0.4
         }
     },
     Zani: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.175,
-            BasicAttackDMGBonus: 0.02,
-            HeavyAttackDMGBonus: 1,
+            BasicAttackDMGBonus: 0.018,
+            HeavyAttackDMGBonus: 0.8,
             ResonanceSkillDMGBonus: 0.06,
             ResonanceLiberationDMGBonus: 0.2
         }
@@ -570,17 +626,17 @@ export const chars = {
     Zhezhi: {
         weights: {
             HP: 0,
-            ATK: 1,
+            ATK: 0.8,
             DEF: 0,
             'HP%': 0,
-            'ATK%': 1,
+            'ATK%': 1.4,
             'DEF%': 0,
-            CritRate: 1,
-            CritDMG: 1,
+            CritRate: 2.2,
+            CritDMG: 2.2,
             EnergyRegen: 0.225,
-            BasicAttackDMGBonus: 1,
-            HeavyAttackDMGBonus: 0.06,
-            ResonanceSkillDMGBonus: 0.07,
+            BasicAttackDMGBonus: 0.8,
+            HeavyAttackDMGBonus: 0.055,
+            ResonanceSkillDMGBonus: 0.066,
             ResonanceLiberationDMGBonus: 0
         }
     }

@@ -9,6 +9,12 @@ var showcase = document.querySelector('.showcase')
 var controls = document.querySelector('.controls')
 var info = document.querySelector('.info-weighted')
 var echoInput = document.querySelector('.echo-input')
+var filters = document.querySelector('.filters')
+
+// Add control functionality
+document.querySelectorAll('.filter-button').forEach((el) => {
+	el.addEventListener('click', () => changeFilter(el))
+})
 
 // Upload Showcase
 document.getElementById('imageInput').addEventListener('change', async function (e) {
@@ -50,8 +56,6 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height }
 	})
 
-	console.log(`[Log] Tesseract: [Char] ${text}`)
-
 	// Character scan errors
 	// -> Ending 'j' instead of 'i'
 	var split = text.split(' ')
@@ -60,16 +64,62 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		text = split.join(' ')
 	}
 
-	// CHaracter-specific setup
+	// Rover Variants
+	if (text.includes('Rover')) {
+		// Create canvas element for extraction
+		const canvas = document.createElement('canvas')
+		canvas.width = img.width
+		canvas.height = img.height
+
+		// Draw image
+		const ctx = canvas.getContext('2d')
+		ctx.drawImage(img, 0, 0)
+
+		// Select variant by color distance
+		/*
+		 * Aero: #98D1BE
+		 * Havoc: #E946A3
+		 * Spectro: #C4B260
+		 */
+		var pixel = ctx.getImageData(31, 64, 1, 1).data
+		var palette = ['#98D1BE', '#E946A3', '#C4B260']
+		var variant = closestColor(rgbToHex(pixel[0], pixel[1], pixel[2]), palette)
+
+		switch (variant) {
+			case '#98D1BE':
+				text = 'Rover (Aero)'
+				break
+			case '#E946A3':
+				text = 'Rover (Havoc)'
+				break
+			case '#C4B260':
+				text = 'Rover (Spectro)'
+		}
+	}
+
+	// Character-specific setup
 	var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
 	if (match) {
 		document.querySelector('.title').textContent = match + "'s Echoes"
-		document.querySelector('.splash').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
+		if (match.includes('Rover')) {
+			document.querySelector('.splash').style.backgroundImage = `url("./media/img/backdrop/Rover.webp")`
+		} else {
+			document.querySelector('.splash').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
+		}
 	}
+
+	// Max Weight Calculation
+	var weightMaxPerc =
+		Object.values(chars[match].weights)
+			.sort((a, b) => b - a)
+			.slice(0, 5)
+			.reduce((acc, val) => acc + val, 0) * 100
+	var critMaxPerc = (chars[match].weights['CritRate'] + chars[match].weights['CritDMG']) * 100
 
 	for (let echo in regions) {
 		var cv_echo = 0
 		var wv_echo = 0
+		var echoStats = {}
 
 		// Create echo
 		var echoSlot = document.createElement('div')
@@ -116,8 +166,6 @@ document.getElementById('imageInput').addEventListener('change', async function 
 				output = 'None 0'
 			}
 
-			console.log(`[Log] Tesseract: [Raw] ${text} [Output] ${output}`)
-
 			// Pre-format
 			var label = output.split(' ')
 			label.pop()
@@ -152,7 +200,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			if (calcLabel != 'None') {
 				// Crit value
 				if (calcLabel.includes('Crit')) {
-					cv_echo += parseFloat(perc)
+					cv_echo += chars[match].weights[calcLabel] * perc
 				}
 
 				// Weighted values
@@ -161,9 +209,18 @@ document.getElementById('imageInput').addEventListener('change', async function 
 				}
 			}
 
+			// Replaceability
+			echoStats[calcLabel] = calcAmount
+
 			// Add element
 			var el = document.createElement('div')
 			el.classList = 'echo-bar'
+
+			// Add icon
+			var icon = document.createElement('img')
+			icon.className = 'icon'
+			icon.src = `./media/img/stats/${assignIcon(calcLabel)}.webp`
+			el.append(icon)
 
 			// Add label
 			var title = document.createElement('span')
@@ -189,12 +246,9 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			el.append(seg)
 
 			// Add attributes
-			el.setAttribute('tier', tier)
-			if (chars[match].weights && chars[match].weights[calcLabel] == 1) {
-				el.setAttribute('weighted', 'true')
-			} else {
-				el.setAttribute('weighted', 'false')
-			}
+			el.querySelector('.value').setAttribute('tier', tier)
+			el.setAttribute('data-weight', chars[match].weights[calcLabel])
+
 			if (calcLabel.includes('Crit')) {
 				el.setAttribute('crit', 'true')
 			} else {
@@ -209,26 +263,31 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			echoSlot.append(el)
 
 			// Crit Value
-			var perc = (cv_echo / 200) * 100
-			var el = document.createElement('div')
-			el.classList = 'echo-bar'
-			el.innerHTML = `
-					<span class="title">Crit</span>
-					<span class="value">${cv_echo.toFixed(2)}<span class="sub-value">/200</span></span>`
-			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
-			echoSlot.append(el)
-
-			// Weighted Value
-			if (chars[match].weights) {
-				var perc = (wv_echo / 500) * 100
+			if (critMaxPerc > 0) {
+				var perc = (cv_echo / critMaxPerc) * 100
 				var el = document.createElement('div')
 				el.classList = 'echo-bar'
 				el.innerHTML = `
-					<span class="title">Weighted: ${getRank(perc)}</span>
-					<span class="value">${wv_echo.toFixed(1)}<span class="sub-value">/500</span></span>`
+					<span class="title">Crit</span>
+					<span class="value">${perc.toFixed(2)}%</span>`
 				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 				echoSlot.append(el)
 			}
+
+			// Weighted Value
+			if (chars[match].weights) {
+				var perc = (wv_echo / weightMaxPerc) * 100
+				var el = document.createElement('div')
+				el.classList = 'echo-bar'
+				el.innerHTML = `
+					<span class="title">Weighted</span>
+					<span class="value">${perc.toFixed(2)}%</span>`
+				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
+				echoSlot.append(el)
+			}
+
+			// Value
+			echoSlot.querySelector('.echo-title').setAttribute('replace', calculateValue(echoStats, match, `Echo #${titleCount}`).toFixed(2))
 
 			// Totals
 			cv_total += cv_echo
@@ -244,41 +303,31 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	var ratings = document.querySelector('.ratings')
 
 	// Crit Score
-	var cv_perc = (cv_total / 1000) * 100
-	var el = document.createElement('div')
-	el.classList = 'echo-score'
-	el.innerHTML = `Crit: ${cv_perc.toFixed(2)}%<span class="sub-value">${cv_total.toFixed(2)}/1000</span>`
-	el.addEventListener('mouseover', () => {
-		showcase.setAttribute('filter', 'crit')
-	})
-	el.addEventListener('mouseout', () => {
-		showcase.setAttribute('filter', '')
-	})
-	ratings.append(el)
+	if (critMaxPerc > 0) {
+		var cv_perc = (cv_total / (critMaxPerc * 5)) * 100
+		var el = document.createElement('div')
+		el.classList = 'echo-score'
+		el.innerHTML = `Crit: ${getRank(cv_perc)}<span class="sub-value">${cv_perc.toFixed(2)}%</span>`
+		ratings.append(el)
+	}
 
 	// Weighted Stats
 	if (chars[match].weights) {
-		var wv_perc = (wv_total / 2500) * 100
+		var wv_perc = (wv_total / (weightMaxPerc * 5)) * 100
 		var el = document.createElement('div')
 		el.classList = 'echo-score'
-		el.innerHTML = `Weighted: ${getRank(wv_perc)}<span class="sub-value">${wv_perc.toFixed(2)}%</span><span class="sub-value">${wv_total.toFixed(2)}/${2500}</span>`
-		el.addEventListener('mouseover', () => {
-			showcase.setAttribute('filter', 'weight')
-		})
-		el.addEventListener('mouseout', () => {
-			showcase.setAttribute('filter', '')
-		})
+		el.innerHTML = `Weighted: ${getRank(wv_perc)}<span class="sub-value">${wv_perc.toFixed(2)}%</span>`
 		ratings.append(el)
 	}
 
 	for (var stat in chars[match].weights) {
 		// Create Bars
-		var perc = ((chars[match].weights[stat] / 1) * 100).toFixed(2)
+		var perc = ((chars[match].weights[stat] / 2.2) * 100).toFixed(2)
 		var el = document.createElement('div')
 		el.classList = 'echo-bar'
 		el.innerHTML = `
 					<span class="title">${statMap[stat]}</span>
-					<span class="value">${chars[match].weights[stat]}<span class="sub-value">/1</span></span>`
+					<span class="value">${chars[match].weights[stat]}</span>`
 		if (chars[match].weights[stat] != 0) {
 			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 		} else {
@@ -286,9 +335,6 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		}
 		info.append(el)
 	}
-
-	// Enable ratings
-	ratings.style.opacity = '1'
 
 	// Info
 	var el = document.createElement('button')
@@ -309,8 +355,9 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	})
 
 	// Enable controls
-	controls.style.opacity = '1'
-	controls.style.pointerEvents = 'all'
+	controls.classList.toggle('hidden')
+	ratings.classList.toggle('hidden')
+	filters.classList.toggle('hidden')
 })
 
 // Manual Input
@@ -334,6 +381,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 		// Create stat options
 		var selectContainer = document.createElement('div')
 		selectContainer.className = 'selection-container'
+		selectContainer.setAttribute('data-weight', 0)
 		var select = document.createElement('select')
 		select.setAttribute('stat', '')
 		for (var key in statMap) {
@@ -388,7 +436,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	el.classList = 'echo-bar'
 	el.innerHTML = `
 					<span class="title">Crit</span>
-					<span class="value">0<span class="sub-value">/200</span></span>`
+					<span class="value">0%</span>`
 	el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) 0%, rgba(32, 34, 37, 0.52) 0%`
 	echoSlot.append(el)
 
@@ -397,7 +445,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	el.classList = 'echo-bar'
 	el.innerHTML = `
 					<span class="title">Weighted: Unranked</span>
-					<span class="value">0<span class="sub-value">/500</span></span>`
+					<span class="value">0%</span>`
 	el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) 0%, rgba(32, 34, 37, 0.52) 0%`
 	echoSlot.append(el)
 
@@ -405,8 +453,9 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	echoSlot.style.opacity = '1'
 
 	// Enable controls
-	controls.style.opacity = '1'
-	controls.style.pointerEvents = 'all'
+	// Enable ratings + filters
+	controls.classList.toggle('hidden')
+	filters.classList.toggle('hidden')
 })
 
 function calcCustomEcho() {
@@ -415,8 +464,18 @@ function calcCustomEcho() {
 	var values = echoContainer.querySelectorAll('select[value]')
 	var ratings = echoContainer.querySelectorAll('.echo-bar')
 	var segments = echoContainer.querySelectorAll('.segments')
+	var showcase = document.querySelector('.showcase')
 	var cv_echo = 0
 	var wv_echo = 0
+	var echoStats = {}
+
+	// Set Max
+	var weightMaxPerc =
+		Object.values(chars[char].weights)
+			.sort((a, b) => b - a)
+			.slice(0, 5)
+			.reduce((acc, val) => acc + val, 0) * 100
+	var critMaxPerc = (chars[char].weights['CritRate'] + chars[char].weights['CritDMG']) * 100
 
 	// Update select/sliders
 	for (var i = 0; i < stats.length; i++) {
@@ -437,23 +496,26 @@ function calcCustomEcho() {
 			}
 		}
 
+		// Add stats
+		echoStats[stats[i].value] = values[i].value
+
 		// Calculate values
 		// -> Crit
 		if (stats[i].value.includes('Crit')) {
-			cv_echo += parseFloat((values[i].value / range[stats[i].value][8]) * 100)
+			cv_echo += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
+			stats[i].parentElement.setAttribute('crit', 'true')
+		} else {
+			stats[i].parentElement.setAttribute('crit', 'false')
 		}
 		// -> WV
 		if (chars[char].weights && stats[i].value != 'None') {
 			wv_echo += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
-			if (chars[char].weights[stats[i].value] == 1) {
-				stats[i].setAttribute('weighted', 'true')
-			}
-		} else {
-			stats[i].setAttribute('weighted', 'false')
+			stats[i].parentElement.setAttribute('data-weight', chars[char].weights[stats[i].value])
 		}
 
 		// Tier to segments
 		var tier = getTier(stats[i].value, values[i].value)
+		values[i].setAttribute('tier', tier)
 		var boxes = segments[i].querySelectorAll('[tier]')
 		boxes.forEach((el) => {
 			if (el.getAttribute('tier') <= tier) {
@@ -464,17 +526,26 @@ function calcCustomEcho() {
 		})
 	}
 
+	// Echo Value
+	showcase.querySelector('.echo-title').setAttribute('replace', calculateValue(echoStats, char, 'Custom').toFixed(2))
+
 	// Crit
-	var cv_perc = (cv_echo / 200) * 100
+	var cv_perc = (cv_echo / critMaxPerc) * 100
 	ratings[0].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${cv_perc}%, rgba(32, 34, 37, 0.52) ${cv_perc}%`
-	ratings[0].querySelector('.value').innerHTML = `${cv.toFixed(1)}<span class="sub-value">/200</span>`
+	ratings[0].querySelector('.value').innerHTML = `${cv_perc}%`
+
+	if (critMaxPerc > 0) {
+		ratings[0].style.display = 'flex'
+	} else {
+		ratings[0].style.display = 'none'
+	}
 
 	// Weighted
 	if (chars[char].weights) {
-		var wv_perc = (wv_echo / 500) * 100
+		var wv_perc = (wv_echo / weightMaxPerc) * 100
 		ratings[1].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${wv_perc}%, rgba(32, 34, 37, 0.52) ${wv_perc}%`
 		ratings[1].querySelector('.title').textContent = `Weighted: ${getRank(wv_perc)}`
-		ratings[1].querySelector('.value').innerHTML = `${wv.toFixed(1)}<span class="sub-value">/500</span>`
+		ratings[1].querySelector('.value').innerHTML = `${wv_perc.toFixed(2)}%`
 		ratings[1].style.display = 'flex'
 	} else {
 		ratings[1].style.display = 'none'
@@ -482,16 +553,133 @@ function calcCustomEcho() {
 }
 
 function getTier(stat, amount) {
-	var match = 0
+	let tier = 0
 	if (amount == 0) {
 		return 0
 	}
 	for (const [key, value] of Object.entries(range[stat])) {
 		if (amount >= value) {
-			match++
+			tier = Math.max(tier, Number(key))
 		}
 	}
-	return match
+	return tier
+}
+
+function changeFilter(el) {
+	var showcase = document.querySelector('.showcase')
+	var attr = el.getAttribute('data-filter')
+
+	if (attr == 'weight' || attr == 'crit') {
+		// Find the other filter button (crit if weight clicked, and vice versa)
+		var otherFilter = attr == 'weight' ? 'crit' : 'weight'
+
+		// If clicked element is already active, deactivate it and clear filter
+		if (el.classList.contains('active')) {
+			showcase.setAttribute('filter', 'none')
+			el.classList.remove('active')
+		} else {
+			// Deactivate the other button if active
+			var otherEl = document.querySelector(`[data-filter="${otherFilter}"]`)
+			if (otherEl && otherEl.classList.contains('active')) {
+				otherEl.classList.remove('active')
+			}
+			// Activate clicked button and set filter accordingly
+			el.classList.add('active')
+			showcase.setAttribute('filter', attr)
+		}
+	} else if (attr == 'color') {
+		if (el.classList.contains('active')) {
+			showcase.setAttribute('tiers', 'hide')
+			el.classList.remove('active')
+		} else {
+			showcase.setAttribute('tiers', 'show')
+			el.classList.add('active')
+		}
+	} else if (attr == 'replace') {
+		if (el.classList.contains('active')) {
+			showcase.setAttribute('replace', 'hide')
+			el.classList.remove('active')
+		} else {
+			showcase.setAttribute('replace', 'show')
+			el.classList.add('active')
+		}
+	}
+}
+
+function calculateValue(values, char, id) {
+	var accumProbBase = [7.33, 21.98, 41.52, 65.03, 80.66, 91.08, 97.03, 100]
+	var accumProbAlt = [18.52, 18.52, 62.97, 62.97, 62.97, 89.35, 89.35, 100]
+	let result = 0
+
+	// Start Group - Value Valc
+	console.groupCollapsed(`[Debug] Value Calculation (${id})`)
+
+	for (let v in values) {
+		// Get Tier
+		for (let [key, val] of Object.entries(range[v])) {
+			if (val == values[v]) {
+				var tier = key
+				continue
+			}
+		}
+
+		// Skip Empty/None
+		if (values[v] == 0) {
+			continue
+		}
+
+		// Get Perc
+		var perc = (values[v] / range[v]['8']) * 100
+
+		// Modifiers
+		var probFactor = 0.1
+		var modWeight = chars[char].weights[v]
+		if (v == 'DEF' || v == 'ATK') {
+			var modProb = accumProbAlt[tier - 1] * (probFactor / 100)
+		} else {
+			var modProb = accumProbBase[tier - 1] * (probFactor / 100)
+		}
+
+		// Update result
+		var increase = parseFloat((perc + perc * modProb) * modWeight)
+		result += increase
+
+		// Debugging - Group: Value Calc
+		console.table({
+			Stat: v,
+			Value: values[v],
+			Percentage: perc,
+			Tier: tier,
+			Probability: modProb,
+			Weight: modWeight,
+			Increase: increase
+		})
+	}
+
+	// End Group - Value Calc
+	console.groupEnd()
+
+	return result
+}
+
+function assignIcon(stat) {
+	var icons = {
+		None: '#',
+		HP: 'hp',
+		ATK: 'atk',
+		DEF: 'def',
+		'ATK%': 'atk',
+		'HP%': 'hp',
+		'DEF%': 'def',
+		CritRate: 'crit_r',
+		CritDMG: 'crit_d',
+		EnergyRegen: 'energy',
+		BasicAttackDMGBonus: 'dmg_basic',
+		HeavyAttackDMGBonus: 'dmg_heavy',
+		ResonanceSkillDMGBonus: 'dmg_res',
+		ResonanceLiberationDMGBonus: 'dmg_lib'
+	}
+	return icons[stat]
 }
 
 function getRank(perc) {
@@ -535,4 +723,43 @@ function getRank(perc) {
 		default:
 			return 'F'
 	}
+}
+
+function hexToRGB(hex) {
+	hex = hex.replace(/^#/, '')
+	if (hex.length === 3)
+		hex = hex
+			.split('')
+			.map((x) => x + x)
+			.join('')
+	const num = parseInt(hex, 16)
+	return [(num >> 16) & 255, (num >> 8) & 255, num & 255]
+}
+
+function rgbToHex(r, g, b) {
+	// Ensure each value is between 0 and 255
+	const clamp = (val) => Math.max(0, Math.min(255, val))
+	r = clamp(r)
+	g = clamp(g)
+	b = clamp(b)
+
+	// Convert each channel to a 2-digit hex string
+	const toHex = (val) => val.toString(16).padStart(2, '0')
+
+	return '#' + toHex(r) + toHex(g) + toHex(b)
+}
+
+function closestColor(targetColor, colorArray) {
+	let closestDistance = Infinity
+	let closestColor = null
+	const [r1, g1, b1] = hexToRGB(targetColor)
+	colorArray.forEach((color) => {
+		const [r2, g2, b2] = hexToRGB(color)
+		const distance = Math.sqrt((r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2)
+		if (distance < closestDistance) {
+			closestDistance = distance
+			closestColor = color
+		}
+	})
+	return closestColor
 }
