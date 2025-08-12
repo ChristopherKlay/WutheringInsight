@@ -427,6 +427,12 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 		const option = document.createElement('option')
 		option.value = key
 		option.textContent = key
+
+		// Check for unrelased / unweighted
+		if (Object.keys(chars[key]).length < 1) {
+			option.disabled = true
+		}
+
 		select.appendChild(option)
 	}
 	select.addEventListener('change', calcCustomEcho)

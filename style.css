@@ -418,6 +418,10 @@ label[for='imageInput'],
 	cursor: pointer;
 }
 
+.export-button {
+	display: none;
+}
+
 /* Filters */
 .filters {
 	border: var(--border-main);
