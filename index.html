@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
@@ -29,7 +29,7 @@
 
 	<body>
 		<!-- Background Setup -->
-		<div class="canvas">
+		<div class="canvas" data-export-exclude>
 			<img src="./media/img/background.jpg" alt="" />
 		</div>
 		<div class="splash"></div>
@@ -50,7 +50,7 @@
 			</div>
 
 			<!-- Filters -->
-			<div class="filters hidden">
+			<div class="filters hidden" data-export-exclude>
 				<div class="filter-button" data-filter="weight">Weighted Stats</div>
 				<div class="filter-button" data-filter="crit">Crit Value</div>
 				<div class="filter-button" data-filter="color">Colored Tiers</div>
@@ -58,7 +58,8 @@
 			</div>
 
 			<!-- Additional Controls -->
-			<div class="controls hidden">
+			<div class="controls hidden" data-export-exclude>
+				<button class="export-button">Export</button>
 				<button class="reset-button" onclick="location.reload()">Reset</button>
 			</div>
 
@@ -69,26 +70,30 @@
 					<div class="info-content">
 						<span class="highlight">Crit Scoring: </span>The total percentage value of rolled crit rate/damage out of the given maximum per echo.
 						<span class="sub-text">
-							Example: Rolling 6.3 (the lowest possible) out of 10.5 (the maximum) crit chance (without any crit damage) would result in a crit scoring of 60 (60% of the possible gain) further increased to 90, due to the 1.5
-							weight modifier.
+							Example: Rolling 6.3 (the lowest possible) out of 10.5 (the maximum) crit chance (without any crit damage) would result in a crit scoring of 60 (60% of the possible gain)
+							further increased to 90, due to the 1.5 weight modifier.
 							<br /><br />
 							This rating is only visible on characters that include crit stats in their weighted stats.
 						</span>
-						<span class="highlight">Tiers: </span>The segmentation on stat bars displayes the different possible roll values. The higher the tier of the roll, the more segments are highlighted.
+						<span class="highlight">Tiers: </span>The segmentation on stat bars displayes the different possible roll values. The higher the tier of the roll, the more segments are
+						highlighted.
 						<span class="sub-text">
-							Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% — only 6.4% or 7.1%) and heavily weighted (the lowest being almost 2.5x more likely to appear compared to
-							the highest).
+							Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% — only 6.4% or 7.1%) and heavily weighted (the lowest being almost
+							2.5x more likely to appear compared to the highest).
 							<br /><br />
 							More information can be found in the "Substat Distribution" table below.
 						</span>
-						<span class="highlight">Weighted: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a letter-based format for easier understanding.
+						<span class="highlight">Weighted: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a letter-based
+						format for easier understanding.
 						<span class="sub-text">
-							While character-specific weighting is applied, secondary requirements like energy regen and crit ratios are not checked and can result in performing below expectations. Always use this stat with your current crit
-							scoring and character-specific secondary requirements in mind.
+							While character-specific weighting is applied, secondary requirements like energy regen and crit ratios are not checked and can result in performing below expectations.
+							Always use this stat with your current crit scoring and character-specific secondary requirements in mind.
 						</span>
-						<span class="highlight">Echo Value: </span>A rating based on weighted stats further being adjusted by (accummulated) probabilities of the given tiers, (slightly) increasing the value of higher rolled stats instead of
-						using a equal distribution.
-						<span class="sub-text"> This gives a even better insight in how much "value" a given echo has and how replaceable it is, with the lowest valued echo being the most replaceable. </span>
+						<span class="highlight">Echo Value: </span>A rating based on weighted stats further being adjusted by (accummulated) probabilities of the given tiers, (slightly) increasing the
+						value of higher rolled stats instead of using a equal distribution.
+						<span class="sub-text">
+							This gives a even better insight in how much "value" a given echo has and how replaceable it is, with the lowest valued echo being the most replaceable.
+						</span>
 					</div>
 				</div>
 				<div class="info-weighted split">
@@ -331,6 +336,7 @@
 		</div>
 
 		<!-- Scripts -->
+		<script src="https://unpkg.com/html-to-image@1.11.0/dist/html-to-image.js"></script>
 		<script src="./script.js" type="module"></script>
 		<script src="https://storage.ko-fi.com/cdn/scripts/overlay-widget.js"></script>
 		<script>
@@ -338,7 +344,7 @@
 				type: 'floating-chat',
 				'floating-chat.donateButton.text': 'Spare some astrites',
 				'floating-chat.donateButton.background-color': 'rgba(32, 34, 37, 0.82)',
-				'floating-chat.donateButton.text-color': '#fff'
+				'floating-chat.donateButton.text-color': '#fff',
 			})
 		</script>
 	</body>

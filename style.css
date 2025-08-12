@@ -63,6 +63,10 @@ body {
 	color: rgb(243 246 250);
 }
 
+body[data-export] {
+	width: 1600px;
+}
+
 /* Effect classes */
 .hidden {
 	opacity: 0;
@@ -106,10 +110,16 @@ body {
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
-	width: 98%;
-	height: 98%;
+	width: 100%;
+	height: 100%;
 	opacity: 0.8;
 	z-index: -1;
+}
+
+.splash[data-export] {
+	position: absolute;
+	width: 1200px;
+	left: 200px;
 }
 
 /* Showcase */
@@ -194,12 +204,8 @@ h1 {
 }
 
 .echo-bar .title {
-	justify-self: flex-start;
-	text-align: left;
-	display: flex;
-	flex-direction: row;
 	width: 70%;
-	padding: 8px 0 8px 10px;
+	padding: 8px;
 }
 
 .echo-bar .value {
@@ -273,6 +279,7 @@ h1 {
 	gap: 2px;
 	width: 100%;
 	height: 100%;
+	z-index: -1;
 }
 
 .segments > div {
@@ -289,7 +296,7 @@ h1 {
 /* Hover Filters */
 /* Full */
 [data-weight^='1'],
-[data-weight^='2']{
+[data-weight^='2'] {
 	background: url('./media/img/bg-gradient.png') center/100% 100% !important;
 	border: var(--border-main) !important;
 }
@@ -356,7 +363,7 @@ h1 {
 	background: var(--background-main);
 	border-radius: var(--border-radius-sec);
 	border: var(--border-main);
-	padding: 6px 12px;
+	padding: 6px 10px 8px 10px;
 	width: 180px;
 	flex-direction: column;
 	align-items: center;
@@ -399,6 +406,7 @@ h1 {
 label[for='imageInput'],
 .reset-button,
 .info-button,
+.export-button,
 .manualInput {
 	padding: 8px 12px;
 	border-radius: var(--border-radius-main);
@@ -657,5 +665,8 @@ label[for='imageInput'],
 	}
 	.floatingchat-container-wrap {
 		left: calc(50% - 125px) !important;
+	}
+	.export-button {
+		display: none;
 	}
 }

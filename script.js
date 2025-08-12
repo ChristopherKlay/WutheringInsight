@@ -12,9 +12,13 @@ var echoInput = document.querySelector('.echo-input')
 var filters = document.querySelector('.filters')
 
 // Add control functionality
+// -> Filter
 document.querySelectorAll('.filter-button').forEach((el) => {
 	el.addEventListener('click', () => changeFilter(el))
 })
+
+// -> Export
+document.querySelector('.export-button').addEventListener('click', exportImage)
 
 // Upload Showcase
 document.getElementById('imageInput').addEventListener('change', async function (e) {
@@ -141,7 +145,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			})
 
 			// Cleanup
-			// -> Common replacements
+			// -> OCR Replacements
 			var output =
 				text
 					.replace('al', 'HP')
@@ -320,6 +324,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		ratings.append(el)
 	}
 
+	// Info Page - Weight Overview
 	for (var stat in chars[match].weights) {
 		// Create Bars
 		var perc = ((chars[match].weights[stat] / 2.2) * 100).toFixed(2)
@@ -468,6 +473,7 @@ function calcCustomEcho() {
 	var cv_echo = 0
 	var wv_echo = 0
 	var echoStats = {}
+	var currentSelections = []
 
 	// Set Max
 	var weightMaxPerc =
@@ -477,11 +483,27 @@ function calcCustomEcho() {
 			.reduce((acc, val) => acc + val, 0) * 100
 	var critMaxPerc = (chars[char].weights['CritRate'] + chars[char].weights['CritDMG']) * 100
 
+	// Gather all selected values
+	const selectedValues = Array.from(stats).map((select) => select.value)
+
+	// Loop through all select boxes
+	stats.forEach((select, idx) => {
+		Array.from(select.options).forEach((option) => {
+			// If this option is selected in any other select box, disable it
+			option.disabled = selectedValues.includes(option.value) && select.value !== option.value && option.value != 'None'
+		})
+	})
+
 	// Update select/sliders
 	for (var i = 0; i < stats.length; i++) {
+		// Reset on "None"
 		if (stats[i].value == 'None') {
 			// Reset styles
 			values[i].value = 0
+
+			// Reset attributes
+			stats[i].parentElement.removeAttribute('data-weight')
+			stats[i].parentElement.removeAttribute('crit')
 		}
 
 		// Set range options
@@ -532,7 +554,7 @@ function calcCustomEcho() {
 	// Crit
 	var cv_perc = (cv_echo / critMaxPerc) * 100
 	ratings[0].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${cv_perc}%, rgba(32, 34, 37, 0.52) ${cv_perc}%`
-	ratings[0].querySelector('.value').innerHTML = `${cv_perc}%`
+	ratings[0].querySelector('.value').innerHTML = `${cv_perc.toFixed(2)}%`
 
 	if (critMaxPerc > 0) {
 		ratings[0].style.display = 'flex'
@@ -604,6 +626,50 @@ function changeFilter(el) {
 			el.classList.add('active')
 		}
 	}
+}
+
+function exportImage() {
+	const node = document.body
+
+	// Export styles
+	document.body.setAttribute('data-export', '')
+	document.querySelector('.splash').setAttribute('data-export', '')
+
+	htmlToImage
+		.toPng(node, {
+			pixelRatio: 1,
+			filter: function (node) {
+				// Exclude elements by data-export-exclude attribute
+				if (node.hasAttribute && node.hasAttribute('data-export-exclude')) {
+					return false
+				}
+
+				// Exclude script tags the Ko-fi widget
+				if (node.tagName == 'SCRIPT' || (node.classList && node.classList.contains('kofi-widget-container'))) {
+					return false
+				}
+
+				return true
+			}
+		})
+		.then((dataUrl) => {
+			// Revert styles
+			document.body.removeAttribute('data-export')
+			document.querySelector('.splash').removeAttribute('data-export')
+
+			// Process result
+			const link = document.createElement('a')
+			link.download = 'WutheringInsight.png'
+			link.href = dataUrl
+			link.click()
+		})
+		.catch((err) => {
+			// Revert styles
+			document.body.removeAttribute('data-export')
+			document.querySelector('.splash').removeAttribute('data-export')
+
+			console.error('oops, something went wrong!', err)
+		})
 }
 
 function calculateValue(values, char, id) {
