@@ -178,7 +178,7 @@ export const chars = {
             ResonanceLiberationDMGBonus: 0.325
         }
     },
-    Ciaconna: {
+    Ciaccona: {
         weights: {
             HP: 0,
             ATK: 0.8,

@@ -2,16 +2,17 @@
 
 ![](https://raw.githubusercontent.com/ChristopherKlay/WutheringInsight/refs/heads/main/media/img/banner.jpg)
 
-A tool to quickly analyze your character showcase files powered by OCR (optical character recognition) displaying information that isn't (easily, or at all) available in the game itself, including a visual representation of stat tiers, a
-rating based on weighted stats and more.
+A tool to quickly analyze your character showcase files powered by OCR (optical character recognition) displaying information that isn't (easily, or at all) available via the game.
 
 [Live Version](https://christopherklay.github.io/WutheringInsight/)
 
 ## Features
 
--   [x] Upload showcases provided by the Wuthering Waves Discord bot and get a complete overview of your roll values
--   [x] Crit and total roll value per piece
--   [x] Overall rating (all echoes) based on possible roll value
+-   [x] Upload showcases provided by the official Wuthering Waves Discord bot and get a complete overview
+-   [x] Doesn't require any access to the game, with absolutely no risk of account restrictions
+-   [x] Echo rating based on crit values, weighted stats (per character) and even echo value (incl. roll probability) to check your most replaceable echo
+-   [x] Don't have access to the bot, or quickly want to check a single echo you got? Use manual mode and check the stats for any given character
+-   [x] Export the results (including current settings/filters) as a easily shareable image (optional)
 
 ## Usage
 

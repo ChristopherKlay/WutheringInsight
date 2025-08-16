@@ -104,11 +104,38 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	// Character-specific setup
 	var match = Object.keys(chars).find((key) => text.toLowerCase().includes(key.toLowerCase()))
 	if (match) {
+		// -> Title
 		document.querySelector('.title').textContent = match + "'s Echoes"
+
+		// Card Element
+		var card = {
+			container: document.createElement('div'),
+			backdrop: document.createElement('img'),
+			artwork: document.createElement('img')
+		}
+
+		// -> Container
+		card.container.className = 'echo card'
+
+		// Backdrop
+		card.backdrop.className = 'backdrop'
+		card.backdrop.src = './media/img/card/Aalto.webp'
+
+		// Artwork
+		card.artwork.className = 'artwork'
+		card.artwork.src = './media/img/card/Aalto.webp'
+
+		// Card Setup
+		card.container.append(card.backdrop)
+		card.container.append(card.artwork)
+
+		// Card background
 		if (match.includes('Rover')) {
-			document.querySelector('.splash').style.backgroundImage = `url("./media/img/backdrop/Rover.webp")`
+			card.backdrop.src = `./media/img/card/Rover.webp`
+			card.artwork.src = `./media/img/card/Rover.webp`
 		} else {
-			document.querySelector('.splash').style.backgroundImage = `url("./media/img/backdrop/${match.replace(' ', '')}.webp")`
+			card.backdrop.src = `./media/img/card/${match.replace(' ', '')}.webp`
+			card.artwork.src = `./media/img/card/${match.replace(' ', '')}.webp`
 		}
 	}
 
@@ -223,12 +250,12 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			// Add icon
 			var icon = document.createElement('img')
 			icon.className = 'icon'
-			icon.src = `./media/img/stats/${assignIcon(calcLabel)}.webp`
+			icon.src = `./media/img/icons/${assignIcon(calcLabel)}.webp`
 			el.append(icon)
 
 			// Add label
 			var title = document.createElement('span')
-			title.textContent = label
+			title.textContent = label.replace(' DMG Bonus', '')
 			title.className = 'title'
 			el.append(title)
 
@@ -300,11 +327,19 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			// Toogle container opacity
 			echoSlot.style.opacity = '1'
 
+			// Add Card
+			if (titleCount == 1) {
+				echoContainer.append(card.container)
+				card.container.style.opacity = '1'
+			}
+
 			// Increase title count
 			titleCount++
 		}
 	}
-	var ratings = document.querySelector('.ratings')
+	var ratings = document.createElement('div')
+	ratings.className = 'ratings hidden'
+	echoContainer.append(ratings)
 
 	// Crit Score
 	if (critMaxPerc > 0) {
@@ -370,6 +405,34 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	// Hide base controls
 	document.querySelector('.base-controls').style.display = 'none'
 
+	// Title
+	document.querySelector('.title').textContent = 'Custom Echo'
+
+	// Card Element
+	var card = {
+		container: document.createElement('div'),
+		backdrop: document.createElement('img'),
+		artwork: document.createElement('img')
+	}
+
+	// -> Container
+	card.container.className = 'echo card'
+
+	// Backdrop
+	card.backdrop.className = 'backdrop'
+	card.backdrop.src = './media/img/card/Aalto.webp'
+
+	// Artwork
+	card.artwork.className = 'artwork'
+	card.artwork.src = './media/img/card/Aalto.webp'
+
+	// Card Setup
+	card.container.append(card.backdrop)
+	card.container.append(card.artwork)
+
+	echoContainer.append(card.container)
+	card.container.style.opacity = '1'
+
 	// Setup echo
 	var echoSlot = document.createElement('div')
 	echoSlot.className = 'echo custom'
@@ -403,7 +466,6 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 		seg.className = 'segments'
 		for (var s = 1; s < 9; s++) {
 			var box = document.createElement('div')
-			box.setAttribute('tier', s)
 			seg.append(box)
 		}
 		selectContainer.append(seg)
@@ -541,17 +603,28 @@ function calcCustomEcho() {
 			stats[i].parentElement.setAttribute('data-weight', chars[char].weights[stats[i].value])
 		}
 
-		// Tier to segments
+		// Tier
 		var tier = getTier(stats[i].value, values[i].value)
 		values[i].setAttribute('tier', tier)
-		var boxes = segments[i].querySelectorAll('[tier]')
-		boxes.forEach((el) => {
-			if (el.getAttribute('tier') <= tier) {
-				el.setAttribute('active', '')
+
+		// Set segments
+		var boxes = segments[i].children
+		for (var s = 0; s < boxes.length; s++) {
+			if (tier > s) {
+				boxes[s].setAttribute('active', '')
 			} else {
-				el.removeAttribute('active')
+				boxes[s].removeAttribute('active')
 			}
-		})
+		}
+
+		// Update card background
+		if (char.includes('Rover')) {
+			document.querySelector('.backdrop').src = `./media/img/card/Rover.webp`
+			document.querySelector('.artwork').src = `./media/img/card/Rover.webp`
+		} else {
+			document.querySelector('.backdrop').src = `./media/img/card/${char.replace(' ', '')}.webp`
+			document.querySelector('.artwork').src = `./media/img/card/${char.replace(' ', '')}.webp`
+		}
 	}
 
 	// Echo Value
@@ -635,15 +708,13 @@ function changeFilter(el) {
 }
 
 function exportImage() {
-	const node = document.body
-
 	// Export styles
 	document.body.setAttribute('data-export', '')
-	document.querySelector('.splash').setAttribute('data-export', '')
 
 	htmlToImage
-		.toPng(node, {
+		.toPng(document.querySelector('.echo-fields'), {
 			pixelRatio: 1,
+			scale: 1,
 			filter: function (node) {
 				// Exclude elements by data-export-exclude attribute
 				if (node.hasAttribute && node.hasAttribute('data-export-exclude')) {
@@ -661,7 +732,6 @@ function exportImage() {
 		.then((dataUrl) => {
 			// Revert styles
 			document.body.removeAttribute('data-export')
-			document.querySelector('.splash').removeAttribute('data-export')
 
 			// Process result
 			const link = document.createElement('a')
@@ -672,7 +742,6 @@ function exportImage() {
 		.catch((err) => {
 			// Revert styles
 			document.body.removeAttribute('data-export')
-			document.querySelector('.splash').removeAttribute('data-export')
 
 			console.error('oops, something went wrong!', err)
 		})
@@ -736,7 +805,7 @@ function calculateValue(values, char, id) {
 
 function assignIcon(stat) {
 	var icons = {
-		None: '#',
+		None: 'none',
 		HP: 'hp',
 		ATK: 'atk',
 		DEF: 'def',
