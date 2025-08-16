@@ -8,11 +8,11 @@ A tool to quickly analyze your character showcase files powered by OCR (optical 
 
 ## Features
 
--   [x] Upload showcases provided by the official Wuthering Waves Discord bot and get a complete overview
--   [x] Doesn't require any access to the game, with absolutely no risk of account restrictions
--   [x] Echo rating based on crit values, weighted stats (per character) and even echo value (incl. roll probability) to check your most replaceable echo
--   [x] Don't have access to the bot, or quickly want to check a single echo you got? Use manual mode and check the stats for any given character
--   [x] Export the results (including current settings/filters) as a easily shareable image (optional)
+-   [x] Upload showcases provided by the official Wuthering Waves Discord bot to get a complete overview.
+-   [x] No access to the game is required, with absolutely no risk of account restrictions.
+-   [x] Echo rating is based on crit values, weighted stats (per character), and even echo value (including roll probability) to help you identify your most replaceable echo.
+-   [x] Don’t have access to the bot or just want to quickly check a single echo you obtained? Use manual mode to check the stats for any given character.
+-   [x] Export the results (including current settings and filters) as an easily shareable image (optional).
 
 ## Usage
 
