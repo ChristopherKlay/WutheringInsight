@@ -1,3 +1,5 @@
+// ─── Initial Setup ─────────────────────────────────────────────────────────────────────────── ✣ ─
+
 // Imports
 import { name, regions } from './import/scan.js'
 import { range, statMap } from './import/stats.js'
@@ -5,34 +7,113 @@ import { chars } from './import/chars.js'
 
 // Element Handles
 var echoContainer = document.querySelector('.echo-fields')
-var showcase = document.querySelector('.showcase')
 var controls = document.querySelector('.controls')
 var info = document.querySelector('.info-weighted')
-var echoInput = document.querySelector('.echo-input')
 var filters = document.querySelector('.filters')
 
-// Add control functionality
-// -> Filter
+// Stat icons
+var statIcons = {
+	None: 'none',
+	HP: 'hp',
+	ATK: 'atk',
+	DEF: 'def',
+	'ATK%': 'atk',
+	'HP%': 'hp',
+	'DEF%': 'def',
+	CritRate: 'crit_r',
+	CritDMG: 'crit_d',
+	EnergyRegen: 'energy',
+	BasicAttackDMGBonus: 'dmg_basic',
+	HeavyAttackDMGBonus: 'dmg_heavy',
+	ResonanceSkillDMGBonus: 'dmg_res',
+	ResonanceLiberationDMGBonus: 'dmg_lib',
+}
+
+// ─── Control Elements ──────────────────────────────────────────────────────────────────────── ✣ ─
+
+// Filters
 document.querySelectorAll('.filter-button').forEach((el) => {
-	el.addEventListener('click', () => changeFilter(el))
+	el.addEventListener('click', () => setFilter(el))
 })
 
-// -> Export
+// Export
 document.querySelector('.export-button').addEventListener('click', exportImage)
 
-// Upload Showcase
-document.getElementById('imageInput').addEventListener('change', async function (e) {
+// Showcase Upload (Automated)
+document.getElementById('imageInput').addEventListener('change', uploadShowcase)
+
+// Manual Input (Custom Echo)
+document.querySelector('.manualInput').addEventListener('click', createCustomEcho)
+
+// ─── Upload Showcase ───────────────────────────────────────────────────────────────────────── ✣ ─
+
+/**
+ * Processes a user-uploaded showcase image, runs OCR to extract character
+ * and stat data, and dynamically builds a complete Echo showcase UI.
+ *
+ * **Workflow:**
+ * 1. **Input Validation:**
+ *    - Expects a `.jpeg` file at 1920x1080 resolution.
+ *    - Displays an error on the label if the file does not meet requirements.
+ *
+ * 2. **OCR Setup (Tesseract.js):**
+ *    - Creates a worker limited to alphanumeric and whitelisted characters.
+ *    - Recognizes the character name in the defined bounding box (`name` region).
+ *    - Postprocesses known OCR errors (e.g. `"j"` misread instead of `"i"`).
+ *
+ * 3. **Character Detection:**
+ *    - Matches OCR text to entries in the `chars` global lookup.
+ *    - Special handling for **Rover** variants via color sampling/matching.
+ *
+ * 4. **UI Construction:**
+ *    - Updates the showcase title (`<div class="title">`).
+ *    - Creates a character card via `createCard(match)`.
+ *    - Iterates through each region (`regions`) to:
+ *      - OCR stat values and labels from cropped subregions.
+ *      - Clean up OCR mistakes, normalize labels, fix missing `%`.
+ *      - Determine stat tier with `getTier()`.
+ *      - Compute percentage, crit contribution, and weighted contribution.
+ *      - Render an `.echo` block containing:
+ *        - Echo title (Echo #n).
+ *        - Individual stat bars with icon, title, value, and tier segments.
+ *        - Crit/Weighted bars for that particular echo.
+ *      - Attribute each `.echo-title` with `replace` containing the calculated stat value via `calculateValue()`.
+ *
+ * 5. **Totals:**
+ *    - Accumulates crit score and weighted score across all echoes (up to 5).
+ *    - Displays consolidated crit and weighted ranks at the bottom using `getRank()`.
+ *
+ * 6. **Info Page:**
+ *    - Dynamically builds a weight overview (`.echo-bar` entries for each stat in `chars[match].weights`).
+ *    - Adds an "Info" button to open the `.info-page`, with a window listener to close the page when clicking outside.
+ *
+ * 7. **Final UI Adjustments:**
+ *    - Appends ratings container (`.ratings`).
+ *    - Reveals `controls`, `ratings`, and `filters` sections.
+ *
+ * @async
+ * @param {Event} event - File input change event triggered when the user uploads an image.
+ * @returns {Promise<void>} Resolves once the showcase has been processed and the DOM has been updated.
+ *
+ * @sideeffect
+ * - Reads and validates a JPEG file.
+ * - Uses Tesseract.js for OCR.
+ * - Mutates DOM: adds `.echo` blocks, `.echo-bar` stats, `.ratings` summary, `.info-page` content.
+ * - Toggles visibility of control elements.
+ */
+async function uploadShowcase(event) {
 	// Upload label
 	var label = document.querySelector('label[for="imageInput"]')
-	// File
-	const file = e.target.files[0]
+
+	// Check for file
+	const file = event.target.files[0]
 	if (!file) return
+
 	// Tesseract
 	const worker = await Tesseract.createWorker('eng')
-	// Tesseract Settings
 	await worker.setParameters({
 		tessedit_pageseg_mode: 7,
-		tessedit_char_whitelist: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%,. '
+		tessedit_char_whitelist: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%,. ',
 	})
 	// Image Element
 	const img = new Image()
@@ -55,9 +136,9 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 	// Recognize character
 	var {
-		data: { text }
+		data: { text },
 	} = await worker.recognize(img, {
-		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height }
+		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height },
 	})
 
 	// Character scan errors
@@ -108,35 +189,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 		document.querySelector('.title').textContent = match + "'s Echoes"
 
 		// Card Element
-		var card = {
-			container: document.createElement('div'),
-			backdrop: document.createElement('img'),
-			artwork: document.createElement('img')
-		}
-
-		// -> Container
-		card.container.className = 'echo card'
-
-		// Backdrop
-		card.backdrop.className = 'backdrop'
-		card.backdrop.src = './media/img/card/Aalto.webp'
-
-		// Artwork
-		card.artwork.className = 'artwork'
-		card.artwork.src = './media/img/card/Aalto.webp'
-
-		// Card Setup
-		card.container.append(card.backdrop)
-		card.container.append(card.artwork)
-
-		// Card background
-		if (match.includes('Rover')) {
-			card.backdrop.src = `./media/img/card/Rover.webp`
-			card.artwork.src = `./media/img/card/Rover.webp`
-		} else {
-			card.backdrop.src = `./media/img/card/${match.replace(' ', '')}.webp`
-			card.artwork.src = `./media/img/card/${match.replace(' ', '')}.webp`
-		}
+		var card = createCard(match)
 	}
 
 	// Max Weight Calculation
@@ -166,9 +219,9 @@ document.getElementById('imageInput').addEventListener('change', async function 
 
 			// OCR on the cropped region
 			var {
-				data: { text }
+				data: { text },
 			} = await worker.recognize(img, {
-				rectangle: { top: top, left: left, width: width, height: height }
+				rectangle: { top: top, left: left, width: width, height: height },
 			})
 
 			// Cleanup
@@ -250,7 +303,7 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			// Add icon
 			var icon = document.createElement('img')
 			icon.className = 'icon'
-			icon.src = `./media/img/icons/${assignIcon(calcLabel)}.webp`
+			icon.src = `./media/img/icons/${statIcons[calcLabel]}.webp`
 			el.append(icon)
 
 			// Add label
@@ -288,54 +341,52 @@ document.getElementById('imageInput').addEventListener('change', async function 
 			echoSlot.append(el)
 		}
 
-		if (echo != 'name') {
-			// HR
-			el = document.createElement('hr')
-			echoSlot.append(el)
+		// Divider
+		el = document.createElement('hr')
+		echoSlot.append(el)
 
-			// Crit Value
-			if (critMaxPerc > 0) {
-				var perc = (cv_echo / critMaxPerc) * 100
-				var el = document.createElement('div')
-				el.classList = 'echo-bar'
-				el.innerHTML = `
+		// Crit Value
+		if (critMaxPerc > 0) {
+			var perc = (cv_echo / critMaxPerc) * 100
+			var el = document.createElement('div')
+			el.classList = 'echo-bar'
+			el.innerHTML = `
 					<span class="title">Crit</span>
 					<span class="value">${perc.toFixed(2)}%</span>`
-				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
-				echoSlot.append(el)
-			}
+			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
+			echoSlot.append(el)
+		}
 
-			// Weighted Value
-			if (chars[match].weights) {
-				var perc = (wv_echo / weightMaxPerc) * 100
-				var el = document.createElement('div')
-				el.classList = 'echo-bar'
-				el.innerHTML = `
+		// Weighted Value
+		if (chars[match].weights) {
+			var perc = (wv_echo / weightMaxPerc) * 100
+			var el = document.createElement('div')
+			el.classList = 'echo-bar'
+			el.innerHTML = `
 					<span class="title">Weighted</span>
 					<span class="value">${perc.toFixed(2)}%</span>`
-				el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
-				echoSlot.append(el)
-			}
-
-			// Value
-			echoSlot.querySelector('.echo-title').setAttribute('replace', calculateValue(echoStats, match, `Echo #${titleCount}`).toFixed(2))
-
-			// Totals
-			cv_total += cv_echo
-			wv_total += wv_echo
-
-			// Toogle container opacity
-			echoSlot.style.opacity = '1'
-
-			// Add Card
-			if (titleCount == 1) {
-				echoContainer.append(card.container)
-				card.container.style.opacity = '1'
-			}
-
-			// Increase title count
-			titleCount++
+			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
+			echoSlot.append(el)
 		}
+
+		// Value
+		echoSlot.querySelector('.echo-title').setAttribute('replace', calculateValue(echoStats, match, `Echo #${titleCount}`).toFixed(2))
+
+		// Totals
+		cv_total += cv_echo
+		wv_total += wv_echo
+
+		// Toogle echo container opacity
+		echoSlot.style.opacity = '1'
+
+		// Add card element
+		if (titleCount == 1) {
+			echoContainer.append(card.container)
+			card.container.style.opacity = '1'
+		}
+
+		// Increase title count
+		titleCount++
 	}
 	var ratings = document.createElement('div')
 	ratings.className = 'ratings hidden'
@@ -398,10 +449,23 @@ document.getElementById('imageInput').addEventListener('change', async function 
 	controls.classList.toggle('hidden')
 	ratings.classList.toggle('hidden')
 	filters.classList.toggle('hidden')
-})
+}
 
-// Manual Input
-document.querySelector('.manualInput').addEventListener('click', function () {
+// ─── Manual Input ──────────────────────────────────────────────────────────────────────────── ✣ ─
+
+/**
+ * Creates and initializes the "Custom Echo" interface.
+ *
+ * - Hides the default `.base-controls` section.
+ * - Updates the title to "Custom Echo".
+ * - Generates a character card (default: `"Aalto"`) and appends it to the global `echoContainer`.
+ * - Dynamically builds the interactive echo editor (`echoSlot`)
+ * - Each `<select>` is bound to the `updateCustomEcho` updater for live UI recalculation.
+ *
+ * @function
+ * @returns {void} Does not return a value; initializes DOM elements and updates global state.
+ */
+function createCustomEcho() {
 	// Hide base controls
 	document.querySelector('.base-controls').style.display = 'none'
 
@@ -409,27 +473,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	document.querySelector('.title').textContent = 'Custom Echo'
 
 	// Card Element
-	var card = {
-		container: document.createElement('div'),
-		backdrop: document.createElement('img'),
-		artwork: document.createElement('img')
-	}
-
-	// -> Container
-	card.container.className = 'echo card'
-
-	// Backdrop
-	card.backdrop.className = 'backdrop'
-	card.backdrop.src = './media/img/card/Aalto.webp'
-
-	// Artwork
-	card.artwork.className = 'artwork'
-	card.artwork.src = './media/img/card/Aalto.webp'
-
-	// Card Setup
-	card.container.append(card.backdrop)
-	card.container.append(card.artwork)
-
+	var card = createCard('Aalto')
 	echoContainer.append(card.container)
 	card.container.style.opacity = '1'
 
@@ -458,7 +502,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 			option.textContent = statMap[key]
 			select.appendChild(option)
 		}
-		select.addEventListener('change', calcCustomEcho)
+		select.addEventListener('change', updateCustomEcho)
 		selectContainer.appendChild(select)
 
 		// Add segments
@@ -476,7 +520,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 		select.setAttribute('value', '')
 		const option = document.createElement('option')
 		select.appendChild(option)
-		select.addEventListener('change', calcCustomEcho)
+		select.addEventListener('change', updateCustomEcho)
 		row.appendChild(select)
 
 		echoSlot.appendChild(row)
@@ -497,7 +541,7 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 
 		select.appendChild(option)
 	}
-	select.addEventListener('change', calcCustomEcho)
+	select.addEventListener('change', updateCustomEcho)
 	echoSlot.append(select)
 
 	// Divider element
@@ -529,9 +573,18 @@ document.querySelector('.manualInput').addEventListener('click', function () {
 	// Enable ratings + filters
 	controls.classList.toggle('hidden')
 	filters.classList.toggle('hidden')
-})
+}
 
-function calcCustomEcho() {
+// ─── Functions ─────────────────────────────────────────────────────────────────────────────── ✣ ─
+
+/**
+ * Updates the custom echo configuration based on user-selected stats, values,
+ * and the currently chosen character.
+ *
+ * @returns {void} The function does not return a value; it updates DOM state
+ *   and style side effects directly.
+ */
+function updateCustomEcho() {
 	var char = echoContainer.querySelector('select[char]').value
 	var stats = echoContainer.querySelectorAll('select[stat]')
 	var values = echoContainer.querySelectorAll('select[value]')
@@ -541,9 +594,8 @@ function calcCustomEcho() {
 	var cv_echo = 0
 	var wv_echo = 0
 	var echoStats = {}
-	var currentSelections = []
 
-	// Set Max
+	// Set maxmimum possible weighted stat
 	var weightMaxPerc =
 		Object.values(chars[char].weights)
 			.sort((a, b) => b - a)
@@ -551,13 +603,13 @@ function calcCustomEcho() {
 			.reduce((acc, val) => acc + val, 0) * 100
 	var critMaxPerc = (chars[char].weights['CritRate'] + chars[char].weights['CritDMG']) * 100
 
-	// Gather all selected values
+	// Gather all user-selected values
 	const selectedValues = Array.from(stats).map((select) => select.value)
 
 	// Loop through all select boxes
 	stats.forEach((select, idx) => {
 		Array.from(select.options).forEach((option) => {
-			// If this option is selected in any other select box, disable it
+			// Disable selected options in all other select boxes
 			option.disabled = selectedValues.includes(option.value) && select.value !== option.value && option.value != 'None'
 		})
 	})
@@ -653,6 +705,58 @@ function calcCustomEcho() {
 	}
 }
 
+/**
+ * Creates a character card element consisting of a container, backdrop, and artwork.
+ *
+ * - The returned object includes DOM elements:
+ *   - `container` (`<div>` with class `"echo card"`)
+ *   - `backdrop` (`<img>` with class `"backdrop"`)
+ *   - `artwork` (`<img>` with class `"artwork"`)
+ *
+ * @param {string} char - The character name used to determine the card artwork.
+ * @returns {{container: HTMLElement, backdrop: HTMLImageElement, artwork: HTMLImageElement}}
+ *   An object containing the created card elements.
+ */
+function createCard(char) {
+	// Card Element
+	var card = {
+		container: document.createElement('div'),
+		backdrop: document.createElement('img'),
+		artwork: document.createElement('img'),
+	}
+
+	// -> Container
+	card.container.className = 'echo card'
+
+	// Backdrop
+	card.backdrop.className = 'backdrop'
+
+	// Artwork
+	card.artwork.className = 'artwork'
+
+	// Card Setup
+	card.container.append(card.backdrop)
+	card.container.append(card.artwork)
+
+	// Card background
+	if (char.includes('Rover')) {
+		card.backdrop.src = `./media/img/card/Rover.webp`
+		card.artwork.src = `./media/img/card/Rover.webp`
+	} else {
+		card.backdrop.src = `./media/img/card/${char.replace(' ', '')}.webp`
+		card.artwork.src = `./media/img/card/${char.replace(' ', '')}.webp`
+	}
+	return card
+}
+
+/**
+ * Determines the tier of a given stat value based on predefined thresholds.
+ *
+ * @param {string} stat - The name of the stat (must exist as a key in the global `range` object).
+ * @param {number} amount - The numeric value of the stat to evaluate.
+ * @returns {number} The tier number corresponding to the provided amount,
+ *   or `0` if the amount does not reach any threshold.
+ */
 function getTier(stat, amount) {
 	let tier = 0
 	if (amount == 0) {
@@ -666,7 +770,17 @@ function getTier(stat, amount) {
 	return tier
 }
 
-function changeFilter(el) {
+/**
+ * Toggles filter attributes on the `.showcase` element based on the clicked control element.
+ *
+ * The clicked element is marked active with the `active` class when enabled,
+ * and the class is removed when disabled. Attributes on the `.showcase` element
+ * reflect the active filter state.
+ *
+ * @param {HTMLElement} el - The element that was clicked, containing a `data-filter` attribute.
+ * @returns {void} Does not return a value; updates the DOM as a side effect.
+ */
+function setFilter(el) {
 	var showcase = document.querySelector('.showcase')
 	var attr = el.getAttribute('data-filter')
 
@@ -707,8 +821,20 @@ function changeFilter(el) {
 	}
 }
 
+/**
+ * Exports the contents of the `.echo-fields` element as a PNG image.
+ *
+ * - Temporarily applies `data-export` styles to the document body.
+ * - Uses the `html-to-image` library to render the element as a PNG.
+ * - Excludes any elements with the `data-export-exclude` attribute.
+ * - Triggers a download of the generated image (`WutheringInsight.png`).
+ * - Cleans up by removing export-specific styles, even on error.
+ *
+ * @function
+ * @returns {void} The function does not return a value; triggers PNG download as a side effect.
+ */
 function exportImage() {
-	// Export styles
+	// Set export styles
 	document.body.setAttribute('data-export', '')
 
 	htmlToImage
@@ -721,16 +847,11 @@ function exportImage() {
 					return false
 				}
 
-				// Exclude script tags the Ko-fi widget
-				if (node.tagName == 'SCRIPT' || (node.classList && node.classList.contains('kofi-widget-container'))) {
-					return false
-				}
-
 				return true
-			}
+			},
 		})
 		.then((dataUrl) => {
-			// Revert styles
+			// Remove export styles
 			document.body.removeAttribute('data-export')
 
 			// Process result
@@ -740,13 +861,33 @@ function exportImage() {
 			link.click()
 		})
 		.catch((err) => {
-			// Revert styles
+			// Remove export styles
 			document.body.removeAttribute('data-export')
 
 			console.error('oops, something went wrong!', err)
 		})
 }
 
+/**
+ * Calculates a weighted stat value for a character based on
+ * provided stat values, tier-based probability curves, and
+ * character-specific weight modifiers.
+ *
+ * - Each stat is evaluated against predefined ranges (`range`)
+ *   to determine its tier.
+ * - Percent contribution (`perc`) is calculated relative to the
+ *   maximum tier value.
+ * - A probability factor is applied using either the base or
+ *   alternate cumulative probability arrays, depending on the stat type.
+ * - The result is weighted according to the character's specific
+ *   stat weighting and accumulated into the final result.
+ * - Debug information is output via `console.group` and `console.table`.
+ *
+ * @param {Object.<string, number>} values - An object mapping stat names to their numeric values.
+ * @param {string} char - The character identifier used to reference weight modifiers in `chars[char].weights`.
+ * @param {string|number} id - An identifier for debugging purposes (used in console output).
+ * @returns {number} The final calculated weighted value.
+ */
 function calculateValue(values, char, id) {
 	var accumProbBase = [7.33, 21.98, 41.52, 65.03, 80.66, 91.08, 97.03, 100]
 	var accumProbAlt = [18.52, 18.52, 62.97, 62.97, 62.97, 89.35, 89.35, 100]
@@ -793,7 +934,7 @@ function calculateValue(values, char, id) {
 			Tier: tier,
 			Probability: modProb,
 			Weight: modWeight,
-			Increase: increase
+			Increase: increase,
 		})
 	}
 
@@ -803,69 +944,48 @@ function calculateValue(values, char, id) {
 	return result
 }
 
-function assignIcon(stat) {
-	var icons = {
-		None: 'none',
-		HP: 'hp',
-		ATK: 'atk',
-		DEF: 'def',
-		'ATK%': 'atk',
-		'HP%': 'hp',
-		'DEF%': 'def',
-		CritRate: 'crit_r',
-		CritDMG: 'crit_d',
-		EnergyRegen: 'energy',
-		BasicAttackDMGBonus: 'dmg_basic',
-		HeavyAttackDMGBonus: 'dmg_heavy',
-		ResonanceSkillDMGBonus: 'dmg_res',
-		ResonanceLiberationDMGBonus: 'dmg_lib'
-	}
-	return icons[stat]
-}
-
+/**
+ * Returns the corresponding rank for a percentage value
+ * based on predefined thresholds.
+ *
+ * @param {number} perc - The percentage value to evaluate.
+ * @returns {string} The rank for the given percentage.
+ */
 function getRank(perc) {
-	switch (true) {
-		case perc >= 75:
-			return 'Sentinel'
-		case perc >= 70:
-			return 'WTF+'
-		case perc >= 65:
-			return 'WTF'
-		case perc >= 60.5:
-			return 'SSS+'
-		case perc >= 56.5:
-			return 'SSS'
-		case perc >= 53:
-			return 'SS+'
-		case perc >= 50:
-			return 'SS'
-		case perc >= 47.5:
-			return 'S+'
-		case perc >= 45:
-			return 'S'
-		case perc >= 42.5:
-			return 'A+'
-		case perc >= 40:
-			return 'A'
-		case perc >= 37.5:
-			return 'B+'
-		case perc >= 35:
-			return 'B'
-		case perc >= 32.5:
-			return 'C+'
-		case perc >= 30:
-			return 'C'
-		case perc >= 27.5:
-			return 'D+'
-		case perc >= 25:
-			return 'D'
-		case perc >= 22.5:
-			return 'F+'
-		default:
-			return 'F'
+	const thresholds = [
+		{ min: 75, rank: 'Sentinel' },
+		{ min: 70, rank: 'WTF+' },
+		{ min: 65, rank: 'WTF' },
+		{ min: 60.5, rank: 'SSS+' },
+		{ min: 56.5, rank: 'SSS' },
+		{ min: 53, rank: 'SS+' },
+		{ min: 50, rank: 'SS' },
+		{ min: 47.5, rank: 'S+' },
+		{ min: 45, rank: 'S' },
+		{ min: 42.5, rank: 'A+' },
+		{ min: 40, rank: 'A' },
+		{ min: 37.5, rank: 'B+' },
+		{ min: 35, rank: 'B' },
+		{ min: 32.5, rank: 'C+' },
+		{ min: 30, rank: 'C' },
+		{ min: 27.5, rank: 'D+' },
+		{ min: 25, rank: 'D' },
+		{ min: 22.5, rank: 'F+' },
+	]
+
+	for (const { min, rank } of thresholds) {
+		if (perc >= min) return rank
 	}
+	return 'F'
 }
 
+/**
+ * Converts a hex color code into its RGB components.
+ * Supports both 3-digit (#fff) and 6-digit (#ffffff) formats.
+ *
+ * @param {string} hex - The hex color code.
+ * @returns {number[]} An array [r, g, b] with values from 0 to 255.
+ */
 function hexToRGB(hex) {
 	hex = hex.replace(/^#/, '')
 	if (hex.length === 3)
@@ -877,6 +997,14 @@ function hexToRGB(hex) {
 	return [(num >> 16) & 255, (num >> 8) & 255, num & 255]
 }
 
+/**
+ * Converts RGB values into a hex color string.
+ *
+ * @param {number} r - The red component (0–255).
+ * @param {number} g - The green component (0–255).
+ * @param {number} b - The blue component (0–255).
+ * @returns {string} The hex color string in the format "#rrggbb".
+ */
 function rgbToHex(r, g, b) {
 	// Ensure each value is between 0 and 255
 	const clamp = (val) => Math.max(0, Math.min(255, val))
@@ -890,6 +1018,14 @@ function rgbToHex(r, g, b) {
 	return '#' + toHex(r) + toHex(g) + toHex(b)
 }
 
+/**
+ * Finds the closest hex color from a provided list of colors
+ * by calculating the Euclidean distance in RGB space.
+ *
+ * @param {string} targetColor - The target color in hex format (e.g. "#ff0000").
+ * @param {string[]} colorArray - An array of hex color strings to compare against.
+ * @returns {string|null} The closest matching color from the array, or null if the array is empty.
+ */
 function closestColor(targetColor, colorArray) {
 	let closestDistance = Infinity
 	let closestColor = null

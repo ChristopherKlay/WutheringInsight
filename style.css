@@ -1,3 +1,4 @@
+/* ─── Css Variables ──────────────────────────────────────────────────────────────────────── ✣ ─ */
 :root {
 	/* Fonts */
 	--font-family-main: 'Lagu Sans', 'Segoe UI', Arial, sans-serif;
@@ -40,24 +41,28 @@
 	--halftone-dotsize: 0.25em;
 }
 
-/* Fonts */
+/* ─── Fonts ──────────────────────────────────────────────────────────────────────────────── ✣ ─ */
 @font-face {
 	font-family: 'Lagu Sans';
-	src:
-		local('Lagu Sans Bold'),
-		local('Lagu-Sans-Bold'),
-		url('./media/font/LaguSans-Bold.woff2') format('woff2'),
-		url('./media/font/LaguSans-Bold.woff') format('woff'),
+	src: local('Lagu Sans Bold'), local('Lagu-Sans-Bold'), url('./media/font/LaguSans-Bold.woff2') format('woff2'), url('./media/font/LaguSans-Bold.woff') format('woff'),
 		url('./media/font/LaguSans-Bold.ttf') format('truetype');
 	font-weight: 700;
 	font-style: normal;
 }
 
+/* ─── Style Resets ───────────────────────────────────────────────────────────────────────── ✣ ─ */
 * {
 	box-sizing: border-box;
 }
 
-/* Page-wide / body changes */
+/* ─── Helper Classes ─────────────────────────────────────────────────────────────────────── ✣ ─ */
+.hidden {
+	opacity: 0;
+	pointer-events: none;
+	visibility: hidden;
+}
+
+/* ─── Page Body ──────────────────────────────────────────────────────────────────────────── ✣ ─ */
 body {
 	display: flex;
 	justify-content: center;
@@ -72,14 +77,7 @@ body[data-export] {
 	height: 1200px;
 }
 
-/* Effect classes */
-.hidden {
-	opacity: 0;
-	pointer-events: none;
-	visibility: hidden;
-}
-
-/* Background */
+/* ─── Background Canvas ──────────────────────────────────────────────────────────────────── ✣ ─ */
 .canvas {
 	position: absolute;
 	z-index: -1;
@@ -109,7 +107,7 @@ body[data-export] {
 	mix-blend-mode: hard-light;
 }
 
-/* Showcase */
+/* ─── Showcase ───────────────────────────────────────────────────────────────────────────── ✣ ─ */
 .showcase {
 	min-height: 100vh;
 	width: 100%;
@@ -123,15 +121,19 @@ body[data-export] {
 
 h1 {
 	font-size: 2.4rem;
-	text-shadow:
-		2px 2px 3px rgb(0 0 0 / 0.4),
-		2px 5px 13px rgb(0 0 0 / 0.1),
-		2px 12px 23px rgb(0 0 0 / 0.1);
+	text-shadow: 2px 2px 3px rgb(0 0 0 / 0.4), 2px 5px 13px rgb(0 0 0 / 0.1), 2px 12px 23px rgb(0 0 0 / 0.1);
 	text-align: center;
 	margin: 0;
 }
 
-/* Card */
+/* ─── Card ───────────────────────────────────────────────────────────────────────────────── ✣ ─ */
+.card {
+	padding: 0;
+	background-size: contain, 100%, cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
 .backdrop,
 .artwork {
 	position: absolute;
@@ -149,7 +151,8 @@ h1 {
 	object-fit: contain;
 }
 
-/* Echo Container */
+/* ─── Echoes ─────────────────────────────────────────────────────────────────────────────── ✣ ─ */
+/* Container */
 .echo-fields {
 	display: flex;
 	width: 100%;
@@ -177,13 +180,6 @@ h1 {
 	backdrop-filter: blur(3px);
 }
 
-.card {
-	padding: 0;
-	background-size: contain, 100%, cover;
-	background-position: center;
-	background-repeat: no-repeat;
-}
-
 .echo hr {
 	width: 85%;
 	border: 1px solid rgb(var(--accent-color) / 0.2);
@@ -196,6 +192,7 @@ h1 {
 	letter-spacing: 1px;
 }
 
+/* Stat Bars */
 .echo-bar {
 	display: flex;
 	position: relative;
@@ -289,7 +286,7 @@ h1 {
 	background: var(--background-main);
 }
 
-/* Segments */
+/* ─── Segment Display ────────────────────────────────────────────────────────────────────── ✣ ─ */
 .segments {
 	position: absolute;
 	display: flex;
@@ -311,7 +308,42 @@ h1 {
 	background: var(--gradient-segment);
 }
 
-/* Hover Filters */
+/* ─── Filter Functions ───────────────────────────────────────────────────────────────────── ✣ ─ */
+/* Filter Controls */
+.filters {
+	border: var(--border-main);
+	border-radius: var(--border-radius-sec);
+	padding: 6px;
+	background: var(--background-main);
+	transition: var(--transition-main);
+}
+
+.filter-button {
+	color: rgb(var(--muted-color));
+	display: inline-block;
+	padding: 4px 6px;
+	pointer-events: all;
+	border-radius: var(--border-radius-main);
+	border: 1px solid rgb(255 255 255 / 0.2);
+	text-align: center;
+	font-size: 0.8rem;
+	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
+	cursor: pointer;
+	user-select: none;
+}
+
+.filter-button.active {
+	color: #fff;
+	background: url('./media/img/bg-gradient.png');
+	background-size: cover;
+	border: var(--border-main);
+}
+
+.filter-button.active:before {
+	content: '✓';
+	padding-right: 4px;
+}
+
 /* Full */
 .showcase[filter='weight'] [data-weight^='1'],
 .showcase[filter='weight'] [data-weight^='2'] {
@@ -372,7 +404,7 @@ h1 {
 	border-right: 4px solid rgb(var(--tier-four) / 0.7);
 }
 
-/* Rating Overview */
+/* ─── Rating ─────────────────────────────────────────────────────────────────────────────── ✣ ─ */
 .ratings {
 	display: flex;
 	gap: var(--spacing-main);
@@ -403,7 +435,7 @@ h1 {
 	color: rgb(var(--muted-color));
 }
 
-/* Controls */
+/* ─── Control Elements ───────────────────────────────────────────────────────────────────── ✣ ─ */
 .controls {
 	display: flex;
 	gap: var(--spacing-main);
@@ -425,6 +457,7 @@ h1 {
 	gap: 24px;
 }
 
+/* Div 2 Button */
 label[for='imageInput'],
 .reset-button,
 .info-button,
@@ -440,42 +473,7 @@ label[for='imageInput'],
 	cursor: pointer;
 }
 
-/* Filters */
-.filters {
-	border: var(--border-main);
-	border-radius: var(--border-radius-sec);
-	padding: 6px;
-	background: var(--background-main);
-	transition: var(--transition-main);
-}
-
-.filter-button {
-	color: rgb(var(--muted-color));
-	display: inline-block;
-	padding: 4px 6px;
-	pointer-events: all;
-	border-radius: var(--border-radius-main);
-	border: 1px solid rgb(255 255 255 / 0.2);
-	text-align: center;
-	font-size: 0.8rem;
-	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
-	cursor: pointer;
-	user-select: none;
-}
-
-.filter-button.active {
-	color: #fff;
-	background: url('./media/img/bg-gradient.png');
-	background-size: cover;
-	border: var(--border-main);
-}
-
-.filter-button.active:before {
-	content: '✓';
-	padding-right: 4px;
-}
-
-/* Data Attr Tooltips */
+/* ─── Data Attr Tooltips ─────────────────────────────────────────────────────────────────── ✣ ─ */
 [data-tooltip] {
 	position: relative;
 	cursor: pointer;
@@ -527,7 +525,7 @@ label[for='imageInput'],
 	line-height: 1.4;
 }
 
-/* Info Page */
+/* ─── Info Page ──────────────────────────────────────────────────────────────────────────── ✣ ─ */
 .info-page {
 	position: fixed;
 	display: flex;
@@ -602,7 +600,7 @@ label[for='imageInput'],
 	border-radius: var(--border-radius-main);
 }
 
-/* Info Page -> Tables */
+/* Tables */
 .info-table {
 	width: 100%;
 }
@@ -650,7 +648,7 @@ label[for='imageInput'],
 	color: rgb(var(--tier-four) / 0.6);
 }
 
-/* Ko-Fi Settings */
+/* ─── Ko-fi ──────────────────────────────────────────────────────────────────────────────── ✣ ─ */
 .floatingchat-container {
 	width: fit-content !important;
 }
@@ -666,7 +664,7 @@ label[for='imageInput'],
 	}
 }
 
-/* Media Switches */
+/* ─── Media Queries ──────────────────────────────────────────────────────────────────────── ✣ ─ */
 @media (max-width: 800px) {
 	.echo,
 	.echo.custom {
