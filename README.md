@@ -21,6 +21,24 @@ A tool to quickly analyze your character showcase files powered by OCR (optical 
 3. Download the generated showcase
 4. Head to the live link above and upload the showcase image
 
+## Examples
+
+### Base
+
+<p align="center">
+
+![](https://raw.githubusercontent.com/ChristopherKlay/WutheringInsight/refs/heads/main/media/img/examples/base.png)
+
+</p>
+
+### Weighted Stats + Colored Tiers + Echo Value
+
+<p align="center">
+
+![](https://raw.githubusercontent.com/ChristopherKlay/WutheringInsight/refs/heads/main/media/img/examples/filters.png)
+
+</p>
+
 ## Support this project
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/B0B079EUW)
