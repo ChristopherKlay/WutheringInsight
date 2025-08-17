@@ -2,7 +2,7 @@
 
 // Imports
 import { name, regions } from './import/scan.js'
-import { range, statMap } from './import/stats.js'
+import { range, combatStats } from './import/stats.js'
 import { chars } from './import/chars.js'
 
 // Element Handles
@@ -10,24 +10,6 @@ var echoContainer = document.querySelector('.echo-fields')
 var controls = document.querySelector('.controls')
 var info = document.querySelector('.info-weighted')
 var filters = document.querySelector('.filters')
-
-// Stat icons
-var statIcons = {
-	None: 'none',
-	HP: 'hp',
-	ATK: 'atk',
-	DEF: 'def',
-	'ATK%': 'atk',
-	'HP%': 'hp',
-	'DEF%': 'def',
-	CritRate: 'crit_r',
-	CritDMG: 'crit_d',
-	EnergyRegen: 'energy',
-	BasicAttackDMGBonus: 'dmg_basic',
-	HeavyAttackDMGBonus: 'dmg_heavy',
-	ResonanceSkillDMGBonus: 'dmg_res',
-	ResonanceLiberationDMGBonus: 'dmg_lib',
-}
 
 // ─── Control Elements ──────────────────────────────────────────────────────────────────────── ✣ ─
 
@@ -303,7 +285,7 @@ async function uploadShowcase(event) {
 			// Add icon
 			var icon = document.createElement('img')
 			icon.className = 'icon'
-			icon.src = `./media/img/icons/${statIcons[calcLabel]}.webp`
+			icon.src = `./media/img/icons/${combatStats.icon[calcLabel]}.webp`
 			el.append(icon)
 
 			// Add label
@@ -417,7 +399,7 @@ async function uploadShowcase(event) {
 		var el = document.createElement('div')
 		el.classList = 'echo-bar'
 		el.innerHTML = `
-					<span class="title">${statMap[stat]}</span>
+					<span class="title">${combatStats.label[stat]}</span>
 					<span class="value">${chars[match].weights[stat]}</span>`
 		if (chars[match].weights[stat] != 0) {
 			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
@@ -496,10 +478,10 @@ function createCustomEcho() {
 		selectContainer.setAttribute('data-weight', 0)
 		var select = document.createElement('select')
 		select.setAttribute('stat', '')
-		for (var key in statMap) {
+		for (var key in combatStats.label) {
 			const option = document.createElement('option')
 			option.value = key
-			option.textContent = statMap[key]
+			option.textContent = combatStats.label[key]
 			select.appendChild(option)
 		}
 		select.addEventListener('change', updateCustomEcho)
