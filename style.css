@@ -126,31 +126,6 @@ h1 {
 	margin: 0;
 }
 
-/* ─── Card ───────────────────────────────────────────────────────────────────────────────── ✣ ─ */
-.card {
-	padding: 0;
-	background-size: contain, 100%, cover;
-	background-position: center;
-	background-repeat: no-repeat;
-}
-
-.backdrop,
-.artwork {
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	border-radius: var(--border-radius-sec);
-}
-
-.backdrop {
-	object-fit: fill;
-	filter: blur(4px) brightness(0.5);
-}
-
-.artwork {
-	object-fit: contain;
-}
-
 /* ─── Echoes ─────────────────────────────────────────────────────────────────────────────── ✣ ─ */
 /* Container */
 .echo-fields {
@@ -284,6 +259,31 @@ h1 {
 
 .echo select > option {
 	background: var(--background-main);
+}
+
+/* ─── Card ───────────────────────────────────────────────────────────────────────────────── ✣ ─ */
+.card {
+	padding: 0;
+	background-size: contain, 100%, cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.backdrop,
+.artwork {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	border-radius: var(--border-radius-sec);
+}
+
+.backdrop {
+	object-fit: fill;
+	filter: blur(4px) brightness(0.5);
+}
+
+.artwork {
+	object-fit: contain;
 }
 
 /* ─── Segment Display ────────────────────────────────────────────────────────────────────── ✣ ─ */
