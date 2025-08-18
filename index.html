@@ -64,10 +64,9 @@
 				<div class="info-explain">
 					<div class="info-title">Explanation & Details</div>
 					<div class="info-content">
-						<span class="highlight">Crit Scoring: </span>The total percentage value of rolled crit rate/damage out of the given maximum per echo.
+						<span class="highlight">Crit Value: </span>The combined effectiveness of crit rate (valued twice) and crit damage.
 						<span class="sub-text">
-							Example: Rolling 6.3 (the lowest possible) out of 10.5 (the maximum) crit chance (without any crit damage) would result in a crit scoring of 60 (60% of the possible gain)
-							further increased to 90, due to the 1.5 weight modifier.
+							Example: A echo with 6.3% crit rate and 15% crit damage would have a crit value of 27.6 (6.3% rate * 2 + 15% damage) out of the possible 42 (10.5% rate * 2 + 21% damage).
 							<br /><br />
 							This rating is only visible on characters that include crit stats in their weighted stats.
 						</span>
@@ -98,89 +97,142 @@
 				<div class="info-table split">
 					<div class="info-title">Weighted Ranking</div>
 					<table>
-						<tr>
-							<td>75 and above</td>
-							<td>Sentinel</td>
-						</tr>
-						<tr>
-							<td>70 – 74.99</td>
-							<td>WTF+</td>
-						</tr>
-						<tr>
-							<td>65 – 69.99</td>
-							<td>WTF</td>
-						</tr>
-						<tr>
-							<td>60.5 – 64.99</td>
-							<td>SSS+</td>
-						</tr>
-						<tr>
-							<td>56.5 – 60.49</td>
-							<td>SSS</td>
-						</tr>
-						<tr>
-							<td>53 – 56.49</td>
-							<td>SS+</td>
-						</tr>
-						<tr>
-							<td>50 – 52.99</td>
-							<td>SS</td>
-						</tr>
-						<tr>
-							<td>47.5 – 49.99</td>
-							<td>S+</td>
-						</tr>
-						<tr>
-							<td>45 – 47.49</td>
-							<td>S</td>
-						</tr>
-						<tr>
-							<td>42.5 – 44.99</td>
-							<td>A+</td>
-						</tr>
-						<tr>
-							<td>40 – 42.49</td>
-							<td>A</td>
-						</tr>
-						<tr>
-							<td>37.5 – 39.99</td>
-							<td>B+</td>
-						</tr>
-						<tr>
-							<td>35 – 37.49</td>
-							<td>B</td>
-						</tr>
-						<tr>
-							<td>32.5 – 34.99</td>
-							<td>C+</td>
-						</tr>
-						<tr>
-							<td>30 – 32.49</td>
-							<td>C</td>
-						</tr>
-						<tr>
-							<td>27.5 – 29.99</td>
-							<td>D+</td>
-						</tr>
-						<tr>
-							<td>25 – 27.49</td>
-							<td>D</td>
-						</tr>
-						<tr>
-							<td>22.5 – 24.99</td>
-							<td>F+</td>
-						</tr>
-						<tr>
-							<td>Below 22.5</td>
-							<td>F</td>
-						</tr>
+						<thead>
+							<tr>
+								<td>Weighted (%)</td>
+								<td>Rank</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>75 and above</td>
+								<td>Sentinel</td>
+							</tr>
+							<tr>
+								<td>70 – 74.99</td>
+								<td>WTF+</td>
+							</tr>
+							<tr>
+								<td>65 – 69.99</td>
+								<td>WTF</td>
+							</tr>
+							<tr>
+								<td>60.5 – 64.99</td>
+								<td>SSS+</td>
+							</tr>
+							<tr>
+								<td>56.5 – 60.49</td>
+								<td>SSS</td>
+							</tr>
+							<tr>
+								<td>53 – 56.49</td>
+								<td>SS+</td>
+							</tr>
+							<tr>
+								<td>50 – 52.99</td>
+								<td>SS</td>
+							</tr>
+							<tr>
+								<td>47.5 – 49.99</td>
+								<td>S+</td>
+							</tr>
+							<tr>
+								<td>45 – 47.49</td>
+								<td>S</td>
+							</tr>
+							<tr>
+								<td>42.5 – 44.99</td>
+								<td>A+</td>
+							</tr>
+							<tr>
+								<td>40 – 42.49</td>
+								<td>A</td>
+							</tr>
+							<tr>
+								<td>37.5 – 39.99</td>
+								<td>B+</td>
+							</tr>
+							<tr>
+								<td>35 – 37.49</td>
+								<td>B</td>
+							</tr>
+							<tr>
+								<td>32.5 – 34.99</td>
+								<td>C+</td>
+							</tr>
+							<tr>
+								<td>30 – 32.49</td>
+								<td>C</td>
+							</tr>
+							<tr>
+								<td>27.5 – 29.99</td>
+								<td>D+</td>
+							</tr>
+							<tr>
+								<td>25 – 27.49</td>
+								<td>D</td>
+							</tr>
+							<tr>
+								<td>22.5 – 24.99</td>
+								<td>F+</td>
+							</tr>
+							<tr>
+								<td>Below 22.5</td>
+								<td>F</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
-				<div class="info-table">
+				<div class="info-cv">
+					<div class="info-title">Crit Value Tiers</div>
+					<table>
+						<thead>
+							<tr>
+								<th>Crit Value</th>
+								<th>Tier (Average)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>210 and above</td>
+								<td>8</td>
+							</tr>
+							<tr>
+								<td>198 - 209.9</td>
+								<td>7</td>
+							</tr>
+							<tr>
+								<td>186 - 197.9</td>
+								<td>6</td>
+							</tr>
+							<tr>
+								<td>174 - 185.9</td>
+								<td>5</td>
+							</tr>
+							<tr>
+								<td>162 - 174.9</td>
+								<td>4</td>
+							</tr>
+							<tr>
+								<td>150 - 161.9</td>
+								<td>3</td>
+							</tr>
+							<tr>
+								<td>138 - 149.9</td>
+								<td>2</td>
+							</tr>
+							<tr>
+								<td>Below 138</td>
+								<td>1</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="info-distribution">
 					<div class="info-title">Substat Distribution</div>
 					<table>
 						<thead>
-							<tr style="background: rgba(0, 0, 0, 0.2)">
+							<tr>
 								<td>Stat</td>
 								<td>T1</td>
 								<td>T2</td>

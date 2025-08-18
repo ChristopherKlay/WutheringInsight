@@ -123,6 +123,8 @@ async function uploadShowcase(event) {
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height },
 	})
 
+	console.log(text)
+
 	// Character scan errors
 	// -> Ending 'j' instead of 'i'
 	var split = text.split(' ')
@@ -174,13 +176,9 @@ async function uploadShowcase(event) {
 		var card = createCard(match)
 	}
 
-	// Max Weight Calculation
-	var weightMaxPerc =
-		Object.values(chars[match].weights)
-			.sort((a, b) => b - a)
-			.slice(0, 5)
-			.reduce((acc, val) => acc + val, 0) * 100
-	var critMaxPerc = (chars[match].weights['CritRate'] + chars[match].weights['CritDMG']) * 100
+	// Max Values
+	var weightMaxPerc = getMaxValue('weight', match)
+	var critValueMax = getMaxValue('cv', match)
 
 	for (let echo in regions) {
 		var cv_echo = 0
@@ -262,11 +260,16 @@ async function uploadShowcase(event) {
 			// Percentage
 			var perc = (calcAmount / range[calcLabel]['8']) * 100
 
-			// Weighted values
+			// Values
 			if (calcLabel != 'None') {
 				// Crit value
-				if (calcLabel.includes('Crit')) {
-					cv_echo += chars[match].weights[calcLabel] * perc
+				switch (calcLabel) {
+					case 'CritRate':
+						cv_echo += parseFloat(2 * calcAmount)
+						break
+					case 'CritDMG':
+						cv_echo += parseFloat(calcAmount)
+						break
 				}
 
 				// Weighted values
@@ -328,13 +331,13 @@ async function uploadShowcase(event) {
 		echoSlot.append(el)
 
 		// Crit Value
-		if (critMaxPerc > 0) {
-			var perc = (cv_echo / critMaxPerc) * 100
+		if (critValueMax > 0) {
+			var perc = (cv_echo / (critValueMax / 5)) * 100
 			var el = document.createElement('div')
 			el.classList = 'echo-bar'
 			el.innerHTML = `
-					<span class="title">Crit</span>
-					<span class="value">${perc.toFixed(2)}%</span>`
+					<span class="title">Crit Value</span>
+					<span class="value">${cv_echo.toFixed(1)}<span class="sub-value">/${critValueMax / 5}</span></span>`
 			el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${perc}%, rgba(32, 34, 37, 0.52) ${perc}%`
 			echoSlot.append(el)
 		}
@@ -375,11 +378,12 @@ async function uploadShowcase(event) {
 	echoContainer.append(ratings)
 
 	// Crit Score
-	if (critMaxPerc > 0) {
-		var cv_perc = (cv_total / (critMaxPerc * 5)) * 100
+	if (critValueMax > 0) {
+		var cv_perc = (cv_total / critValueMax) * 100
 		var el = document.createElement('div')
 		el.classList = 'echo-score'
-		el.innerHTML = `Crit: ${getRank(cv_perc)}<span class="sub-value">${cv_perc.toFixed(2)}%</span>`
+		el.setAttribute('tier', getCritTier(cv_total))
+		el.innerHTML = `<span style="color: #fff; display: contents;">Crit Value:</span> ${cv_total.toFixed(1)}<span class="sub-value">${cv_perc.toFixed(2)}%</span>`
 		ratings.append(el)
 	}
 
@@ -393,6 +397,13 @@ async function uploadShowcase(event) {
 	}
 
 	// Info Page - Weight Overview
+
+	// -> Title
+	document.querySelector('.info-weighted > .info-title').textContent = `Weighted Stats (${match})`
+
+	// -> Bars
+	var infoBars = document.createElement('div')
+	infoBars.className = 'info-bars'
 	for (var stat in chars[match].weights) {
 		// Create Bars
 		var perc = ((chars[match].weights[stat] / 2.2) * 100).toFixed(2)
@@ -406,8 +417,9 @@ async function uploadShowcase(event) {
 		} else {
 			el.style.background = 'rgba(32, 34, 37, 0.52)'
 		}
-		info.append(el)
+		infoBars.append(el)
 	}
+	info.append(infoBars)
 
 	// Info
 	var el = document.createElement('button')
@@ -534,8 +546,8 @@ function createCustomEcho() {
 	var el = document.createElement('div')
 	el.classList = 'echo-bar'
 	el.innerHTML = `
-					<span class="title">Crit</span>
-					<span class="value">0%</span>`
+					<span class="title">Crit Value</span>
+					<span class="value">0<span class="sub-value">/42</span></span>`
 	el.style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) 0%, rgba(32, 34, 37, 0.52) 0%`
 	echoSlot.append(el)
 
@@ -577,13 +589,9 @@ function updateCustomEcho() {
 	var wv_echo = 0
 	var echoStats = {}
 
-	// Set maxmimum possible weighted stat
-	var weightMaxPerc =
-		Object.values(chars[char].weights)
-			.sort((a, b) => b - a)
-			.slice(0, 5)
-			.reduce((acc, val) => acc + val, 0) * 100
-	var critMaxPerc = (chars[char].weights['CritRate'] + chars[char].weights['CritDMG']) * 100
+	// Max Values
+	var weightMaxPerc = getMaxValue('weight', char)
+	var critValueMax = getMaxValue('cv', char)
 
 	// Gather all user-selected values
 	const selectedValues = Array.from(stats).map((select) => select.value)
@@ -625,12 +633,21 @@ function updateCustomEcho() {
 
 		// Calculate values
 		// -> Crit
+		switch (stats[i].value) {
+			case 'CritRate':
+				cv_echo += parseFloat(2 * values[i].value)
+				break
+			case 'CritDMG':
+				cv_echo += parseFloat(values[i].value)
+				break
+		}
+
 		if (stats[i].value.includes('Crit')) {
-			cv_echo += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
 			stats[i].parentElement.setAttribute('crit', 'true')
 		} else {
 			stats[i].parentElement.setAttribute('crit', 'false')
 		}
+
 		// -> WV
 		if (chars[char].weights && stats[i].value != 'None') {
 			wv_echo += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
@@ -665,11 +682,11 @@ function updateCustomEcho() {
 	showcase.querySelector('.echo-title').setAttribute('replace', calculateValue(echoStats, char, 'Custom').toFixed(2))
 
 	// Crit
-	var cv_perc = (cv_echo / critMaxPerc) * 100
+	var cv_perc = (cv_echo / (critValueMax / 5)) * 100
 	ratings[0].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${cv_perc}%, rgba(32, 34, 37, 0.52) ${cv_perc}%`
-	ratings[0].querySelector('.value').innerHTML = `${cv_perc.toFixed(2)}%`
+	ratings[0].querySelector('.value').innerHTML = `${cv_echo.toFixed(1)}/<span class="sub-value">/${critValueMax / 5}</span>`
 
-	if (critMaxPerc > 0) {
+	if (critValueMax > 0) {
 		ratings[0].style.display = 'flex'
 	} else {
 		ratings[0].style.display = 'none'
@@ -729,6 +746,35 @@ function createCard(char) {
 		card.artwork.src = `./media/img/card/${char.replace(' ', '')}.webp`
 	}
 	return card
+}
+
+/**
+ * Calculates the maximum value for a character based on the requested type.
+ *
+ * Supported types:
+ * - `"weight"`: Returns the maximum weighted sum of the top 5 highest stat weights,
+ *   multiplied by 100.
+ * - `"cv"`: Returns the maximum possible crit value.
+ *
+ * @param {"weight"|"cv"|string} val - The type of calculation to perform.
+ * @param {string} char - The key identifying the character.
+ * @returns {number} The maximum value for the given character and calculation type.
+ */
+function getMaxValue(val, char) {
+	switch (val) {
+		case 'weight':
+			// Max Weighted Sum
+			return (
+				Object.values(chars[char].weights)
+					.sort((a, b) => b - a)
+					.slice(0, 5)
+					.reduce((acc, val) => acc + val, 0) * 100
+			)
+		case 'cv':
+			return 105 * ((chars[char].weights['CritRate'] > 0) + (chars[char].weights['CritDMG'] > 0))
+		default:
+			return 0
+	}
 }
 
 /**
@@ -959,6 +1005,37 @@ function getRank(perc) {
 		if (perc >= min) return rank
 	}
 	return 'F'
+}
+
+/**
+ * Determines the critical tier based on the given CV (critical value).
+ *
+ * @param {number} cv - The crit value to evaluate.
+ * @returns {number} The tier (rank) corresponding to the provided CV.
+ *
+ * @example
+ * getCritTier(200); // returns 7
+ * getCritTier(140); // returns 2
+ * getCritTier(300); // returns 8
+ * getCritTier(100); // returns 1 (default if no threshold is met)
+ */
+function getCritTier(cv) {
+	const thresholds = [
+		{ min: 210, rank: 8 },
+		{ min: 198, rank: 7 },
+		{ min: 186, rank: 6 },
+		{ min: 174, rank: 5 },
+		{ min: 162, rank: 4 },
+		{ min: 150, rank: 3 },
+		{ min: 138, rank: 2 },
+		{ min: 126, rank: 1 },
+	]
+
+	// use rank instead of tier
+	for (const { min, rank } of thresholds) {
+		if (cv >= min) return rank
+	}
+	return 1
 }
 
 /**

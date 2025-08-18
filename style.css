@@ -10,9 +10,9 @@
 
 	/* Tiers */
 	--tier-one: 142 183 128;
-	--tier-two: 196 239 255;
+	--tier-two: 156 209 255;
 	--tier-three: 239 182 247;
-	--tier-four: 247 220 187;
+	--tier-four: var(--accent-color);
 
 	/* Backgrounds */
 	--background: 32 34 37;
@@ -22,7 +22,11 @@
 	--background-modal: rgb(2 4 7 / 0.82);
 
 	/* Borders */
-	--border-main: 1px solid rgb(var(--accent-color) / 0.7);
+	--box-border-main: 0 0 0 1px rgb(var(--accent-color) / 0.7);
+	--box-border-muted: 0 0 0 1px rgb(var(--muted-color) / 0.7);
+	--box-border-warning: 0 0 0 1px rgb(var(--warning-color) / 0.7);
+	--box-border-outline: 0 0 0 1px rgb(var(--muted-color) / 0.3);
+
 	--border-radius-main: 4px;
 	--border-radius-sec: 10px;
 
@@ -144,7 +148,7 @@ h1 {
 	background: var(--background-main);
 	bottom: 0;
 	right: 0;
-	border: var(--border-main);
+	box-shadow: var(--box-border-main);
 	border-radius: var(--border-radius-sec);
 	padding: var(--spacing-main);
 	width: 300px;
@@ -178,7 +182,7 @@ h1 {
 	font-size: 0.8em;
 	font-weight: 500;
 	transition: var(--transition-main);
-	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
+	box-shadow: var(--box-border-outline);
 }
 
 .echo-bar .icon {
@@ -226,6 +230,7 @@ h1 {
 	width: 70%;
 	transition: var(--transition-main);
 	border-radius: var(--border-radius-main);
+	box-shadow: var(--box-border-outline);
 }
 
 .echo .selection-container > select {
@@ -243,6 +248,7 @@ h1 {
 .echo select {
 	background: var(--background-sec);
 	border: none;
+	box-shadow: var(--box-border-outline);
 	border-radius: var(--border-radius-main);
 	color: #fff;
 	padding: 8px 0;
@@ -259,6 +265,7 @@ h1 {
 
 .echo select > option {
 	background: var(--background-main);
+	color: #fff;
 }
 
 /* ─── Card ───────────────────────────────────────────────────────────────────────────────── ✣ ─ */
@@ -311,7 +318,7 @@ h1 {
 /* ─── Filter Functions ───────────────────────────────────────────────────────────────────── ✣ ─ */
 /* Filter Controls */
 .filters {
-	border: var(--border-main);
+	box-shadow: var(--box-border-main);
 	border-radius: var(--border-radius-sec);
 	padding: 6px;
 	background: var(--background-main);
@@ -324,10 +331,9 @@ h1 {
 	padding: 4px 6px;
 	pointer-events: all;
 	border-radius: var(--border-radius-main);
-	border: 1px solid rgb(255 255 255 / 0.2);
 	text-align: center;
 	font-size: 0.8rem;
-	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
+	box-shadow: var(--box-border-muted);
 	cursor: pointer;
 	user-select: none;
 }
@@ -336,7 +342,7 @@ h1 {
 	color: #fff;
 	background: url('./media/img/bg-gradient.png');
 	background-size: cover;
-	border: var(--border-main);
+	box-shadow: var(--box-border-main);
 }
 
 .filter-button.active:before {
@@ -354,7 +360,7 @@ h1 {
 
 /* Partly */
 .showcase[filter='weight'] [data-weight='0.8'] {
-	box-shadow: 0 0 0 1px rgb(var(--muted-color) / 0.6);
+	box-shadow: var(--box-border-muted);
 }
 
 .showcase[filter='weight'] [data-weight='0'],
@@ -372,7 +378,7 @@ h1 {
 	padding: 2px 6px;
 	background: rgb(var(--accent-color) / 0.2);
 	border-radius: var(--border-radius-main);
-	border: var(--border-main);
+	box-shadow: var(--box-border-main);
 	transition: var(--transition-main);
 }
 
@@ -384,25 +390,25 @@ h1 {
 .showcase[tiers='show'] [tier='1'],
 .showcase[tiers='show'] [tier='2'] {
 	color: rgb(var(--tier-one) / 1);
-	border-right: 4px solid rgb(var(--tier-one) / 0.7);
+	border-right: 4px solid rgb(var(--tier-one) / 1);
 }
 
 .showcase[tiers='show'] [tier='3'],
 .showcase[tiers='show'] [tier='4'] {
 	color: rgb(var(--tier-two) / 1);
-	border-right: 4px solid rgb(var(--tier-two) / 0.7);
+	border-right: 4px solid rgb(var(--tier-two) / 1);
 }
 
 .showcase[tiers='show'] [tier='5'],
 .showcase[tiers='show'] [tier='6'] {
 	color: rgb(var(--tier-three) / 1);
-	border-right: 4px solid rgb(var(--tier-three) / 0.7);
+	border-right: 4px solid rgb(var(--tier-three) / 1);
 }
 
 .showcase[tiers='show'] [tier='7'],
 .showcase[tiers='show'] [tier='8'] {
 	color: rgb(var(--tier-four) / 1);
-	border-right: 4px solid rgb(var(--tier-four) / 0.7);
+	border-right: 4px solid rgb(var(--tier-four) / 1);
 }
 
 /* ─── Rating ─────────────────────────────────────────────────────────────────────────────── ✣ ─ */
@@ -417,15 +423,15 @@ h1 {
 	position: relative;
 	background: var(--background-main);
 	border-radius: var(--border-radius-sec);
-	border: var(--border-main);
+	border-right: 4px solid transparent;
+	box-shadow: var(--box-border-main);
 	padding: 6px 10px 8px 10px;
-	width: 180px;
+	width: 200px;
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
 	font-size: 1.2rem;
 	letter-spacing: 1px;
-	box-shadow: 0 2px 14px rgba(0 0 0 / 0.13);
 }
 
 .echo-score .sub-value {
@@ -466,12 +472,16 @@ label[for='imageInput'],
 .manualInput {
 	padding: 8px 12px;
 	border-radius: var(--border-radius-main);
-	border: var(--border-main);
+	box-shadow: var(--box-border-main);
 	text-align: center;
-	font-size: 1.4em;
 	background: var(--background-main);
-	box-shadow: 0 1px 4px 0 rgb(76 110 245 / 0.07);
 	cursor: pointer;
+	border: none;
+}
+
+label[for='imageInput'],
+.manualInput {
+	font-size: 1.4em;
 }
 
 /* ─── Data Attr Tooltips ─────────────────────────────────────────────────────────────────── ✣ ─ */
@@ -496,7 +506,7 @@ label[for='imageInput'],
 	border-radius: var(--border-radius-sec);
 	backdrop-filter: blur(10px);
 	background-color: var(--background-main);
-	border: var(--border-main);
+	box-shadow: var(--box-border-main);
 	color: #fff;
 	content: attr(data-tooltip);
 	text-align: center;
@@ -518,7 +528,7 @@ label[for='imageInput'],
 	border-radius: var(--border-radius-sec);
 	backdrop-filter: blur(10px);
 	background-color: var(--background-main);
-	border: var(--border-main);
+	box-shadow: var(--box-border-main);
 	color: rgb(var(--warning-color));
 	content: attr(data-error);
 	text-align: center;
@@ -541,13 +551,12 @@ label[for='imageInput'],
 	transform: translate(-50%, -50%);
 	background: var(--background-main);
 	backdrop-filter: blur(12px);
-	border: var(--border-main);
 	border-radius: var(--border-radius-sec);
 	padding: var(--spacing-main);
 	opacity: 0;
 	pointer-events: none;
 	transition: var(--transition-main);
-	box-shadow: 0 0 0 50vmax var(--background-modal);
+	box-shadow: var(--box-border-main), 0 0 0 50vmax var(--background-modal);
 }
 
 .info-content {
@@ -559,7 +568,9 @@ label[for='imageInput'],
 .info-title {
 	font-size: 1.4rem;
 	text-align: center;
-	border-bottom: var(--border-main);
+	border-radius: var(--border-radius-sec);
+	background: rgb(var(--accent-color) / 0.05);
+	box-shadow: var(--box-border-main);
 }
 
 .info-page > div {
@@ -570,6 +581,13 @@ label[for='imageInput'],
 
 .info-page .split {
 	width: calc(50% - var(--spacing-main));
+}
+
+/* Weighted Ranking */
+.info-bars {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-main);
 }
 
 .info-weighted .echo-bar {
@@ -602,51 +620,86 @@ label[for='imageInput'],
 }
 
 /* Tables */
-.info-table {
+.info-page table {
 	width: 100%;
 }
 
-.info-table .highlight {
-	color: rgb(var(--accent-color));
-	background: rgb(var(--accent-color) / 0.05);
+.info-page table thead,
+.info-page table .highlight {
+	background: rgb(0 0 0 / 0.2);
 }
 
-.info-table table {
+.info-page table {
 	position: relative;
 	border-collapse: collapse;
-	border-style: hidden;
 	width: 95%;
 	left: 2.5%;
 }
 
-.info-table table th,
-.info-table table td {
-	border: var(--border-main);
+/* Remove borders */
+.info-page table tr td:first-child,
+table tr th:first-child {
+	border-left: none;
+	border-top: none;
+}
+
+.info-page table tr:first-child th,
+.info-page table thead td {
+	border-top: none;
+}
+
+.info-page table tr td:last-child,
+table tr th:last-child {
+	border-right: none;
+	border-top: none;
+}
+
+.info-page table tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.info-page table th,
+.info-page table td {
+	border: 1px solid rgb(var(--muted-color) / 0.4);
 	padding: 4px 8px;
 }
 
-.info-table table td {
+.info-page table td {
 	text-align: center;
 }
 
-.info-table tbody tr:not(.highlight) td:nth-child(2),
-.info-table tbody tr:not(.highlight) td:nth-child(3) {
+/* Table: Crit Value */
+.info-cv table tbody tr:nth-child(-n + 3) td:last-child {
+	color: rgb(var(--tier-four) / 1);
+}
+
+.info-cv table tbody tr:nth-child(n + 4):nth-child(-n + 5) td:last-child {
+	color: rgb(var(--tier-three) / 1);
+}
+
+.info-cv table tbody tr:nth-child(n + 6):nth-child(-n + 7) td:last-child {
+	color: rgb(var(--tier-two) / 1);
+}
+
+.info-cv table tbody tr:nth-child(8) td:last-child {
 	color: rgb(var(--tier-one) / 1);
 }
 
-.info-table tbody tr:not(.highlight) td:nth-child(4),
-.info-table tbody tr:not(.highlight) td:nth-child(5) {
-	color: rgb(var(--tier-two) / 0.8);
+/* Table: Distribution */
+.info-distribution tbody tr:not(.highlight) td:is(:nth-child(2), :nth-child(3)) {
+	color: rgb(var(--tier-one) / 1);
 }
 
-.info-table tbody tr:not(.highlight) td:nth-child(6),
-.info-table tbody tr:not(.highlight) td:nth-child(7) {
-	color: rgb(var(--tier-three) / 0.8);
+.info-distribution tbody tr:not(.highlight) td:is(:nth-child(4), :nth-child(5)) {
+	color: rgb(var(--tier-two) / 1);
 }
 
-.info-table tbody tr:not(.highlight) td:nth-child(8),
-.info-table tbody tr:not(.highlight) td:nth-child(9) {
-	color: rgb(var(--tier-four) / 0.6);
+.info-distribution tbody tr:not(.highlight) td:is(:nth-child(6), :nth-child(7)) {
+	color: rgb(var(--tier-three) / 1);
+}
+
+.info-distribution tbody tr:not(.highlight) td:is(:nth-child(8), :nth-child(9)) {
+	color: rgb(var(--tier-four) / 1);
 }
 
 /* ─── Ko-fi ──────────────────────────────────────────────────────────────────────────────── ✣ ─ */
