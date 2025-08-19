@@ -256,16 +256,27 @@ h1 {
 	min-width: 0;
 	font-family: var(--font-family-main);
 	font-size: 0.9rem;
+	padding-left: calc(var(--spacing-main) / 2);
 }
 
 .echo select[char] {
-	width: 50%;
+	width: 70%;
 	text-align: center;
 }
 
 .echo select > option {
 	background: var(--background-main);
 	color: #fff;
+}
+
+.echo .reset-stats {
+	background: var(--background-sec);
+	border-radius: var(--border-radius-main);
+	box-shadow: var(--box-border-outline);
+	padding: 8px 12px;
+	cursor: pointer;
+	text-align: center;
+	width: 30%;
 }
 
 /* ─── Card ───────────────────────────────────────────────────────────────────────────────── ✣ ─ */

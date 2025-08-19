@@ -260,15 +260,26 @@ async function uploadShowcase(event) {
 			// Percentage
 			var perc = (calcAmount / range[calcLabel]['8']) * 100
 
+			// Add element
+			var el = document.createElement('div')
+			el.classList = 'echo-bar'
+
 			// Values
 			if (calcLabel != 'None') {
 				// Crit value
+				el.setAttribute('crit', 'false')
 				switch (calcLabel) {
 					case 'CritRate':
-						cv_echo += parseFloat(2 * calcAmount)
+						if (chars[match].weights[calcLabel] > 0) {
+							cv_echo += parseFloat(2 * calcAmount)
+							el.setAttribute('crit', 'true')
+						}
 						break
 					case 'CritDMG':
-						cv_echo += parseFloat(calcAmount)
+						if (chars[match].weights[calcLabel] > 0) {
+							cv_echo += parseFloat(calcAmount)
+							el.setAttribute('crit', 'true')
+						}
 						break
 				}
 
@@ -280,10 +291,6 @@ async function uploadShowcase(event) {
 
 			// Replaceability
 			echoStats[calcLabel] = calcAmount
-
-			// Add element
-			var el = document.createElement('div')
-			el.classList = 'echo-bar'
 
 			// Add icon
 			var icon = document.createElement('img')
@@ -318,11 +325,6 @@ async function uploadShowcase(event) {
 			el.querySelector('.value').setAttribute('tier', tier)
 			el.setAttribute('data-weight', chars[match].weights[calcLabel])
 
-			if (calcLabel.includes('Crit')) {
-				el.setAttribute('crit', 'true')
-			} else {
-				el.setAttribute('crit', 'false')
-			}
 			echoSlot.append(el)
 		}
 
@@ -520,6 +522,10 @@ function createCustomEcho() {
 		echoSlot.appendChild(row)
 	}
 
+	// Container Row
+	var row = document.createElement('div')
+	row.className = 'row'
+
 	// Character Select
 	var select = document.createElement('select')
 	select.setAttribute('char', '')
@@ -536,7 +542,23 @@ function createCustomEcho() {
 		select.appendChild(option)
 	}
 	select.addEventListener('change', updateCustomEcho)
-	echoSlot.append(select)
+	row.append(select)
+
+	// Reset Stat Selection
+	var el = document.createElement('div')
+	el.className = 'reset-stats'
+	el.textContent = 'Reset'
+	el.addEventListener('click', function () {
+		// Reset all stats to 'None'
+		var selects = document.querySelectorAll('.echo select[stat]')
+		selects.forEach((select) => {
+			select.value = 'None'
+		})
+		updateCustomEcho()
+	})
+	row.append(el)
+
+	echoSlot.append(row)
 
 	// Divider element
 	var el = document.createElement('hr')
@@ -633,19 +655,20 @@ function updateCustomEcho() {
 
 		// Calculate values
 		// -> Crit
+		stats[i].parentElement.setAttribute('crit', 'false')
 		switch (stats[i].value) {
 			case 'CritRate':
-				cv_echo += parseFloat(2 * values[i].value)
+				if (chars[char].weights[stats[i].value] > 0) {
+					cv_echo += parseFloat(2 * values[i].value)
+					stats[i].parentElement.setAttribute('crit', 'true')
+				}
 				break
 			case 'CritDMG':
-				cv_echo += parseFloat(values[i].value)
+				if (chars[char].weights[stats[i].value] > 0) {
+					cv_echo += parseFloat(values[i].value)
+					stats[i].parentElement.setAttribute('crit', 'true')
+				}
 				break
-		}
-
-		if (stats[i].value.includes('Crit')) {
-			stats[i].parentElement.setAttribute('crit', 'true')
-		} else {
-			stats[i].parentElement.setAttribute('crit', 'false')
 		}
 
 		// -> WV
