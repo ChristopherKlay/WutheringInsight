@@ -246,6 +246,8 @@ h1 {
 }
 
 .echo select {
+	position: relative;
+	display: inline-block;
 	background: var(--background-sec);
 	border: none;
 	box-shadow: var(--box-border-outline);

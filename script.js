@@ -585,6 +585,9 @@ function createCustomEcho() {
 	echoContainer.append(echoSlot)
 	echoSlot.style.opacity = '1'
 
+	// Force update to set stats
+	updateCustomEcho()
+
 	// Enable controls
 	// Enable ratings + filters
 	controls.classList.toggle('hidden')
