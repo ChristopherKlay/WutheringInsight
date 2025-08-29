@@ -49,341 +49,338 @@
 			<div class="filters hidden" data-export-exclude>
 				<div class="filter-button" data-filter="weight">Weighted Stats</div>
 				<div class="filter-button" data-filter="crit">Crit Value</div>
-				<div class="filter-button" data-filter="color">Colored Tiers</div>
+				<div class="filter-button" data-filter="color">Color Coding</div>
 				<div class="filter-button" data-filter="replace">Echo Value</div>
 			</div>
 
 			<!-- Additional Controls -->
 			<div class="controls hidden" data-export-exclude>
+				<button class="info-button">Info</button>
 				<button class="export-button">Export</button>
 				<button class="reset-button" onclick="location.reload()">Reset</button>
 			</div>
 
 			<!-- Info Modal -->
-			<div class="info-page">
-				<div class="info-explain">
-					<div class="info-title">Explanation & Details</div>
-					<div class="info-content">
-						<span class="highlight">Crit Value: </span>The combined effectiveness of crit rate (valued twice) and crit damage.
-						<span class="sub-text">
-							Example: A echo with 6.3% crit rate and 15% crit damage would have a crit value of 27.6 (6.3% rate * 2 + 15% damage) out of the possible 42 (10.5% rate * 2 + 21% damage).
-							<br /><br />
-							This rating is only visible on characters that include crit stats in their weighted stats.
-						</span>
-						<span class="highlight">Tiers: </span>The segmentation on stat bars displayes the different possible roll values. The higher the tier of the roll, the more segments are
-						highlighted.
-						<span class="sub-text">
-							Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% — only 6.4% or 7.1%) and heavily weighted (the lowest being almost
-							2.5x more likely to appear compared to the highest).
-							<br /><br />
-							More information can be found in the "Substat Distribution" table below.
-						</span>
-						<span class="highlight">Weighted: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a letter-based
-						format for easier understanding.
-						<span class="sub-text">
-							While character-specific weighting is applied, secondary requirements like energy regen and overall crit ratios are not checked and can result in performing below
-							expectations. Always use this stat with your current in-game crit scoring and character-specific secondary requirements in mind.
-						</span>
-						<span class="highlight">Echo Value: </span>A rating based on weighted stats further being adjusted by (accummulated) probabilities of the given tiers, (slightly) increasing the
-						value of higher rolled stats instead of using a equal distribution.
-						<span class="sub-text">
-							This gives an even better insight in how much "value" a given echo has and how replaceable it is, with the lowest valued echo being the most replaceable.
-							<br /><br />
-							This value is not comparable between different characters.
-							<br /><br />
-							<span class="highlight">Disclaimer: </span>Energy Regen can be under/overvalued in the calculation, depending on other sources, team and rotation. Always keep ER as low as
-							possible, while still meeting your personal requirements with other sources of ER in mind.
-						</span>
+			<div class="info-page hidden">
+				<div class="info-container">
+					<div class="info-explain">
+						<div class="info-title">Explanation & Details</div>
+						<div class="info-content">
+							<span class="highlight">Crit Value: </span>The combined effectiveness of crit rate (valued twice) and crit damage.
+							<span class="sub-text">
+								Example: A echo with 6.3% crit rate and 15% crit damage would have a crit value of 27.6 (6.3% rate * 2 + 15% damage) out of the possible 42 (10.5% rate * 2 + 21%
+								damage).
+								<br /><br />
+								This rating is only visible on characters that include crit stats in their weighted stats.
+							</span>
+							<span class="highlight">Tiers: </span>The segmentation on stat bars displayes the different possible roll values. The higher the tier of the roll, the more segments are
+							highlighted.
+							<span class="sub-text">
+								Possible substats in Wuthering Waves are pre-determined (meaning, for example, you can't roll 6.7% ATK% — only 6.4% or 7.1%) and heavily weighted (the lowest being
+								almost 2.5x more likely to appear compared to the highest).
+								<br /><br />
+								More information can be found in the "Substat Distribution" table below.
+							</span>
+							<span class="highlight">Weighted: </span>The total percentage value of all stats weighted by the listed character-specific modifiers. This rating is displayed in a
+							letter-based format for easier understanding.
+							<span class="sub-text">
+								<span class="highlight">Echo Value: </span>The resulting stats, adjusted by (the accummulative) probability of the given tiers, (slightly) increasing the value of
+								higher rolled stats instead of using a equal distribution. <br /><br />
+								<span class="highlight">Disclaimer: </span> While character-specific weighting is applied, secondary requirements like energy regen and overall crit ratios are not
+								checked and can result in performing below expectations. Always use this stat with your current in-game crit scoring and character-specific secondary requirements (like
+								Energy Regen) in mind.
+							</span>
+						</div>
 					</div>
-				</div>
-				<div class="info-weighted split">
-					<div class="info-title">Weighted Stats</div>
-				</div>
-				<div class="info-table split">
-					<div class="info-title">Weighted Ranking</div>
-					<table>
-						<thead>
-							<tr>
-								<td>Weighted (%)</td>
-								<td>Rank</td>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>75 and above</td>
-								<td>Sentinel</td>
-							</tr>
-							<tr>
-								<td>70 – 74.99</td>
-								<td>WTF+</td>
-							</tr>
-							<tr>
-								<td>65 – 69.99</td>
-								<td>WTF</td>
-							</tr>
-							<tr>
-								<td>60.5 – 64.99</td>
-								<td>SSS+</td>
-							</tr>
-							<tr>
-								<td>56.5 – 60.49</td>
-								<td>SSS</td>
-							</tr>
-							<tr>
-								<td>53 – 56.49</td>
-								<td>SS+</td>
-							</tr>
-							<tr>
-								<td>50 – 52.99</td>
-								<td>SS</td>
-							</tr>
-							<tr>
-								<td>47.5 – 49.99</td>
-								<td>S+</td>
-							</tr>
-							<tr>
-								<td>45 – 47.49</td>
-								<td>S</td>
-							</tr>
-							<tr>
-								<td>42.5 – 44.99</td>
-								<td>A+</td>
-							</tr>
-							<tr>
-								<td>40 – 42.49</td>
-								<td>A</td>
-							</tr>
-							<tr>
-								<td>37.5 – 39.99</td>
-								<td>B+</td>
-							</tr>
-							<tr>
-								<td>35 – 37.49</td>
-								<td>B</td>
-							</tr>
-							<tr>
-								<td>32.5 – 34.99</td>
-								<td>C+</td>
-							</tr>
-							<tr>
-								<td>30 – 32.49</td>
-								<td>C</td>
-							</tr>
-							<tr>
-								<td>27.5 – 29.99</td>
-								<td>D+</td>
-							</tr>
-							<tr>
-								<td>25 – 27.49</td>
-								<td>D</td>
-							</tr>
-							<tr>
-								<td>22.5 – 24.99</td>
-								<td>F+</td>
-							</tr>
-							<tr>
-								<td>Below 22.5</td>
-								<td>F</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="info-cv">
-					<div class="info-title">Crit Value Tiers</div>
-					<table>
-						<thead>
-							<tr>
-								<th>Crit Value</th>
-								<th>Tier (Average)</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>210 and above</td>
-								<td>8</td>
-							</tr>
-							<tr>
-								<td>198 - 209.9</td>
-								<td>7</td>
-							</tr>
-							<tr>
-								<td>186 - 197.9</td>
-								<td>6</td>
-							</tr>
-							<tr>
-								<td>174 - 185.9</td>
-								<td>5</td>
-							</tr>
-							<tr>
-								<td>162 - 174.9</td>
-								<td>4</td>
-							</tr>
-							<tr>
-								<td>150 - 161.9</td>
-								<td>3</td>
-							</tr>
-							<tr>
-								<td>138 - 149.9</td>
-								<td>2</td>
-							</tr>
-							<tr>
-								<td>Below 138</td>
-								<td>1</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div class="info-distribution">
-					<div class="info-title">Substat Distribution</div>
-					<table>
-						<thead>
-							<tr>
-								<td>Stat</td>
-								<td>T1</td>
-								<td>T2</td>
-								<td>T3</td>
-								<td>T4</td>
-								<td>T5</td>
-								<td>T6</td>
-								<td>T7</td>
-								<td>T8</td>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>Crit. DMG</td>
-								<td>12.6%</td>
-								<td>13.8%</td>
-								<td>15%</td>
-								<td>16.2%</td>
-								<td>17.4%</td>
-								<td>18.6%</td>
-								<td>19.8%</td>
-								<td>21%</td>
-							</tr>
-							<tr>
-								<td>Crit. Rate</td>
-								<td>6.3%</td>
-								<td>6.9%</td>
-								<td>7.5%</td>
-								<td>8.1%</td>
-								<td>8.7%</td>
-								<td>9.3%</td>
-								<td>9.9%</td>
-								<td>10.5%</td>
-							</tr>
-							<tr>
-								<td>ATK%</td>
-								<td>6.4%</td>
-								<td>7.1%</td>
-								<td>7.9%</td>
-								<td>8.6%</td>
-								<td>9.4%</td>
-								<td>10.1%</td>
-								<td>10.9%</td>
-								<td>11.6%</td>
-							</tr>
-							<tr>
-								<td>HP%</td>
-								<td>6.4%</td>
-								<td>7.1%</td>
-								<td>7.9%</td>
-								<td>8.6%</td>
-								<td>9.4%</td>
-								<td>10.1%</td>
-								<td>10.9%</td>
-								<td>11.6%</td>
-							</tr>
-							<tr>
-								<td>DEF%</td>
-								<td>8.1%</td>
-								<td>9%</td>
-								<td>10%</td>
-								<td>10.9%</td>
-								<td>11.9%</td>
-								<td>12.8%</td>
-								<td>13.8%</td>
-								<td>14.7%</td>
-							</tr>
-							<tr>
-								<td>DMG%</td>
-								<td>6.4%</td>
-								<td>7.1%</td>
-								<td>7.9%</td>
-								<td>8.6%</td>
-								<td>9.4%</td>
-								<td>10.1%</td>
-								<td>10.9%</td>
-								<td>11.6%</td>
-							</tr>
-							<tr>
-								<td>Energy Regen</td>
-								<td>6.8%</td>
-								<td>7.6%</td>
-								<td>8.4%</td>
-								<td>9.2%</td>
-								<td>10%</td>
-								<td>10.8%</td>
-								<td>11.6%</td>
-								<td>12.4%</td>
-							</tr>
-							<tr>
-								<td>HP</td>
-								<td>320</td>
-								<td>360</td>
-								<td>390</td>
-								<td>430</td>
-								<td>470</td>
-								<td>510</td>
-								<td>540</td>
-								<td>580</td>
-							</tr>
-							<tr class="highlight">
-								<td>Chance</td>
-								<td>7.33%</td>
-								<td>14.65%</td>
-								<td>19.54%</td>
-								<td>23.51%</td>
-								<td>15.63%</td>
-								<td>10.42%</td>
-								<td>5.95%</td>
-								<td>2.98%</td>
-							</tr>
-							<tr>
-								<td>DEF</td>
-								<td>40</td>
-								<td></td>
-								<td>50</td>
-								<td></td>
-								<td></td>
-								<td>60</td>
-								<td></td>
-								<td>70</td>
-							</tr>
-							<tr>
-								<td>ATK</td>
-								<td>30</td>
-								<td></td>
-								<td>40</td>
-								<td></td>
-								<td></td>
-								<td>50</td>
-								<td></td>
-								<td>60</td>
-							</tr>
-							<tr class="highlight">
-								<td>Chance</td>
-								<td>18.52%</td>
-								<td></td>
-								<td>44.45%</td>
-								<td></td>
-								<td></td>
-								<td>26.38%</td>
-								<td></td>
-								<td>10.36%</td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="info-weighted hidden">
+						<div class="info-title">Weighted Stats</div>
+					</div>
+					<div class="info-table">
+						<div class="info-title">Weighted Ranking</div>
+						<table>
+							<thead>
+								<tr>
+									<td>Weighted (%)</td>
+									<td>Rank</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>75 and above</td>
+									<td>Sentinel</td>
+								</tr>
+								<tr>
+									<td>70 – 74.99</td>
+									<td>WTF+</td>
+								</tr>
+								<tr>
+									<td>65 – 69.99</td>
+									<td>WTF</td>
+								</tr>
+								<tr>
+									<td>60.5 – 64.99</td>
+									<td>SSS+</td>
+								</tr>
+								<tr>
+									<td>56.5 – 60.49</td>
+									<td>SSS</td>
+								</tr>
+								<tr>
+									<td>53 – 56.49</td>
+									<td>SS+</td>
+								</tr>
+								<tr>
+									<td>50 – 52.99</td>
+									<td>SS</td>
+								</tr>
+								<tr>
+									<td>47.5 – 49.99</td>
+									<td>S+</td>
+								</tr>
+								<tr>
+									<td>45 – 47.49</td>
+									<td>S</td>
+								</tr>
+								<tr>
+									<td>42.5 – 44.99</td>
+									<td>A+</td>
+								</tr>
+								<tr>
+									<td>40 – 42.49</td>
+									<td>A</td>
+								</tr>
+								<tr>
+									<td>37.5 – 39.99</td>
+									<td>B+</td>
+								</tr>
+								<tr>
+									<td>35 – 37.49</td>
+									<td>B</td>
+								</tr>
+								<tr>
+									<td>32.5 – 34.99</td>
+									<td>C+</td>
+								</tr>
+								<tr>
+									<td>30 – 32.49</td>
+									<td>C</td>
+								</tr>
+								<tr>
+									<td>27.5 – 29.99</td>
+									<td>D+</td>
+								</tr>
+								<tr>
+									<td>25 – 27.49</td>
+									<td>D</td>
+								</tr>
+								<tr>
+									<td>22.5 – 24.99</td>
+									<td>F+</td>
+								</tr>
+								<tr>
+									<td>Below 22.5</td>
+									<td>F</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="info-cv">
+						<div class="info-title">Crit Value Tiers</div>
+						<table>
+							<thead>
+								<tr>
+									<th>Crit Value</th>
+									<th>Tier (Average)</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>210 and above</td>
+									<td>8</td>
+								</tr>
+								<tr>
+									<td>198 - 209.9</td>
+									<td>7</td>
+								</tr>
+								<tr>
+									<td>186 - 197.9</td>
+									<td>6</td>
+								</tr>
+								<tr>
+									<td>174 - 185.9</td>
+									<td>5</td>
+								</tr>
+								<tr>
+									<td>162 - 174.9</td>
+									<td>4</td>
+								</tr>
+								<tr>
+									<td>150 - 161.9</td>
+									<td>3</td>
+								</tr>
+								<tr>
+									<td>138 - 149.9</td>
+									<td>2</td>
+								</tr>
+								<tr>
+									<td>Below 138</td>
+									<td>1</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="info-distribution">
+						<div class="info-title">Substat Distribution</div>
+						<table>
+							<thead>
+								<tr>
+									<td>Stat</td>
+									<td>T1</td>
+									<td>T2</td>
+									<td>T3</td>
+									<td>T4</td>
+									<td>T5</td>
+									<td>T6</td>
+									<td>T7</td>
+									<td>T8</td>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Crit. DMG</td>
+									<td>12.6%</td>
+									<td>13.8%</td>
+									<td>15%</td>
+									<td>16.2%</td>
+									<td>17.4%</td>
+									<td>18.6%</td>
+									<td>19.8%</td>
+									<td>21%</td>
+								</tr>
+								<tr>
+									<td>Crit. Rate</td>
+									<td>6.3%</td>
+									<td>6.9%</td>
+									<td>7.5%</td>
+									<td>8.1%</td>
+									<td>8.7%</td>
+									<td>9.3%</td>
+									<td>9.9%</td>
+									<td>10.5%</td>
+								</tr>
+								<tr>
+									<td>ATK%</td>
+									<td>6.4%</td>
+									<td>7.1%</td>
+									<td>7.9%</td>
+									<td>8.6%</td>
+									<td>9.4%</td>
+									<td>10.1%</td>
+									<td>10.9%</td>
+									<td>11.6%</td>
+								</tr>
+								<tr>
+									<td>HP%</td>
+									<td>6.4%</td>
+									<td>7.1%</td>
+									<td>7.9%</td>
+									<td>8.6%</td>
+									<td>9.4%</td>
+									<td>10.1%</td>
+									<td>10.9%</td>
+									<td>11.6%</td>
+								</tr>
+								<tr>
+									<td>DEF%</td>
+									<td>8.1%</td>
+									<td>9%</td>
+									<td>10%</td>
+									<td>10.9%</td>
+									<td>11.9%</td>
+									<td>12.8%</td>
+									<td>13.8%</td>
+									<td>14.7%</td>
+								</tr>
+								<tr>
+									<td>DMG%</td>
+									<td>6.4%</td>
+									<td>7.1%</td>
+									<td>7.9%</td>
+									<td>8.6%</td>
+									<td>9.4%</td>
+									<td>10.1%</td>
+									<td>10.9%</td>
+									<td>11.6%</td>
+								</tr>
+								<tr>
+									<td>Energy Regen</td>
+									<td>6.8%</td>
+									<td>7.6%</td>
+									<td>8.4%</td>
+									<td>9.2%</td>
+									<td>10%</td>
+									<td>10.8%</td>
+									<td>11.6%</td>
+									<td>12.4%</td>
+								</tr>
+								<tr>
+									<td>HP</td>
+									<td>320</td>
+									<td>360</td>
+									<td>390</td>
+									<td>430</td>
+									<td>470</td>
+									<td>510</td>
+									<td>540</td>
+									<td>580</td>
+								</tr>
+								<tr class="highlight">
+									<td>Chance</td>
+									<td>7.33%</td>
+									<td>14.65%</td>
+									<td>19.54%</td>
+									<td>23.51%</td>
+									<td>15.63%</td>
+									<td>10.42%</td>
+									<td>5.95%</td>
+									<td>2.98%</td>
+								</tr>
+								<tr>
+									<td>DEF</td>
+									<td>40</td>
+									<td></td>
+									<td>50</td>
+									<td></td>
+									<td></td>
+									<td>60</td>
+									<td></td>
+									<td>70</td>
+								</tr>
+								<tr>
+									<td>ATK</td>
+									<td>30</td>
+									<td></td>
+									<td>40</td>
+									<td></td>
+									<td></td>
+									<td>50</td>
+									<td></td>
+									<td>60</td>
+								</tr>
+								<tr class="highlight">
+									<td>Chance</td>
+									<td>18.52%</td>
+									<td></td>
+									<td>44.45%</td>
+									<td></td>
+									<td></td>
+									<td>26.38%</td>
+									<td></td>
+									<td>10.36%</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

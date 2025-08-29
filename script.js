@@ -27,6 +27,18 @@ document.getElementById('imageInput').addEventListener('change', uploadShowcase)
 // Manual Input (Custom Echo)
 document.querySelector('.manualInput').addEventListener('click', createCustomEcho)
 
+// Info Page Modal
+document.querySelector('.info-button').addEventListener('click', function () {
+	document.querySelector('.info-page').classList.remove('hidden')
+})
+
+window.addEventListener('mouseup', function (event) {
+	var info = document.querySelector('.info-page')
+	if (info && !info.contains(event.target)) {
+		info.classList.add('hidden')
+	}
+})
+
 // ─── Upload Showcase ───────────────────────────────────────────────────────────────────────── ✣ ─
 
 /**
@@ -97,6 +109,7 @@ async function uploadShowcase(event) {
 		tessedit_pageseg_mode: 7,
 		tessedit_char_whitelist: '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ%,. ',
 	})
+
 	// Image Element
 	const img = new Image()
 	img.src = URL.createObjectURL(file)
@@ -122,8 +135,6 @@ async function uploadShowcase(event) {
 	} = await worker.recognize(img, {
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height },
 	})
-
-	console.log(text)
 
 	// Character scan errors
 	// -> Ending 'j' instead of 'i'
@@ -245,6 +256,9 @@ async function uploadShowcase(event) {
 				// 1.9 > 7.9
 				amount = '7' + amount.slice(1)
 			}
+			if (label != 'Crit. DMG') {
+				amount = amount.replace('17', '7')
+			}
 			if ('ATK|HP|DEF'.includes(label) && amount[amount.length - 1] == '%') {
 				// Fix missing %
 				label += '%'
@@ -322,7 +336,7 @@ async function uploadShowcase(event) {
 			el.append(seg)
 
 			// Add attributes
-			el.querySelector('.value').setAttribute('tier', tier)
+			el.querySelector('.value').setAttribute('rank', getStatRank(tier))
 			el.setAttribute('data-weight', chars[match].weights[calcLabel])
 
 			echoSlot.append(el)
@@ -384,7 +398,13 @@ async function uploadShowcase(event) {
 		var cv_perc = (cv_total / critValueMax) * 100
 		var el = document.createElement('div')
 		el.classList = 'echo-score'
-		el.setAttribute('tier', getCritTier(cv_total))
+
+		// Double vs Single Weighted
+		if (critValueMax < 210) {
+			el.setAttribute('rank', getCritRank(cv_total * 2))
+		} else {
+			el.setAttribute('rank', getCritRank(cv_total))
+		}
 		el.innerHTML = `<span style="color: #fff; display: contents;">Crit Value:</span> ${cv_total.toFixed(1)}<span class="sub-value">${cv_perc.toFixed(2)}%</span>`
 		ratings.append(el)
 	}
@@ -422,24 +442,7 @@ async function uploadShowcase(event) {
 		infoBars.append(el)
 	}
 	info.append(infoBars)
-
-	// Info
-	var el = document.createElement('button')
-	el.textContent = 'Info'
-	el.className = 'info-button'
-	el.addEventListener('click', function () {
-		document.querySelector('.info-page').style.opacity = '1'
-		document.querySelector('.info-page').style.pointerEvents = 'all'
-	})
-	controls.prepend(el)
-
-	window.addEventListener('mouseup', function (event) {
-		var info = document.querySelector('.info-page')
-		if (info && !info.contains(event.target)) {
-			info.style.opacity = '0'
-			info.style.pointerEvents = 'none'
-		}
-	})
+	document.querySelector('.info-weighted').classList.remove('hidden')
 
 	// Enable controls
 	controls.classList.toggle('hidden')
@@ -475,7 +478,8 @@ function createCustomEcho() {
 
 	// Setup echo
 	var echoSlot = document.createElement('div')
-	echoSlot.className = 'echo custom'
+	echoSlot.className = 'echo'
+	echoSlot.setAttribute('custom', '')
 	echoSlot.innerHTML = `
 		<div class="echo-title">Custom Echo</div>
 	`
@@ -682,7 +686,7 @@ function updateCustomEcho() {
 
 		// Tier
 		var tier = getTier(stats[i].value, values[i].value)
-		values[i].setAttribute('tier', tier)
+		values[i].setAttribute('rank', getStatRank(tier))
 
 		// Set segments
 		var boxes = segments[i].children
@@ -858,10 +862,10 @@ function setFilter(el) {
 		}
 	} else if (attr == 'color') {
 		if (el.classList.contains('active')) {
-			showcase.setAttribute('tiers', 'hide')
+			showcase.setAttribute('ranks', 'hide')
 			el.classList.remove('active')
 		} else {
-			showcase.setAttribute('tiers', 'show')
+			showcase.setAttribute('ranks', 'show')
 			el.classList.add('active')
 		}
 	} else if (attr == 'replace') {
@@ -888,11 +892,14 @@ function setFilter(el) {
  * @returns {void} The function does not return a value; triggers PNG download as a side effect.
  */
 function exportImage() {
+	// Target
+	var target = document.querySelector('.echo-fields')
+
 	// Set export styles
 	document.body.setAttribute('data-export', '')
 
 	htmlToImage
-		.toPng(document.querySelector('.echo-fields'), {
+		.toPng(target, {
 			pixelRatio: 1,
 			scale: 1,
 			filter: function (node) {
@@ -918,7 +925,7 @@ function exportImage() {
 			// Remove export styles
 			document.body.removeAttribute('data-export')
 
-			console.error('oops, something went wrong!', err)
+			console.error('[Error]', err)
 		})
 }
 
@@ -1033,6 +1040,29 @@ function getRank(perc) {
 	return 'F'
 }
 
+function getStatRank(tier) {
+	switch (tier) {
+		case 8:
+			return 'gold'
+		case 7:
+			return 'gold'
+		case 6:
+			return 'gold'
+		case 5:
+			return 'purple'
+		case 4:
+			return 'purple'
+		case 3:
+			return 'blue'
+		case 2:
+			return 'blue'
+		case 1:
+			return 'green'
+		default:
+			return 'green'
+	}
+}
+
 /**
  * Determines the critical tier based on the given CV (critical value).
  *
@@ -1045,23 +1075,23 @@ function getRank(perc) {
  * getCritTier(300); // returns 8
  * getCritTier(100); // returns 1 (default if no threshold is met)
  */
-function getCritTier(cv) {
-	const thresholds = [
-		{ min: 210, rank: 8 },
-		{ min: 198, rank: 7 },
-		{ min: 186, rank: 6 },
-		{ min: 174, rank: 5 },
-		{ min: 162, rank: 4 },
-		{ min: 150, rank: 3 },
-		{ min: 138, rank: 2 },
-		{ min: 126, rank: 1 },
+function getCritRank(cv) {
+	var thresholds = [
+		{ min: 210, rank: 'gold' },
+		{ min: 198, rank: 'gold' },
+		{ min: 186, rank: 'gold' },
+		{ min: 174, rank: 'purple' },
+		{ min: 162, rank: 'purple' },
+		{ min: 150, rank: 'blue' },
+		{ min: 138, rank: 'blue' },
+		{ min: 126, rank: 'green' },
 	]
 
 	// use rank instead of tier
 	for (const { min, rank } of thresholds) {
 		if (cv >= min) return rank
 	}
-	return 1
+	return 'green'
 }
 
 /**
