@@ -4,7 +4,8 @@
 
 A tool to quickly analyze your character showcase files powered by OCR (optical character recognition) displaying information that isn't (easily, or at all) available via the game.
 
-[Live Version](https://christopherklay.github.io/WutheringInsight/)
+-   [Live Version](https://christopherklay.github.io/WutheringInsight/)
+-   [Changelog](https://github.com/ChristopherKlay/WutheringInsight/blob/main/changelog.md)
 
 ## Features
 

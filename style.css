@@ -10,10 +10,10 @@
 	--lightup-color: 235 235 235;
 
 	/* Tiers */
-	--tier-one: 142 183 128;
-	--tier-two: 156 209 255;
-	--tier-three: 239 182 247;
-	--tier-four: var(--accent-color);
+	--tier-one: 109 230 153;
+	--tier-two: 136 180 249;
+	--tier-three: 202 151 250;
+	--tier-four: 249 211 96;
 
 	/* Backgrounds */
 	--background: 32 34 37;
@@ -590,8 +590,7 @@ label[for='imageInput'],
 
 /* ─── Info Page ──────────────────────────────────────────────────────────────────────────── ✣ ─ */
 .info-page {
-	height: 90%;
-	max-width: var(--app-width);
+	inset: 10% 5%;
 	position: fixed;
 	background: var(--background-main);
 	backdrop-filter: blur(12px);
@@ -636,6 +635,10 @@ label[for='imageInput'],
 }
 
 /* Weighted Ranking */
+.info-weighted {
+	display: none;
+}
+
 .info-bars {
 	display: grid;
 	gap: var(--spacing-main);

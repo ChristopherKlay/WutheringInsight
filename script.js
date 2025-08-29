@@ -421,7 +421,7 @@ async function uploadShowcase(event) {
 	// Info Page - Weight Overview
 
 	// -> Title
-	document.querySelector('.info-weighted > .info-title').textContent = `Weighted Stats (${match})`
+	info.querySelector('.info-title').textContent = `Weighted Stats (${match})`
 
 	// -> Bars
 	var infoBars = document.createElement('div')
@@ -442,7 +442,7 @@ async function uploadShowcase(event) {
 		infoBars.append(el)
 	}
 	info.append(infoBars)
-	document.querySelector('.info-weighted').classList.remove('hidden')
+	info.style.display = 'block'
 
 	// Enable controls
 	controls.classList.toggle('hidden')
