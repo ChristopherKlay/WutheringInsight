@@ -40,6 +40,12 @@ A tool to quickly analyze your character showcase files powered by OCR (optical 
 
 </p>
 
+## Copyright and Assets
+
+All graphics, images, and other media used in this repository are the property of their respective owners.  
+They are included here for illustrative or reference purposes only. No copyright ownership is claimed,  
+and all rights remain with the original creators.
+
 ## Support this project
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/B0B079EUW)
