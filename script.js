@@ -714,7 +714,7 @@ function updateCustomEcho() {
 	// Crit
 	var cv_perc = (cv_echo / (critValueMax / 5)) * 100
 	ratings[0].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${cv_perc}%, rgba(32, 34, 37, 0.52) ${cv_perc}%`
-	ratings[0].querySelector('.value').innerHTML = `${cv_echo.toFixed(1)}/<span class="sub-value">/${critValueMax / 5}</span>`
+	ratings[0].querySelector('.value').innerHTML = `${cv_echo.toFixed(1)}<span class="sub-value">/${critValueMax / 5}</span>`
 
 	if (critValueMax > 0) {
 		ratings[0].style.display = 'flex'
