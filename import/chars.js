@@ -23,7 +23,23 @@ export const chars = {
 			ResonanceLiberationDMGBonus: 0.131,
 		},
 	},
-	Augusta: {},
+	Augusta: {
+		weights: {
+			HP: 0,
+			ATK: 0.8,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1.4,
+			'DEF%': 0,
+			CritRate: 2.2,
+			CritDMG: 2.2,
+			EnergyRegen: 0.8,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0.8,
+			ResonanceSkillDMGBonus: 0.167,
+			ResonanceLiberationDMGBonus: 0,
+		},
+	},
 	Baizhi: {
 		weights: {
 			HP: 0.8,
@@ -230,7 +246,23 @@ export const chars = {
 		},
 	},
 	Galbrena: {},
-	Iuno: {},
+	Iuno: {
+		weights: {
+			HP: 0,
+			ATK: 0.8,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1.4,
+			'DEF%': 0,
+			CritRate: 2.2,
+			CritDMG: 2.2,
+			EnergyRegen: 0.8,
+			BasicAttackDMGBonus: 0.039,
+			HeavyAttackDMGBonus: 0,
+			ResonanceSkillDMGBonus: 0.079,
+			ResonanceLiberationDMGBonus: 0.8,
+		},
+	},
 	Jianxin: {
 		weights: {
 			HP: 0,
