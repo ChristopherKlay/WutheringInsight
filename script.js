@@ -116,8 +116,8 @@ async function uploadShowcase(event) {
 	await img.decode()
 
 	// Validate image
-	if (img.width != 1920 || img.height != 1080 || file.name.split('.').pop().toLowerCase() != 'jpeg') {
-		label.setAttribute('data-error', 'Error: Unsupported file. Please upload the original 1920x1080 JPEG file.')
+	if (img.width != 1920 || img.height != 1080) {
+		label.setAttribute('data-error', 'Error: Unsupported file. Please upload the original 1920x1080 file.')
 		return
 	}
 
