@@ -136,6 +136,8 @@ async function uploadShowcase(event) {
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height },
 	})
 
+	console.log(text)
+
 	// Character scan errors
 	// -> Ending 'j' instead of 'i'
 	var split = text.split(' ')
@@ -143,6 +145,8 @@ async function uploadShowcase(event) {
 		split[0] = split[0].slice(0, -1) + 'i'
 		text = split.join(' ')
 	}
+	// Starting J vs I
+	text = text.replace('luno', 'Iuno')
 
 	// Rover Variants
 	if (text.includes('Rover')) {
