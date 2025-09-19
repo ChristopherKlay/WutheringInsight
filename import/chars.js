@@ -144,7 +144,7 @@ export const chars = {
 	},
 	Cartethyia: {
 		weights: {
-			HP: 1,
+			HP: 0.8,
 			ATK: 0,
 			DEF: 0,
 			'HP%': 1.4,
@@ -156,7 +156,7 @@ export const chars = {
 			BasicAttackDMGBonus: 0.8,
 			HeavyAttackDMGBonus: 0.1,
 			ResonanceSkillDMGBonus: 0.125,
-			ResonanceLiberationDMGBonus: 0.236,
+			ResonanceLiberationDMGBonus: 0.8,
 		},
 	},
 	Changli: {
