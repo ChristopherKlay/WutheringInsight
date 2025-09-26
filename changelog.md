@@ -2,11 +2,16 @@
 
 ## 1.0
 
+### 1.0.1 - 2025-09-26
+
+-   The "Weighted" (now "Top Weighted") filter now displays only the top 5 weighted stats (or equivalent), hiding all others.
+-   The character selection and reset button in manual mode have been moved to the top of the interface.
+
 ### 1.0.1 - 2025-08-29
 
 #### Fixed
 
--   Info modal not displaying weighted stats correctly
+-   Info modal not displaying weighted stats correctly.
 
 ### 1.0.0 - 2025-08-29
 

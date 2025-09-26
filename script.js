@@ -341,7 +341,7 @@ async function uploadShowcase(event) {
 
 			// Add attributes
 			el.querySelector('.value').setAttribute('rank', getStatRank(tier))
-			el.setAttribute('data-weight', chars[match].weights[calcLabel])
+			el.setAttribute('weighted', chars[match].weights[calcLabel] >= getWeightCutoff(chars[match].weights))
 
 			echoSlot.append(el)
 		}
@@ -488,48 +488,6 @@ function createCustomEcho() {
 		<div class="echo-title">Custom Echo</div>
 	`
 
-	// Input Elements
-	for (let i = 0; i < 5; i++) {
-		// Create row
-		var row = document.createElement('div')
-		row.className = 'row'
-
-		// Create stat options
-		var selectContainer = document.createElement('div')
-		selectContainer.className = 'selection-container'
-		selectContainer.setAttribute('data-weight', 0)
-		var select = document.createElement('select')
-		select.setAttribute('stat', '')
-		for (var key in combatStats.label) {
-			const option = document.createElement('option')
-			option.value = key
-			option.textContent = combatStats.label[key]
-			select.appendChild(option)
-		}
-		select.addEventListener('change', updateCustomEcho)
-		selectContainer.appendChild(select)
-
-		// Add segments
-		var seg = document.createElement('div')
-		seg.className = 'segments'
-		for (var s = 1; s < 9; s++) {
-			var box = document.createElement('div')
-			seg.append(box)
-		}
-		selectContainer.append(seg)
-		row.append(selectContainer)
-
-		// Create stat ranges
-		var select = document.createElement('select')
-		select.setAttribute('value', '')
-		const option = document.createElement('option')
-		select.appendChild(option)
-		select.addEventListener('change', updateCustomEcho)
-		row.appendChild(select)
-
-		echoSlot.appendChild(row)
-	}
-
 	// Container Row
 	var row = document.createElement('div')
 	row.className = 'row'
@@ -567,6 +525,52 @@ function createCustomEcho() {
 	row.append(el)
 
 	echoSlot.append(row)
+
+	// Divider element
+	var el = document.createElement('hr')
+	echoSlot.append(el)
+
+	// Input Elements
+	for (let i = 0; i < 5; i++) {
+		// Create row
+		var row = document.createElement('div')
+		row.className = 'row'
+
+		// Create stat options
+		var selectContainer = document.createElement('div')
+		selectContainer.className = 'selection-container'
+		selectContainer.setAttribute('weighted', 'false')
+		var select = document.createElement('select')
+		select.setAttribute('stat', '')
+		for (var key in combatStats.label) {
+			const option = document.createElement('option')
+			option.value = key
+			option.textContent = combatStats.label[key]
+			select.appendChild(option)
+		}
+		select.addEventListener('change', updateCustomEcho)
+		selectContainer.appendChild(select)
+
+		// Add segments
+		var seg = document.createElement('div')
+		seg.className = 'segments'
+		for (var s = 1; s < 9; s++) {
+			var box = document.createElement('div')
+			seg.append(box)
+		}
+		selectContainer.append(seg)
+		row.append(selectContainer)
+
+		// Create stat ranges
+		var select = document.createElement('select')
+		select.setAttribute('value', '')
+		const option = document.createElement('option')
+		select.appendChild(option)
+		select.addEventListener('change', updateCustomEcho)
+		row.appendChild(select)
+
+		echoSlot.appendChild(row)
+	}
 
 	// Divider element
 	var el = document.createElement('hr')
@@ -645,7 +649,7 @@ function updateCustomEcho() {
 			values[i].value = 0
 
 			// Reset attributes
-			stats[i].parentElement.removeAttribute('data-weight')
+			stats[i].parentElement.removeAttribute('weighted')
 			stats[i].parentElement.removeAttribute('crit')
 		}
 
@@ -685,7 +689,7 @@ function updateCustomEcho() {
 		// -> WV
 		if (chars[char].weights && stats[i].value != 'None') {
 			wv_echo += chars[char].weights[stats[i].value] * ((values[i].value / range[stats[i].value][8]) * 100)
-			stats[i].parentElement.setAttribute('data-weight', chars[char].weights[stats[i].value])
+			stats[i].parentElement.setAttribute('weighted', chars[char].weights[stats[i].value] >= getWeightCutoff(chars[char].weights))
 		}
 
 		// Tier
@@ -812,6 +816,21 @@ function getMaxValue(val, char) {
 }
 
 /**
+ * Returns the 5th highest numeric value from the given object's values.
+ *
+ * The function extracts all values from the provided object, sorts them
+ * in descending order, and returns the value at index 4 (the fifth element).
+ *
+ * @param {Object.<string, number>} obj - An object with numeric values.
+ * @returns {number | undefined} The 5th largest value, or `undefined` if the object has fewer than 5 values.
+ */
+function getWeightCutoff(obj) {
+	var values = Object.values(obj)
+	values.sort((a, b) => b - a)
+	return values[4]
+}
+
+/**
  * Determines the tier of a given stat value based on predefined thresholds.
  *
  * @param {string} stat - The name of the stat (must exist as a key in the global `range` object).
@@ -919,7 +938,7 @@ function exportImage() {
 			// Remove export styles
 			document.body.removeAttribute('data-export')
 
-			// Process result
+			// Download Result
 			const link = document.createElement('a')
 			link.download = 'WutheringInsight.png'
 			link.href = dataUrl

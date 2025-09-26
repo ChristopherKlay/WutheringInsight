@@ -394,17 +394,12 @@ h1 {
 /* Full */
 .showcase {
 	&[filter='weight'] {
-		[data-weight^='1'],
-		[data-weight^='2'] {
+		[weighted='true'] {
 			background: url('./media/img/bg-gradient.png') center/100% 100%;
 			box-shadow: 0 0 0 1px rgb(var(--accent-color) / 0.7);
 		}
 
-		[data-weight='0.8'] {
-			box-shadow: var(--box-border-muted);
-		}
-
-		[data-weight='0'] {
+		[weighted='false'] {
 			opacity: 0.2;
 		}
 	}
