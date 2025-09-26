@@ -2,7 +2,13 @@
 
 ## 1.0
 
-### 1.0.1 - 2025-09-26
+### 1.0.2 - 2025-09-26
+
+#### Fixed
+
+-   Resolved an OCR error and improved styling for the 'Sentinel' rank
+
+#### Updated
 
 -   The "Weighted" (now "Top Weighted") filter now displays only the top 5 weighted stats (or equivalent), hiding all others.
 -   The character selection and reset button in manual mode have been moved to the top of the interface.
