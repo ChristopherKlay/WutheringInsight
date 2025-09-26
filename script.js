@@ -136,8 +136,6 @@ async function uploadShowcase(event) {
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height },
 	})
 
-	console.log(text)
-
 	// Character scan errors
 	// -> Ending 'j' instead of 'i'
 	var split = text.split(' ')
@@ -250,8 +248,6 @@ async function uploadShowcase(event) {
 			label.pop()
 			label = label.join(' ')
 			var amount = output.split(' ')[output.split(' ').length - 1]
-
-			console.log(amount)
 
 			// Fix incorrect chars
 			if (amount[0] == '1' && amount[1] == '7') {
