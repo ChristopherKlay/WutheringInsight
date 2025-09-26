@@ -251,10 +251,16 @@ async function uploadShowcase(event) {
 			label = label.join(' ')
 			var amount = output.split(' ')[output.split(' ').length - 1]
 
+			console.log(amount)
+
 			// Fix incorrect chars
 			if (amount[0] == '1' && amount[1] == '7') {
 				// 11.7 > 17.7
 				amount = '17' + amount.slice(2)
+			}
+			if (amount[0] == '7' && amount[1] == '1') {
+				// 71 > 7.1
+				amount = '7.1' + amount.slice(2)
 			}
 			if (amount[0] == '1' && amount[1] == '.') {
 				// 1.9 > 7.9

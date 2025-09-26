@@ -472,7 +472,7 @@ h1 {
 	border-right: 4px solid transparent;
 	box-shadow: var(--box-border-main);
 	padding: 6px 10px 8px 10px;
-	width: 200px;
+	width: 220px;
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-around;
