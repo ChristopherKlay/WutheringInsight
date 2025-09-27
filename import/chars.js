@@ -260,7 +260,7 @@ export const chars = {
 			BasicAttackDMGBonus: 0.039,
 			HeavyAttackDMGBonus: 0,
 			ResonanceSkillDMGBonus: 0.079,
-			ResonanceLiberationDMGBonus: 0.8,
+			ResonanceLiberationDMGBonus: 1.4,
 		},
 	},
 	Jianxin: {
