@@ -156,7 +156,7 @@ export const chars = {
 			BasicAttackDMGBonus: 0.8,
 			HeavyAttackDMGBonus: 0.1,
 			ResonanceSkillDMGBonus: 0.125,
-			ResonanceLiberationDMGBonus: 0.8,
+			ResonanceLiberationDMGBonus: 1,
 		},
 	},
 	Changli: {
