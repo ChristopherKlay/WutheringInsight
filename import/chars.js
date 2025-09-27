@@ -119,7 +119,7 @@ export const chars = {
 			CritRate: 2.2,
 			CritDMG: 2.2,
 			EnergyRegen: 0.8,
-			BasicAttackDMGBonus: 0.72,
+			BasicAttackDMGBonus: 1.4,
 			HeavyAttackDMGBonus: 0.023,
 			ResonanceSkillDMGBonus: 0.07,
 			ResonanceLiberationDMGBonus: 0,
