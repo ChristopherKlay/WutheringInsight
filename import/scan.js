@@ -124,6 +124,10 @@ export const icons = {
 			left: 504,
 			top: 576,
 		},
+		{
+			left: 584,
+			top: 576,
+		},
 	],
 }
 
