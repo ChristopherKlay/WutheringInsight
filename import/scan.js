@@ -6,6 +6,127 @@ export const name = {
 	height: 60,
 }
 
+export const icons = {
+	echo: [
+		{
+			left: 22,
+			top: 651,
+			width: 190,
+			height: 180,
+		},
+		{
+			left: 397,
+			top: 651,
+			width: 190,
+			height: 180,
+		},
+		{
+			left: 771,
+			top: 651,
+			width: 190,
+			height: 180,
+		},
+		{
+			left: 1145,
+			top: 651,
+			width: 190,
+			height: 180,
+		},
+		{
+			left: 1518,
+			top: 651,
+			width: 190,
+			height: 180,
+		},
+	],
+	set: [
+		{
+			left: 268,
+			top: 663,
+			width: 48,
+			height: 48,
+		},
+		{
+			left: 641,
+			top: 663,
+			width: 48,
+			height: 48,
+		},
+		{
+			left: 1015,
+			top: 663,
+			width: 48,
+			height: 48,
+		},
+		{
+			left: 1390,
+			top: 663,
+			width: 48,
+			height: 48,
+		},
+		{
+			left: 1764,
+			top: 663,
+			width: 48,
+			height: 48,
+		},
+	],
+	cost: [
+		{
+			left: 323,
+			top: 664,
+			width: 47,
+			height: 47,
+		},
+		{
+			left: 696,
+			top: 664,
+			width: 47,
+			height: 47,
+		},
+		{
+			left: 1070,
+			top: 664,
+			width: 47,
+			height: 47,
+		},
+		{
+			left: 1445,
+			top: 664,
+			width: 47,
+			height: 47,
+		},
+		{
+			left: 1819,
+			top: 664,
+			width: 47,
+			height: 47,
+		},
+	],
+	seq: [
+		{
+			left: 189,
+			top: 576,
+		},
+		{
+			left: 263,
+			top: 576,
+		},
+		{
+			left: 344,
+			top: 576,
+		},
+		{
+			left: 424,
+			top: 576,
+		},
+		{
+			left: 504,
+			top: 576,
+		},
+	],
+}
+
 export const regions = {
 	group1: [
 		{

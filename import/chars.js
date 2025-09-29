@@ -153,10 +153,10 @@ export const chars = {
 			CritRate: 2.2,
 			CritDMG: 2.2,
 			EnergyRegen: 0.8,
-			BasicAttackDMGBonus: 0.8,
+			BasicAttackDMGBonus: 1.2,
 			HeavyAttackDMGBonus: 0.1,
 			ResonanceSkillDMGBonus: 0.125,
-			ResonanceLiberationDMGBonus: 1,
+			ResonanceLiberationDMGBonus: 0.8,
 		},
 	},
 	Changli: {

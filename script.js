@@ -1,7 +1,7 @@
 // ─── Initial Setup ─────────────────────────────────────────────────────────────────────────── ✣ ─
 
 // Imports
-import { name, regions } from './import/scan.js'
+import { name, regions, icons } from './import/scan.js'
 import { range, combatStats } from './import/stats.js'
 import { chars } from './import/chars.js'
 
@@ -71,7 +71,6 @@ window.addEventListener('mouseup', function (event) {
  *        - Echo title (Echo #n).
  *        - Individual stat bars with icon, title, value, and tier segments.
  *        - Crit/Weighted bars for that particular echo.
- *      - Attribute each `.echo-title` with `replace` containing the calculated stat value via `calculateValue()`.
  *
  * 5. **Totals:**
  *    - Accumulates crit score and weighted score across all echoes (up to 5).
@@ -124,10 +123,13 @@ async function uploadShowcase(event) {
 	// Hide base controls
 	document.querySelector('.base-controls').style.display = 'none'
 
+	// Dim background
+	document.querySelector('.canvas').setAttribute('dimmed', '')
+
 	// Setup loop variables
 	var cv_total = 0
 	var wv_total = 0
-	var titleCount = 1
+	var titleCount = 0
 
 	// Recognize character
 	var {
@@ -186,7 +188,7 @@ async function uploadShowcase(event) {
 		document.querySelector('.title').textContent = match + "'s Echoes"
 
 		// Card Element
-		var card = createCard(match)
+		var card = createCard(match, getSequences(img, icons.seq))
 	}
 
 	// Max Values
@@ -201,9 +203,28 @@ async function uploadShowcase(event) {
 		// Create echo
 		var echoSlot = document.createElement('div')
 		echoSlot.className = 'echo'
-		echoSlot.innerHTML = `
-			<div class="echo-title">Echo #${titleCount}</div>
-		`
+
+		// Title section
+		var echoTitle = document.createElement('div')
+		echoTitle.className = 'echo-title'
+
+		// -> Showcase Icons
+		var echoSet = document.createElement('img')
+		echoSet.className = 'echo-set'
+		echoSet.src = areaToDataUrl(img, icons.set[titleCount])
+		echoTitle.append(echoSet)
+
+		var echoImage = document.createElement('img')
+		echoImage.className = 'echo-image'
+		echoImage.src = areaToDataUrl(img, icons.echo[titleCount])
+		echoTitle.append(echoImage)
+
+		var echoCost = document.createElement('img')
+		echoCost.className = 'echo-cost'
+		echoCost.src = areaToDataUrl(img, icons.cost[titleCount])
+		echoTitle.append(echoCost)
+
+		echoSlot.append(echoTitle)
 		echoContainer.append(echoSlot)
 
 		for (let i = 0; i < regions[echo].length; i++) {
@@ -376,9 +397,6 @@ async function uploadShowcase(event) {
 			echoSlot.append(el)
 		}
 
-		// Value
-		echoSlot.querySelector('.echo-title').setAttribute('replace', calculateValue(echoStats, match, `Echo #${titleCount}`).toFixed(2))
-
 		// Totals
 		cv_total += cv_echo
 		wv_total += wv_echo
@@ -387,7 +405,7 @@ async function uploadShowcase(event) {
 		echoSlot.style.opacity = '1'
 
 		// Add card element
-		if (titleCount == 1) {
+		if (titleCount == 0) {
 			echoContainer.append(card.container)
 			card.container.style.opacity = '1'
 		}
@@ -474,8 +492,8 @@ function createCustomEcho() {
 	// Hide base controls
 	document.querySelector('.base-controls').style.display = 'none'
 
-	// Title
-	document.querySelector('.title').textContent = 'Custom Echo'
+	// Dim background
+	document.querySelector('.canvas').setAttribute('dimmed', '')
 
 	// Card Element
 	var card = createCard('Aalto')
@@ -486,9 +504,6 @@ function createCustomEcho() {
 	var echoSlot = document.createElement('div')
 	echoSlot.className = 'echo'
 	echoSlot.setAttribute('custom', '')
-	echoSlot.innerHTML = `
-		<div class="echo-title">Custom Echo</div>
-	`
 
 	// Container Row
 	var row = document.createElement('div')
@@ -718,9 +733,6 @@ function updateCustomEcho() {
 		}
 	}
 
-	// Echo Value
-	showcase.querySelector('.echo-title').setAttribute('replace', calculateValue(echoStats, char, 'Custom').toFixed(2))
-
 	// Crit
 	var cv_perc = (cv_echo / (critValueMax / 5)) * 100
 	ratings[0].style.background = `linear-gradient(to right, var(--gradient-main-start) 0%, var(--gradient-main-stop) ${cv_perc}%, rgba(32, 34, 37, 0.52) ${cv_perc}%`
@@ -756,12 +768,13 @@ function updateCustomEcho() {
  * @returns {{container: HTMLElement, backdrop: HTMLImageElement, artwork: HTMLImageElement}}
  *   An object containing the created card elements.
  */
-function createCard(char) {
+function createCard(char, seq = 0) {
 	// Card Element
 	var card = {
 		container: document.createElement('div'),
 		backdrop: document.createElement('img'),
 		artwork: document.createElement('img'),
+		sequence: document.createElement('div'),
 	}
 
 	// -> Container
@@ -773,9 +786,25 @@ function createCard(char) {
 	// Artwork
 	card.artwork.className = 'artwork'
 
+	// Sequences
+	card.sequence.className = 'sequence'
+	// -> Active
+	for (var i = 0; i < seq; i++) {
+		var el = document.createElement('img')
+		el.src = './media/img/interface/seq-active.png'
+		card.sequence.append(el)
+	}
+	// -> Inactive
+	for (var i = 0; i < 6 - seq; i++) {
+		var el = document.createElement('img')
+		el.src = './media/img/interface/seq-inactive.png'
+		card.sequence.append(el)
+	}
+
 	// Card Setup
 	card.container.append(card.backdrop)
 	card.container.append(card.artwork)
+	card.container.append(card.sequence)
 
 	// Card background
 	if (char.includes('Rover')) {
@@ -955,82 +984,6 @@ function exportImage() {
 }
 
 /**
- * Calculates a weighted stat value for a character based on
- * provided stat values, tier-based probability curves, and
- * character-specific weight modifiers.
- *
- * - Each stat is evaluated against predefined ranges (`range`)
- *   to determine its tier.
- * - Percent contribution (`perc`) is calculated relative to the
- *   maximum tier value.
- * - A probability factor is applied using either the base or
- *   alternate cumulative probability arrays, depending on the stat type.
- * - The result is weighted according to the character's specific
- *   stat weighting and accumulated into the final result.
- * - Debug information is output via `console.group` and `console.table`.
- *
- * @param {Object.<string, number>} values - An object mapping stat names to their numeric values.
- * @param {string} char - The character identifier used to reference weight modifiers in `chars[char].weights`.
- * @param {string|number} id - An identifier for debugging purposes (used in console output).
- * @returns {number} The final calculated weighted value.
- */
-function calculateValue(values, char, id) {
-	var accumProbBase = [7.33, 21.98, 41.52, 65.03, 80.66, 91.08, 97.03, 100]
-	var accumProbAlt = [18.52, 18.52, 62.97, 62.97, 62.97, 89.35, 89.35, 100]
-	let result = 0
-
-	// Start Group - Value Valc
-	console.groupCollapsed(`[Debug] Value Calculation (${id})`)
-
-	for (let v in values) {
-		// Get Tier
-		for (let [key, val] of Object.entries(range[v])) {
-			if (val == values[v]) {
-				var tier = key
-				continue
-			}
-		}
-
-		// Skip Empty/None
-		if (values[v] == 0) {
-			continue
-		}
-
-		// Get Perc
-		var perc = (values[v] / range[v]['8']) * 100
-
-		// Modifiers
-		var probFactor = 0.1
-		var modWeight = chars[char].weights[v]
-		if (v == 'DEF' || v == 'ATK') {
-			var modProb = accumProbAlt[tier - 1] * (probFactor / 100)
-		} else {
-			var modProb = accumProbBase[tier - 1] * (probFactor / 100)
-		}
-
-		// Update result
-		var increase = parseFloat((perc + perc * modProb) * modWeight)
-		result += increase
-
-		// Debugging - Group: Value Calc
-		console.table({
-			Stat: v,
-			Value: values[v],
-			Percentage: perc,
-			Tier: tier,
-			Probability: modProb,
-			Weight: modWeight,
-			Increase: increase,
-		})
-	}
-
-	// End Group - Value Calc
-	console.groupEnd()
-
-	return result
-}
-
-/**
  * Returns the corresponding rank for a percentage value
  * based on predefined thresholds.
  *
@@ -1179,4 +1132,53 @@ function closestColor(targetColor, colorArray) {
 		}
 	})
 	return closestColor
+}
+
+/**
+ * Extracts a specific rectangular area from the source image and returns a CSS-compatible data URL string.
+ *
+ * @param {CanvasImageSource} source - The image, video, or canvas source to crop from.
+ * @param {Object} cords - An object specifying the crop rectangle.
+ * @param {number} cords.left - The x-coordinate (from left) of the crop area in the source image.
+ * @param {number} cords.top - The y-coordinate (from top) of the crop area in the source image.
+ * @param {number} cords.width - The width of the crop area.
+ * @param {number} cords.height - The height of the crop area.
+ * @returns {string} A string in the format 'url(data:image/png;base64,...)' for use in CSS background-image.
+ *
+ * @example
+ * const url = areaToDataUrl(img, { left: 10, top: 20, width: 100, height: 50 });
+ * element.style.backgroundImage = url;
+ */
+function areaToDataUrl(source, cords) {
+	var canvas = document.createElement('canvas')
+	canvas.width = cords.width
+	canvas.height = cords.height
+	const ctx = canvas.getContext('2d')
+	ctx.drawImage(source, cords.left, cords.top, cords.width, cords.height, 0, 0, cords.width, cords.height)
+	return canvas.toDataURL()
+}
+
+function getSequences(source, cords) {
+	// Create canvas element for extraction
+	var canvas = document.createElement('canvas')
+	canvas.width = source.width
+	canvas.height = source.height
+
+	// Draw image
+	var ctx = canvas.getContext('2d')
+	ctx.drawImage(source, 0, 0)
+
+	// Check sequences
+	var seq = 0
+	for (var el in cords) {
+		// Read pixel
+		var pixel = ctx.getImageData(cords[el].left, cords[el].top, 1, 1).data
+
+		// Check value against treshold
+		if (pixel[0] + pixel[1] + pixel[2] > 30) {
+			// Add sequence
+			seq++
+		}
+	}
+	return seq
 }

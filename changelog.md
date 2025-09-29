@@ -2,11 +2,27 @@
 
 ## 1.0
 
+### 1.0.3 - 2025-09-29
+
+#### Added
+
+-   Echo icon, along with set and cost details, replacing the previous plain text title.
+-   Automatic detection for unlocked sequence nodes, displayed on the character portrait.
+
+#### Updated
+
+-   Background image now includes automatic dimming when not on the landing view.
+
+#### Removed
+
+-   "Echo Value" filter, due to low usage and to reduce option clutter; "Weighted Value" already provides the necessary information.
+-   Redundant "Custom Echo" placeholder title for manual input.
+
 ### 1.0.2 - 2025-09-26
 
 #### Fixed
 
--   Resolved an OCR error and improved styling for the 'Sentinel' rank
+-   Resolved an OCR error and improved styling for the 'Sentinel' rank.
 
 #### Updated
 
