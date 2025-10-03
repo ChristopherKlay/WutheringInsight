@@ -817,13 +817,15 @@ table tr th:last-child {
 
 /* ─── Media Queries ──────────────────────────────────────────────────────────────────────── ✣ ─ */
 @media (max-width: 800px) {
-	.echo,
-	.echo.custom {
-		width: 90%;
-	}
-	.card {
-		order: -1;
-		height: 400px;
+	body:not([data-export]) {
+		.echo,
+		.echo.custom {
+			width: 90%;
+		}
+		.card {
+			order: -1;
+			height: 400px;
+		}
 	}
 	.details {
 		flex-direction: column;
@@ -834,7 +836,7 @@ table tr th:last-child {
 	.floatingchat-container-wrap {
 		left: calc(50% - 125px) !important;
 	}
-	.export-button {
-		display: none;
+	.ratings {
+		flex-direction: column;
 	}
 }
