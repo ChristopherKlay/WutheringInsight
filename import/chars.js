@@ -245,7 +245,23 @@ export const chars = {
 			ResonanceLiberationDMGBonus: 0.0146,
 		},
 	},
-	Galbrena: {},
+	Galbrena: {
+		weights: {
+			HP: 0,
+			ATK: 0.8,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1.4,
+			'DEF%': 0,
+			CritRate: 2.2,
+			CritDMG: 2.2,
+			EnergyRegen: 0.8,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0.8,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0,
+		},
+	},
 	Iuno: {
 		weights: {
 			HP: 0,
@@ -416,7 +432,23 @@ export const chars = {
 			ResonanceLiberationDMGBonus: 0,
 		},
 	},
-	Qiuyuan: {},
+	Qiuyuan: {
+		weights: {
+			HP: 0,
+			ATK: 0.8,
+			DEF: 0,
+			'HP%': 0,
+			'ATK%': 1.4,
+			'DEF%': 0,
+			CritRate: 2.2,
+			CritDMG: 2.2,
+			EnergyRegen: 0.8,
+			BasicAttackDMGBonus: 0,
+			HeavyAttackDMGBonus: 0.8,
+			ResonanceSkillDMGBonus: 0,
+			ResonanceLiberationDMGBonus: 0,
+		},
+	},
 	Roccia: {
 		weights: {
 			HP: 0,

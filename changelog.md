@@ -1,8 +1,18 @@
 # Changelog
 
-## 1.0
+### 1.1.2 - 2025-10-05
 
-### 1.0.3 - 2025-09-29
+#### Added
+
+-   Support for Galbrena and Quiyuan
+
+### 1.1.1 - 2025-10-03
+
+#### Updated
+
+-   Export function to also be available on mobile, exporting with the same layout used on desktop
+
+### 1.1.0 - 2025-09-29
 
 #### Added
 
