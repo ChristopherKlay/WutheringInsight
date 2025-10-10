@@ -139,14 +139,19 @@ async function uploadShowcase(event) {
 	})
 
 	// Character scan errors
+
+	// Starting J vs I
+	text = text.replace('luno', 'Iuno')
+
+	// Zani
+	// -> Missing 'i'
+	text = text.replace('Zan', 'Zani')
 	// -> Ending 'j' instead of 'i'
 	var split = text.split(' ')
 	if (split[0].slice(-1) == 'j') {
 		split[0] = split[0].slice(0, -1) + 'i'
 		text = split.join(' ')
 	}
-	// Starting J vs I
-	text = text.replace('luno', 'Iuno')
 
 	// Rover Variants
 	if (text.includes('Rover')) {
