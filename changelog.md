@@ -1,5 +1,12 @@
 # Changelog
 
+### 1.1.3 - 2025-10-11
+
+#### Fixed
+
+-   Rendering issues affecting character portraits on iOS devices
+-   Recognition problem with showcases for "Zani"
+
 ### 1.1.2 - 2025-10-05
 
 #### Added
