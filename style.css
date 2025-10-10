@@ -363,17 +363,15 @@ h1 {
 .artwork {
 	position: absolute;
 	height: 100%;
+}
+
+.backdrop {
 	width: 100%;
 	border-radius: var(--border-radius-sec);
 }
 
 .backdrop {
-	object-fit: fill;
 	filter: blur(4px) brightness(0.5);
-}
-
-.artwork {
-	object-fit: contain;
 }
 
 .sequence {
