@@ -1,5 +1,19 @@
 # Changelog
 
+### 1.1.4 - 2025-10-13
+
+#### Added
+
+-   Implemented pre-processing steps to reduce OCR errors.
+
+#### Changed
+
+-   Optimized canvas handling to minimize redraws and improve performance.
+
+#### Fixed
+
+-   Resolved OCR recognition issues with the "Flat ATK" stat.
+
 ### 1.1.3 - 2025-10-11
 
 #### Fixed

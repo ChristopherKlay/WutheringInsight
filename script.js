@@ -7,9 +7,13 @@ import { chars } from './import/chars.js'
 
 // Element Handles
 var echoContainer = document.querySelector('.echo-fields')
+var showcase = document.querySelector('.showcase')
 var controls = document.querySelector('.controls')
 var info = document.querySelector('.info-weighted')
 var filters = document.querySelector('.filters')
+
+// Debounce
+var uploadShowcaseDebounced = debounce(uploadShowcase, 300)
 
 // ─── Control Elements ──────────────────────────────────────────────────────────────────────── ✣ ─
 
@@ -22,7 +26,7 @@ document.querySelectorAll('.filter-button').forEach((el) => {
 document.querySelector('.export-button').addEventListener('click', exportImage)
 
 // Showcase Upload (Automated)
-document.getElementById('imageInput').addEventListener('change', uploadShowcase)
+document.getElementById('imageInput').addEventListener('change', uploadShowcaseDebounced)
 
 // Manual Input (Custom Echo)
 document.querySelector('.manualInput').addEventListener('click', createCustomEcho)
@@ -120,6 +124,19 @@ async function uploadShowcase(event) {
 		return
 	}
 
+	// Create canvas element
+	const canvas = document.createElement('canvas')
+	canvas.width = img.width
+	canvas.height = img.height
+
+	// Draw image
+	const ctx = canvas.getContext('2d', { willReadFrequently: true })
+	ctx.drawImage(img, 0, 0)
+
+	// OCR Prep
+	adjustLevels(ctx, img.width, img.height, 35, 168, 1, 0, 255)
+	const imageDataUrl = canvas.toDataURL('image/jpeg', 7)
+
 	// Hide base controls
 	document.querySelector('.base-controls').style.display = 'none'
 
@@ -134,16 +151,14 @@ async function uploadShowcase(event) {
 	// Recognize character
 	var {
 		data: { text },
-	} = await worker.recognize(img, {
+	} = await worker.recognize(imageDataUrl, {
 		rectangle: { top: name.top, left: name.left, width: name.width, height: name.height },
 	})
 
 	// Character scan errors
 
-	// Starting J vs I
+	// -> Starting J vs I
 	text = text.replace('luno', 'Iuno')
-
-	// Zani
 	// -> Missing 'i'
 	text = text.replace('Zan', 'Zani')
 	// -> Ending 'j' instead of 'i'
@@ -155,15 +170,6 @@ async function uploadShowcase(event) {
 
 	// Rover Variants
 	if (text.includes('Rover')) {
-		// Create canvas element for extraction
-		const canvas = document.createElement('canvas')
-		canvas.width = img.width
-		canvas.height = img.height
-
-		// Draw image
-		const ctx = canvas.getContext('2d')
-		ctx.drawImage(img, 0, 0)
-
 		// Select variant by color distance
 		/*
 		 * Aero: #98D1BE
@@ -193,7 +199,7 @@ async function uploadShowcase(event) {
 		document.querySelector('.title').textContent = match + "'s Echoes"
 
 		// Card Element
-		var card = createCard(match, getSequences(img, icons.seq))
+		var card = createCard(match, getSequences(ctx, icons.seq))
 	}
 
 	// Max Values
@@ -203,7 +209,6 @@ async function uploadShowcase(event) {
 	for (let echo in regions) {
 		var cv_echo = 0
 		var wv_echo = 0
-		var echoStats = {}
 
 		// Create echo
 		var echoSlot = document.createElement('div')
@@ -239,9 +244,11 @@ async function uploadShowcase(event) {
 			// OCR on the cropped region
 			var {
 				data: { text },
-			} = await worker.recognize(img, {
+			} = await worker.recognize(imageDataUrl, {
 				rectangle: { top: top, left: left, width: width, height: height },
 			})
+
+			console.log(text)
 
 			// Cleanup
 			// -> OCR Replacements
@@ -334,9 +341,6 @@ async function uploadShowcase(event) {
 					wv_echo += chars[match].weights[calcLabel] * perc
 				}
 			}
-
-			// Replaceability
-			echoStats[calcLabel] = calcAmount
 
 			// Add icon
 			var icon = document.createElement('img')
@@ -643,10 +647,8 @@ function updateCustomEcho() {
 	var values = echoContainer.querySelectorAll('select[value]')
 	var ratings = echoContainer.querySelectorAll('.echo-bar')
 	var segments = echoContainer.querySelectorAll('.segments')
-	var showcase = document.querySelector('.showcase')
 	var cv_echo = 0
 	var wv_echo = 0
-	var echoStats = {}
 
 	// Max Values
 	var weightMaxPerc = getMaxValue('weight', char)
@@ -686,9 +688,6 @@ function updateCustomEcho() {
 				values[i].append(option)
 			}
 		}
-
-		// Add stats
-		echoStats[stats[i].value] = values[i].value
 
 		// Calculate values
 		// -> Crit
@@ -898,7 +897,6 @@ function getTier(stat, amount) {
  * @returns {void} Does not return a value; updates the DOM as a side effect.
  */
 function setFilter(el) {
-	var showcase = document.querySelector('.showcase')
 	var attr = el.getAttribute('data-filter')
 
 	if (attr == 'weight' || attr == 'crit') {
@@ -951,14 +949,11 @@ function setFilter(el) {
  * @returns {void} The function does not return a value; triggers PNG download as a side effect.
  */
 function exportImage() {
-	// Target
-	var target = document.querySelector('.echo-fields')
-
 	// Set export styles
 	document.body.setAttribute('data-export', '')
 
 	htmlToImage
-		.toPng(target, {
+		.toPng(echoContainer, {
 			pixelRatio: 1,
 			scale: 1,
 			filter: function (node) {
@@ -1160,24 +1155,22 @@ function areaToDataUrl(source, cords) {
 	canvas.height = cords.height
 	const ctx = canvas.getContext('2d')
 	ctx.drawImage(source, cords.left, cords.top, cords.width, cords.height, 0, 0, cords.width, cords.height)
-	return canvas.toDataURL()
+	return canvas.toDataURL('image/jpeg', 7)
 }
 
+/**
+ * Counts the number of pixels in the given coordinates whose combined RGB value exceeds a threshold to return the active sequences of a given character.
+ *
+ * @param {CanvasRenderingContext2D} source - The canvas 2D rendering context to read pixels from.
+ * @param {Array<{left: number, top: number}>} cords - An array of coordinate objects with 'left' and 'top' properties.
+ * @returns {number} The count of pixels where the sum of the red, green, and blue values is greater than 30.
+ */
 function getSequences(source, cords) {
-	// Create canvas element for extraction
-	var canvas = document.createElement('canvas')
-	canvas.width = source.width
-	canvas.height = source.height
-
-	// Draw image
-	var ctx = canvas.getContext('2d')
-	ctx.drawImage(source, 0, 0)
-
 	// Check sequences
 	var seq = 0
 	for (var el in cords) {
 		// Read pixel
-		var pixel = ctx.getImageData(cords[el].left, cords[el].top, 1, 1).data
+		var pixel = source.getImageData(cords[el].left, cords[el].top, 1, 1).data
 
 		// Check value against treshold
 		if (pixel[0] + pixel[1] + pixel[2] > 30) {
@@ -1186,4 +1179,67 @@ function getSequences(source, cords) {
 		}
 	}
 	return seq
+}
+
+/**
+ * Adjusts the levels of an image on a canvas context by applying input range normalization,
+ * gamma correction, and output range scaling on the grayscale values of the pixels.
+ *
+ * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
+ * @param {number} width - The width of the image area to process.
+ * @param {number} height - The height of the image area to process.
+ * @param {number} inputMin - The minimum input level (used for normalization).
+ * @param {number} inputMax - The maximum input level (used for normalization).
+ * @param {number} gamma - The gamma correction value.
+ * @param {number} outputMin - The minimum output level after adjustment.
+ * @param {number} outputMax - The maximum output level after adjustment.
+ */
+function adjustLevels(ctx, width, height, inputMin, inputMax, gamma, outputMin, outputMax) {
+	const imageData = ctx.getImageData(0, 0, width, height)
+	const d = imageData.data
+	const invGamma = 1 / gamma
+
+	for (let i = 0; i < d.length; i += 4) {
+		let gray = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]
+
+		// Normalize input range
+		gray = (gray - inputMin) / (inputMax - inputMin)
+		gray = Math.min(Math.max(gray, 0), 1)
+
+		// Gamma correction
+		gray = Math.pow(gray, invGamma)
+
+		// Scale to output range
+		gray = gray * (outputMax - outputMin) + outputMin
+		gray = Math.min(Math.max(gray, 0), 255)
+
+		d[i] = d[i + 1] = d[i + 2] = gray
+		// Alpha channel unchanged
+	}
+
+	ctx.putImageData(imageData, 0, 0)
+}
+
+/**
+ * Creates a debounced version of the given function.
+ * The debounced function delays invoking `func` until after
+ * it stops being called for `wait` milliseconds.
+ * This is useful to limit the rate at which a function is executed,
+ * for example, in response to rapid events like key presses or window resizing.
+ *
+ * @param {Function} func - The function to debounce.
+ * @param {number} wait - The number of milliseconds to delay.
+ * @returns {Function} A new debounced version of the `func` function.
+ *
+ * @example
+ * // Create a debounced function that logs after 300ms of no calls
+ * const debouncedLog = debounce(() => console.log('Called!'), 300);
+ * window.addEventListener('resize', debouncedLog);
+ */
+function debounce(func, wait) {
+	let timeout
+	return function (...args) {
+		clearTimeout(timeout)
+		timeout = setTimeout(() => func.apply(this, args), wait)
+	}
 }
