@@ -1,4 +1,4 @@
-# Development Status
+# Project Closure
 
 After carefully considering the substantial positive and constructive feedback received, I have chosen to disassociate from the involved communities and discontinue development on Wuthering Insight.
 
