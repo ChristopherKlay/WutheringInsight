@@ -1,3 +1,11 @@
+# Development Status
+
+After carefully considering the substantial positive and constructive feedback received, I have chosen to disassociate from the involved communities and discontinue development on Wuthering Insight.
+
+My intent with projects such as Wuthering Insight has always been to provide free resources that support and engage their respective communities. However, during my involvement, I have frequently encountered topics and discussions that reveal troubling trends. These include the normalization of issues such as addiction, harmful spending behaviors, and, unfortunately, the acceptance of more serious concerns including predatory and abusive behaviors.
+
+Getting feedback from the community is a big part of what makes these projects work, but I can’t ignore my own values just to keep things moving forward. My beliefs come first, and I genuinely hope that anyone struggling with the issues I mentioned is able to find the help they need.
+
 # Wuthering Insight
 
 ![](https://raw.githubusercontent.com/ChristopherKlay/WutheringInsight/refs/heads/main/media/img/banner.jpg)
